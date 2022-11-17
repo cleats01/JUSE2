@@ -22,21 +22,6 @@ const GlobalStyle = createGlobalStyle`
           cursor: pointer;
         }
       }
-      h1, h2, h3, h4, h5, h6{
-        font-family:'Maven Pro', sans-serif;
-      }
-
-      @media only screen and (max-width: 768px) {
-        body {
-          font-size: 12px;
-        }
-      }
-
-      @media only screen and (max-width: 480px) {
-        body {
-          font-size: 10px;
-        }
-      }
     `;
 
 export default GlobalStyle;
