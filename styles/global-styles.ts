@@ -7,7 +7,7 @@ const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;
       }
       body{
-        font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+        font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
       }
       a {
         color: inherit;
@@ -17,21 +17,6 @@ const GlobalStyle = createGlobalStyle`
         background-color: transparent;
         border: none;
         outline: none;
-      }
-      h1, h2, h3, h4, h5, h6{
-        font-family:'Maven Pro', sans-serif;
-      }
-
-      @media only screen and (max-width: 768px) {
-        body {
-          font-size: 12px;
-        }
-      }
-
-      @media only screen and (max-width: 480px) {
-        body {
-          font-size: 10px;
-        }
       }
     `;
 
