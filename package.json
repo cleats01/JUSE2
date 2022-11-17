@@ -12,8 +12,8 @@
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
-    "@types/styled-components": "^5.1.26",
     "babel-plugin-styled-components": "^2.0.7",
+    "dotenv": "^16.0.3",
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.3",
     "next": "13.0.3",
@@ -22,5 +22,11 @@
     "styled-components": "^5.3.6",
     "styled-reset": "^4.4.2",
     "typescript": "4.9.3"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/next-auth": "^3.15.0",
+    "@types/styled-components": "^5.1.26",
+    "next-auth": "^4.16.4"
   }
 }
