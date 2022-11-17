@@ -1,10 +1,10 @@
 import React from 'react';
-import GlobalStyle from '../styles/global-styles';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
+  const { data, status } = useSession();
   return (
     <React.Fragment>
-      <GlobalStyle />
       <div>hi</div>
     </React.Fragment>
   );
