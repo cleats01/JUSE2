@@ -1,10 +1,10 @@
 import React from 'react';
 import TabBar from '../../components/TabBar';
 
-export default function Search() {
+export default function Chat() {
   return (
     <React.Fragment>
-      <h1>Search</h1>
+      <h1>Chat</h1>
       <TabBar />
     </React.Fragment>
   );

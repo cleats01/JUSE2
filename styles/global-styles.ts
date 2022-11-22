@@ -6,8 +6,10 @@ const GlobalStyle = createGlobalStyle`
       * {
         box-sizing: border-box;
       }
-      body{
+      body {
         font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        color: ${({ theme }) => theme.colors.black1};
+        fill: ${({ theme }) => theme.colors.black1};
         max-width: 480px;
       }
       a {
@@ -15,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
         text-decoration: none;
       }
       input, button {
+        color: inherit;
         background-color: transparent;
         border: none;
         outline: none;

@@ -1,33 +1,62 @@
 import styled from 'styled-components';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import router from 'next/router';
+import router, { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import HomeIcon from '../public/icons/home.svg';
 import SearchIcon from '../public/icons/search.svg';
 import AddIcon from '../public/icons/add.svg';
 import ChatIcon from '../public/icons/chat.svg';
 import UserIcon from '../public/icons/user.svg';
-import Link from 'next/link';
 
 interface tab {
   id: number;
   icon: JSX.Element;
   label: string;
   path: string;
+  selected: boolean;
 }
 
 export default function TabBar() {
   const { data, status } = useSession();
+  const router = useRouter();
 
   const tabList: tab[] = [
-    { id: 1, icon: <HomeIcon />, label: '홈', path: '/' },
-    { id: 2, icon: <SearchIcon />, label: '검색', path: '/search' },
-    ,
-    { id: 3, icon: <AddIcon />, label: '등록', path: '/add' },
-    ,
-    { id: 4, icon: <ChatIcon />, label: '주시톡', path: '/' },
-    ,
-    { id: 5, icon: <UserIcon />, label: '내 정보', path: '/user' },
+    {
+      id: 1,
+      icon: <HomeIcon />,
+      label: '홈',
+      path: '/',
+      selected: router.pathname === '/',
+    },
+    {
+      id: 2,
+      icon: <SearchIcon />,
+      label: '검색',
+      path: '/search',
+      selected: router.pathname === '/search',
+    },
+    {
+      id: 3,
+      icon: <AddIcon />,
+      label: '등록',
+      path: '/add',
+      selected: router.pathname === '/add',
+    },
+    {
+      id: 4,
+      icon: <ChatIcon />,
+      label: '주시톡',
+      path: '/chat',
+      selected: router.pathname === '/chat',
+    },
+    {
+      id: 5,
+      icon: <UserIcon />,
+      label: '내 정보',
+      path: data?.user ? '/user' : '/login',
+      selected: router.pathname === '/user' || router.pathname === '/login',
+    },
   ];
 
   return (
@@ -35,9 +64,12 @@ export default function TabBar() {
       <UlRow>
         {tabList.map(
           (tab: tab): JSX.Element => (
-            <Link key={tab.id} href={tab.path}>
-              hi
-            </Link>
+            <TabIcon key={tab.id}>
+              <Link href={tab.path} className={tab.selected.toString()}>
+                {tab.icon}
+                <label>{tab.label}</label>
+              </Link>
+            </TabIcon>
           )
         )}
       </UlRow>
@@ -45,13 +77,14 @@ export default function TabBar() {
   );
 }
 
-const TabBarLayout = styled.nav`
-  height: 50px;
-  width: 100vw;
-  padding: 5px 25px;
+const TabBarLayout = styled.div`
+  padding: 8px 20px;
   position: fixed;
+  max-width: 480px;
+  left: 0;
+  right: 0;
   bottom: 0;
-  border-top: 1px solid red;
+  border-top: 1px solid ${({ theme }) => theme.colors.grey2};
 `;
 
 const UlRow = styled.ul`
@@ -60,12 +93,16 @@ const UlRow = styled.ul`
 `;
 
 const TabIcon = styled.li`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  width: 40px;
-  > label {
+  > a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
     font-size: 12px;
+    &.false {
+      fill: ${({ theme }) => theme.colors.grey3};
+      color: ${({ theme }) => theme.colors.grey3};
+    }
   }
 `;
