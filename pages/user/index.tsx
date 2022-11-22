@@ -7,7 +7,7 @@ export default function User() {
   const router = useRouter();
 
   const signOutHandler = () => {
-    signOut({ callbackUrl: '/' });
+    signOut({ callbackUrl: '/login' });
   };
 
   return (
