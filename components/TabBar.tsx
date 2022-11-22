@@ -1,36 +1,45 @@
 import styled from 'styled-components';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import router from 'next/router';
+
 import HomeIcon from '../public/icons/home.svg';
 import SearchIcon from '../public/icons/search.svg';
 import AddIcon from '../public/icons/add.svg';
 import ChatIcon from '../public/icons/chat.svg';
 import UserIcon from '../public/icons/user.svg';
+import Link from 'next/link';
+
+interface tab {
+  id: number;
+  icon: JSX.Element;
+  label: string;
+  path: string;
+}
 
 export default function TabBar() {
   const { data, status } = useSession();
+
+  const tabList: tab[] = [
+    { id: 1, icon: <HomeIcon />, label: '홈', path: '/' },
+    { id: 2, icon: <SearchIcon />, label: '검색', path: '/search' },
+    ,
+    { id: 3, icon: <AddIcon />, label: '등록', path: '/add' },
+    ,
+    { id: 4, icon: <ChatIcon />, label: '주시톡', path: '/' },
+    ,
+    { id: 5, icon: <UserIcon />, label: '내 정보', path: '/user' },
+  ];
+
   return (
     <TabBarLayout>
       <UlRow>
-        <TabIcon>
-          <HomeIcon />
-          <span>홈</span>
-        </TabIcon>
-        <TabIcon>
-          <SearchIcon />
-          <span>검색</span>
-        </TabIcon>
-        <TabIcon>
-          <AddIcon />
-          <span>등록</span>
-        </TabIcon>
-        <TabIcon>
-          <ChatIcon />
-          <span>주시톡</span>
-        </TabIcon>
-        <TabIcon>
-          <UserIcon />
-          <span>내 정보</span>
-        </TabIcon>
+        {tabList.map(
+          (tab: tab): JSX.Element => (
+            <Link key={tab.id} href={tab.path}>
+              hi
+            </Link>
+          )
+        )}
       </UlRow>
     </TabBarLayout>
   );
@@ -56,7 +65,7 @@ const TabIcon = styled.li`
   align-items: center;
   gap: 5px;
   width: 40px;
-  > span {
+  > label {
     font-size: 12px;
   }
 `;
