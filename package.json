@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mui/material": "^5.10.15",
+    "@mui/styled-engine-sc": "^5.10.14",
     "@next-auth/mongodb-adapter": "^1.1.1",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
