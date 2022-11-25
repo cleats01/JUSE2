@@ -18,13 +18,16 @@ export default NextAuth({
   ],
   pages: {
     signIn: '/login',
+    newUser: '/user/signup/',
   },
   callbacks: {
-    // async signIn({ user, account, profile, email, credentials }) {
-    //   // 회원 아닐 때
-    // },
+    async signIn({ user }) {
+      const result = await (await clientPromise)
+        .db()
+        .collection('profiles')
+        .findOne({ email: user.email });
+      return result ? true : `/user/signup/${user.email}`;
+    },
   },
-  adapter: MongoDBAdapter(clientPromise, {
-    databaseName: 'users',
-  }),
+  adapter: MongoDBAdapter(clientPromise),
 });

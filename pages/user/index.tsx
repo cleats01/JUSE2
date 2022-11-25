@@ -4,8 +4,6 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 export default function User() {
-  const router = useRouter();
-
   const signOutHandler = () => {
     signOut({ callbackUrl: '/login' });
   };
