@@ -54,7 +54,7 @@ export default function TabBar() {
       id: 5,
       icon: <UserIcon />,
       label: '내 정보',
-      path: data?.user ? '/user' : '/login',
+      path: status === 'authenticated' ? '/user' : '/login',
       selected: router.pathname === '/user' || router.pathname === '/login',
     },
   ];

@@ -23,6 +23,22 @@ export default NextAuth({
       const result = await getUserByEmail(user.email as string);
       return result ? true : `/user/signup/${user.email}`;
     },
+    async jwt({ token, account, profile, user }) {
+      if (account) {
+        const userData = await getUserByEmail(user?.email as string).then(
+          (data) => data
+        );
+        token.accessToken = account.access_token;
+        token.id = userData?.id;
+        token.nickname = userData?.nickname;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.id = token.id;
+      session.user.nickname = token.nickname;
+      return session;
+    },
   },
   // adapter: MongoDBAdapter(clientPromise),
 });
