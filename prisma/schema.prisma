@@ -13,6 +13,14 @@ type position {
   position  String
   count     Int 
 }
+
+type userSession {
+  id        String
+  email     String
+  image     String
+  name      String
+  nickname  String
+}
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String?  @unique
@@ -30,6 +38,7 @@ model Board {
   position  position[]
   title     String
   content   String
+  user      userSession
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

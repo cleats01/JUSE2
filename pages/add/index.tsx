@@ -13,8 +13,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { TextField } from '@mui/material';
+import { useSession } from 'next-auth/react';
 
 export default function Add() {
+  const { data: session, status } = useSession();
   const [type, setType] = useState<string>('project');
   const [place, setPlace] = useState<string>('online');
   const [contact, setContact] = useState<string>('');
@@ -148,6 +150,7 @@ export default function Add() {
           position,
           title,
           content,
+          user: session?.user,
         }}
       />
       <FormContainer>

@@ -16,6 +16,13 @@ export interface boardFormData {
   position: { position: string; count: number }[];
   title: string;
   content: string;
+  user: {
+    id: string;
+    email: string;
+    nickname: string;
+    name: string;
+    image: string;
+  };
 }
 
 export default function NavbarNew(props: propsType) {
