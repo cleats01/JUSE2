@@ -139,7 +139,17 @@ export default function Add() {
 
   return (
     <AddLayout>
-      <NavbarNew />
+      <NavbarNew
+        formData={{
+          type,
+          place: place === 'online' ? place : offline,
+          contact,
+          period,
+          position,
+          title,
+          content,
+        }}
+      />
       <FormContainer>
         <InputWrapper>
           <ToggleButtonGroup

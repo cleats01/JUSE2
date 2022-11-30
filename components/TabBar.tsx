@@ -40,14 +40,14 @@ export default function TabBar() {
       id: 3,
       icon: <AddIcon />,
       label: '등록',
-      path: '/add',
+      path: status === 'authenticated' ? '/add' : '/login',
       selected: router.pathname === '/add',
     },
     {
       id: 4,
       icon: <ChatIcon />,
       label: '주시톡',
-      path: '/chat',
+      path: status === 'authenticated' ? '/chat' : '/login',
       selected: router.pathname === '/chat',
     },
     {

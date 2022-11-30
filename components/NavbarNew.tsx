@@ -1,16 +1,54 @@
+import axios from 'axios';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
 import BackIcon from '../public/icons/angle-small-left.svg';
 
-export default function NavbarNew() {
+interface propsType {
+  formData: boardFormData;
+}
+
+export interface boardFormData {
+  type: string;
+  place: string;
+  contact: string;
+  period: string;
+  position: { position: string; count: number }[];
+  title: string;
+  content: string;
+}
+
+export default function NavbarNew(props: propsType) {
   const router = useRouter();
+  const { formData } = props;
+
+  const handleSubmit = () => {
+    const { contact, period, position, title, content } = formData;
+    if (!contact) {
+      alert('연락 방법 혹은 연락처를 입력해주세요.');
+    } else if (!period) {
+      alert('예상 진행 기간을 선택해주세요.');
+    } else if (
+      !position.at(-1)?.position ||
+      position.filter((obj) => obj.count !== 0).length === 0
+    ) {
+      alert('모집 포지션과 인원 수를 확인해주세요.');
+    } else if (!title) {
+      alert('제목을 입력해주세요.');
+    } else if (!content) {
+      alert('본문을 입력해주세요.');
+    } else {
+      axios.post('/api/board', formData).then(() => {
+        router.push('/');
+      });
+    }
+  };
 
   return (
     <NavLayout>
       <BackIcon onClick={router.back} />
       <MidSpan>모집 글쓰기</MidSpan>
-      <button>완료</button>
+      <button onClick={handleSubmit}>완료</button>
     </NavLayout>
   );
 }
