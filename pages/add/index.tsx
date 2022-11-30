@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import NavbarNew from '../../components/NavbarNew';
+import TechStack from '../../components/TechStack';
 
 import PlusIcon from '../../public/icons/plus-circle.svg';
 import MinusIcon from '../../public/icons/minus-circle.svg';
@@ -14,6 +15,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { TextField } from '@mui/material';
 import { useSession } from 'next-auth/react';
+import BottomSheet from '../../components/BottomSheet';
 
 export default function Add() {
   const { data: session, status } = useSession();
@@ -55,6 +57,8 @@ export default function Add() {
   const positions: string[] = ['프론트엔드', '백엔드', '모바일', '기타'];
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [techStack, setTechStack] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleType = (
     event: React.MouseEvent<HTMLElement>,
@@ -277,6 +281,13 @@ export default function Add() {
           variant='filled'
         />
       </ContentsContainer>
+      {!isModalOpen ? (
+        <BottomSheet setIsOpen={setIsModalOpen}>
+          <TechStack selected={techStack} setSelected={setTechStack} />
+        </BottomSheet>
+      ) : (
+        ''
+      )}
     </AddLayout>
   );
 }
