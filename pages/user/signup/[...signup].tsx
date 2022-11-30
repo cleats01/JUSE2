@@ -24,7 +24,7 @@ export default function SignUp() {
       />
       <button
         onClick={() => {
-          axios.post('/api/sign-up', { email, nickname }).then(() => {
+          axios.post('/api/users', { email, nickname }).then(() => {
             router.push('/login');
           });
         }}>

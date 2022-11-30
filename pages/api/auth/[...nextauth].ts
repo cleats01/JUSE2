@@ -2,8 +2,7 @@ import NextAuth from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
-import clientPromise from '../../../lib/mongodb';
+import { getUserByEmail } from '../../../prisma/user';
 
 export default NextAuth({
   providers: [
@@ -17,17 +16,13 @@ export default NextAuth({
     }),
   ],
   pages: {
-    signIn: '/login',
-    newUser: '/user/signup/',
+    signIn: '/user',
   },
   callbacks: {
     async signIn({ user }) {
-      const result = await (await clientPromise)
-        .db()
-        .collection('profiles')
-        .findOne({ email: user.email });
+      const result = await getUserByEmail(user.email as string);
       return result ? true : `/user/signup/${user.email}`;
     },
   },
-  adapter: MongoDBAdapter(clientPromise),
+  // adapter: MongoDBAdapter(clientPromise),
 });
