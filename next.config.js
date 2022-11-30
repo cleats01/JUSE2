@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -7,11 +8,6 @@ const nextConfig = {
       test: /\.svg$/,
       use: ['@svgr/webpack'],
       issuer: /\.[jt]sx?$/,
-      resolve: {
-        alias: {
-          '@mui/styled-engine': '@mui/styled-engine-sc',
-        },
-      },
     });
     return config;
   },

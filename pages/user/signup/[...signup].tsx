@@ -25,7 +25,6 @@ export default function SignUp() {
       <button
         onClick={() => {
           axios.post('/api/sign-up', { email, nickname }).then(() => {
-            // 여기서 쿠키를 넣어줄 수 있나?
             router.push('/login');
           });
         }}>
