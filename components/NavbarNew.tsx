@@ -73,7 +73,7 @@ const NavLayout = styled.nav`
   padding: 5px 20px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey1};
   background-color: #fff;
-  z-index: 9;
+  z-index: 2;
 `;
 
 const MidSpan = styled.span`
