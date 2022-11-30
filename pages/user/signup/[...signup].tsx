@@ -24,7 +24,8 @@ export default function SignUp() {
       />
       <button
         onClick={() => {
-          axios.post('/api/users', { email, nickname }).then(() => {
+          axios.post('/api/user', { email, nickname }).then(() => {
+            alert('회원가입에 성공하였습니다. 다시 로그인하여 주십시오.');
             router.push('/login');
           });
         }}>
