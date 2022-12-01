@@ -1,13 +1,19 @@
-import { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 import CloseBtnIcon from '../public/icons/close.svg';
 
-const TechStack = ({ selected, setSelected }) => {
-  const [currentTab, setCurrentTab] = useState('프론트엔드');
+interface propsType {
+  selected: string[];
+  setSelected: Dispatch<SetStateAction<string[]>>;
+}
+
+const TechStack = ({ selected, setSelected }: propsType) => {
+  const [currentTab, setCurrentTab] = useState<string>('프론트엔드');
 
   //현재 탭 변경
-  const tabHandler = (e) => {
-    setCurrentTab(e.target.innerText);
+  const tabHandler = (e: React.MouseEvent<HTMLElement>) => {
+    const eventTarget = e.target as HTMLElement;
+    setCurrentTab(eventTarget.innerText);
   };
 
   // 모든 스택 이름
@@ -38,10 +44,9 @@ const TechStack = ({ selected, setSelected }) => {
     기타: ['AWS', 'Kubernetes', 'Docker', 'Git', 'Jest'],
   };
 
-  //스택 선택 -> 스택은 무조건 우선 소문자화하여 배열에 저장
-  const stackClickHandler = (el) => {
+  const stackClickHandler = (el: string) => {
     if (selected.includes(el)) {
-      const deletedArr = selected.filter((e) => e !== el);
+      const deletedArr = selected.filter((e: string) => e !== el);
       setSelected(deletedArr);
     } else {
       setSelected((prev) => [...prev, el]);
@@ -54,8 +59,8 @@ const TechStack = ({ selected, setSelected }) => {
   };
 
   //스택 삭제
-  const stackDeleteHandler = (idx) => {
-    const deletedArr = selected.filter((e, i) => i !== idx);
+  const stackDeleteHandler = (idx: number) => {
+    const deletedArr = selected.filter((e, i: number) => i !== idx);
     setSelected(deletedArr);
   };
 
@@ -72,19 +77,21 @@ const TechStack = ({ selected, setSelected }) => {
         ))}
       </StackTab>
       <StackContainer>
-        {stacks[currentTab].map((el, i) => (
-          <StackBubble
-            key={i}
-            onClick={() => stackClickHandler(el.toLowerCase())}
-            className={
-              !selected.includes(el.toLowerCase()) && selected.length > 0
-                ? 'not-selected'
-                : ''
-            }>
-            <Stack src={`/icons/stacks/${el}.png`} alt={el} />
-            <span>{el}</span>
-          </StackBubble>
-        ))}
+        {stacks[currentTab as keyof typeof stacks].map(
+          (el: string, i: number) => (
+            <StackBubble
+              key={i}
+              onClick={() => stackClickHandler(el)}
+              className={
+                !selected.includes(el) && selected.length > 0
+                  ? 'not-selected'
+                  : ''
+              }>
+              <Stack src={`/icons/stacks/${el}.png`} alt={el} />
+              <span>{el}</span>
+            </StackBubble>
+          )
+        )}
       </StackContainer>
       {selected.length ? (
         <SelectedContainer>
@@ -180,15 +187,12 @@ const ResetButton = styled.button`
   padding: 5px 10px;
   background: #ffffff;
   font-size: 12px;
-  color: ${({ theme }) => theme.text};
-  background: ${({ theme }) => theme.background};
   border: 1px solid ${({ theme }) => theme.colors.grey3};
   border-radius: 4px;
   cursor: pointer;
   :hover {
     color: ${({ theme }) => theme.colors.purple1};
     border: 1px solid ${({ theme }) => theme.colors.purple1};
-    background: ${({ theme }) => theme.background};
   }
 `;
 
