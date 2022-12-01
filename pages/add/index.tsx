@@ -5,6 +5,7 @@ import TechStack from '../../components/TechStack';
 
 import PlusIcon from '../../public/icons/plus-circle.svg';
 import MinusIcon from '../../public/icons/minus-circle.svg';
+import CloseIcon from '../../public/icons/cross-small.svg';
 
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -155,6 +156,7 @@ export default function Add() {
           title,
           content,
           user: session?.user,
+          techStack,
         }}
       />
       <FormContainer>
@@ -263,6 +265,31 @@ export default function Add() {
             포지션 추가
           </PositionAddButton>
         </InputWrapper>
+        <InputWrapper>
+          {isModalOpen ? (
+            <BottomSheet setIsOpen={setIsModalOpen}>
+              <BottomSheetHeader>
+                사용 기술 스택
+                <button
+                  onClick={() => {
+                    setIsModalOpen(false);
+                  }}>
+                  <CloseIcon />
+                </button>
+              </BottomSheetHeader>
+              <TechStack selected={techStack} setSelected={setTechStack} />
+            </BottomSheet>
+          ) : (
+            ''
+          )}
+          <StackAddButton onClick={() => setIsModalOpen((prev) => !prev)}>
+            {techStack.length
+              ? techStack.map((stack) => (
+                  <StackBubble src={`/icons/stacks/${stack}.png`} />
+                ))
+              : '기술 스택 추가'}
+          </StackAddButton>
+        </InputWrapper>
       </FormContainer>
       <ContentsContainer>
         <TextField
@@ -281,13 +308,6 @@ export default function Add() {
           variant='filled'
         />
       </ContentsContainer>
-      {!isModalOpen ? (
-        <BottomSheet setIsOpen={setIsModalOpen}>
-          <TechStack selected={techStack} setSelected={setTechStack} />
-        </BottomSheet>
-      ) : (
-        ''
-      )}
     </AddLayout>
   );
 }
@@ -299,7 +319,7 @@ const AddLayout = styled.div`
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   border: 1px solid ${({ theme }) => theme.colors.grey2};
   border-radius: 20px;
   padding: 20px;
@@ -343,4 +363,29 @@ const ContentsContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 0 5px;
+`;
+
+const StackAddButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.grey3};
+  border-radius: 5px;
+  padding: 10px;
+`;
+
+const StackBubble = styled.img`
+  width: 30px;
+  border: 1px solid ${({ theme }) => theme.colors.grey2};
+  border-radius: 999px;
+`;
+
+const BottomSheetHeader = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-weight: 700;
 `;

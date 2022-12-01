@@ -40,6 +40,15 @@ const SheetContainer = styled.div`
   left: 0;
   right: 0;
   border-radius: 15px 15px 0 0;
-  padding: 30px 20px;
+  padding: 20px;
   background-color: #fff;
+  @keyframes show {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  animation: show 0.15s linear;
 `;

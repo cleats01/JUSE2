@@ -23,6 +23,7 @@ export interface boardFormData {
     name: string;
     image: string;
   };
+  techStack: string[];
 }
 
 export default function NavbarNew(props: propsType) {

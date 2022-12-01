@@ -6,21 +6,22 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 type position {
-  position  String
-  count     Int 
+  position String
+  count    Int
 }
 
 type userSession {
-  id        String
-  email     String
-  image     String
-  name      String
-  nickname  String
+  id       String
+  email    String
+  image    String
+  name     String
+  nickname String
 }
+
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String?  @unique
@@ -30,8 +31,8 @@ model User {
 }
 
 model Board {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  type      String   
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  type      String
   place     String
   contact   String
   period    String
@@ -39,6 +40,7 @@ model Board {
   title     String
   content   String
   user      userSession
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  techStack String[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
