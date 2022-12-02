@@ -24,7 +24,7 @@ const TechStack = ({ selected, setSelected }: propsType) => {
       'React',
       'Vue',
       'Svelte',
-      'Next',
+      'Nextjs',
       'GraphQl',
     ],
     백엔드: [

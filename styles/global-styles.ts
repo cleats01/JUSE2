@@ -25,6 +25,14 @@ const GlobalStyle = createGlobalStyle`
           cursor: pointer;
         }
       }
+      @keyframes bottomShow {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
     `;
 
 export default GlobalStyle;

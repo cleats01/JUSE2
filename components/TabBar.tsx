@@ -85,6 +85,8 @@ const TabBarLayout = styled.div`
   right: 0;
   bottom: 0;
   border-top: 1px solid ${({ theme }) => theme.colors.grey1};
+  background-color: #fff;
+  z-index: 2;
 `;
 
 const UlRow = styled.ul`
