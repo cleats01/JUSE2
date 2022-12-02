@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import HamburgerIcon from '../public/icons/menu-burger.svg';
-import NotificationIcon from '../public/icons/bell.svg';
 import React, { Dispatch, ReactNode, SetStateAction } from 'react';
 
 interface propsType {
@@ -15,7 +13,7 @@ export default function BottomSheet(props: propsType) {
     if (event.target === event.currentTarget) setIsOpen((prev) => !prev);
   };
   return (
-    <ModalBackground id='background' onClick={handleClose}>
+    <ModalBackground onClick={handleClose}>
       <SheetContainer>{children}</SheetContainer>
     </ModalBackground>
   );
@@ -42,13 +40,5 @@ const SheetContainer = styled.div`
   border-radius: 15px 15px 0 0;
   padding: 20px;
   background-color: #fff;
-  @keyframes show {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-  animation: show 0.15s linear;
+  animation: bottomShow 0.15s linear;
 `;
