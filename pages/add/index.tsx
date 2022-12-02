@@ -5,7 +5,6 @@ import TechStack from '../../components/TechStack';
 
 import PlusIcon from '../../public/icons/plus-circle.svg';
 import MinusIcon from '../../public/icons/minus-circle.svg';
-import CloseIcon from '../../public/icons/cross-small.svg';
 
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -274,7 +273,7 @@ export default function Add() {
                   onClick={() => {
                     setIsModalOpen(false);
                   }}>
-                  <CloseIcon />
+                  완료
                 </button>
               </BottomSheetHeader>
               <TechStack selected={techStack} setSelected={setTechStack} />
@@ -314,6 +313,7 @@ export default function Add() {
 
 const AddLayout = styled.div`
   padding: 70px 16px;
+  animation: bottomShow 0.3s linear;
 `;
 
 const FormContainer = styled.div`
@@ -365,24 +365,25 @@ const ContentsContainer = styled.div`
   padding: 0 5px;
 `;
 
-const StackAddButton = styled.button`
+export const StackAddButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+  width: 100%;
   border: 1px solid ${({ theme }) => theme.colors.grey3};
   border-radius: 5px;
   padding: 10px;
 `;
 
-const StackBubble = styled.img`
+export const StackBubble = styled.img`
   width: 30px;
   border: 1px solid ${({ theme }) => theme.colors.grey2};
   border-radius: 999px;
 `;
 
-const BottomSheetHeader = styled.header`
+export const BottomSheetHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;

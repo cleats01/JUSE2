@@ -22,11 +22,16 @@ export const getUserByEmail = async (email: string) => {
 };
 
 // CREATE
-export const createUser = async (email: string, nickname: string) => {
+export const createUser = async (
+  email: string,
+  nickname: string,
+  userTechStack: string[]
+) => {
   const user = await prisma.user.create({
     data: {
       email,
       nickname,
+      userTechStack,
     },
   });
   return user;
