@@ -16,7 +16,7 @@ export default function Home() {
           place: '온라인',
           title:
             '코딩테스트, 면접 스터디 모집합니다! 제목은 두 줄까지는 보여져야 합니다.',
-          techStack: ['TypeScript', 'React', 'Next', 'Nestjs'],
+          techStack: ['TypeScript', 'React', 'Nextjs', 'Nestjs'],
         }}
       />
       <Card
@@ -25,7 +25,7 @@ export default function Home() {
           place: '온라인',
           title:
             '코딩테스트, 면접 스터디 모집합니다! 제목은 두 줄까지는 보여져야 합니다.',
-          techStack: ['TypeScript', 'React', 'Next', 'Nestjs'],
+          techStack: ['TypeScript', 'React', 'Nextjs', 'Nestjs'],
         }}
       />
       <Card
@@ -34,7 +34,7 @@ export default function Home() {
           place: '서울',
           title:
             '코딩테스트, 면접 스터디 모집합니다! 제목은 두 줄까지는 보여져야 합니다.',
-          techStack: ['TypeScript', 'React', 'Next', 'Nestjs'],
+          techStack: ['TypeScript', 'React', 'Nextjs', 'Nestjs'],
         }}
       />
       <Card
@@ -43,7 +43,7 @@ export default function Home() {
           place: '온라인',
           title:
             '코딩테스트, 면접 스터디 모집합니다! 제목은 두 줄까지는 보여져야 합니다.',
-          techStack: ['TypeScript', 'React', 'Next', 'Nestjs'],
+          techStack: ['TypeScript', 'React', 'Nextjs', 'Nestjs'],
         }}
       />
       <TabBar />
