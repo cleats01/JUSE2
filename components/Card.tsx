@@ -62,13 +62,20 @@ const CardHeader = styled.header`
 `;
 
 const Title = styled.h1`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
   line-height: 1.4;
+  -webkit-line-clamp: 2;
   font-weight: 700;
 `;
 
 const TechStackWrapper = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
 `;
 
