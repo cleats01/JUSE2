@@ -33,7 +33,7 @@ export default function SignUp() {
     } else if (!regex.test(nickname)) {
       alert('닉네임은 한글,영어,숫자만 가능합니다.');
     } else {
-      axios.post('/api/user', { email, nickname, userTechStack }).then(() => {
+      axios.post('/api/users', { email, nickname, userTechStack }).then(() => {
         alert('회원가입에 성공하였습니다. 다시 로그인하여 주십시오.');
         router.push('/login');
       });

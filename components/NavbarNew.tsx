@@ -46,7 +46,7 @@ export default function NavbarNew(props: propsType) {
     } else if (!content) {
       alert('본문을 입력해주세요.');
     } else {
-      axios.post('/api/board', formData).then(() => {
+      axios.post('/api/boards', formData).then(() => {
         router.push('/');
       });
     }

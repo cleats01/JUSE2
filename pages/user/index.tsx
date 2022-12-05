@@ -25,7 +25,7 @@ export default function User() {
   useEffect(() => {
     const userInfoData = async () =>
       await axios
-        .get(`/api/user?id=${session?.user.id}`)
+        .get(`/api/users?id=${session?.user.id}`)
         .then((res) => setUser(res.data));
     if (status === 'authenticated') {
       userInfoData();
