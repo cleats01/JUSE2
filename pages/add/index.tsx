@@ -19,8 +19,8 @@ import BottomSheet from '../../components/BottomSheet';
 
 export default function Add() {
   const { data: session, status } = useSession();
-  const [type, setType] = useState<string>('project');
-  const [place, setPlace] = useState<string>('online');
+  const [type, setType] = useState<string>('프로젝트');
+  const [place, setPlace] = useState<string>('온라인');
   const [contact, setContact] = useState<string>('');
   const [offline, setOffline] = useState<string>('');
   const offlinePlace: string[] = [
@@ -148,7 +148,7 @@ export default function Add() {
       <NavbarNew
         formData={{
           type,
-          place: place === 'online' ? place : offline,
+          place: place === '온라인' ? place : offline,
           contact,
           period,
           position,
@@ -165,8 +165,8 @@ export default function Add() {
             value={type}
             exclusive
             onChange={handleType}>
-            <ToggleButton value='project'>프로젝트</ToggleButton>
-            <ToggleButton value='study'>스터디</ToggleButton>
+            <ToggleButton value='프로젝트'>프로젝트</ToggleButton>
+            <ToggleButton value='스터디'>스터디</ToggleButton>
           </ToggleButtonGroup>
         </InputWrapper>
         <InputWrapper>
@@ -175,9 +175,9 @@ export default function Add() {
             value={place}
             exclusive
             onChange={handlePlace}>
-            <ToggleButton value='online'>온라인</ToggleButton>
-            <ToggleButton value='offline'>오프라인</ToggleButton>
-            {place === 'offline' ? (
+            <ToggleButton value='온라인'>온라인</ToggleButton>
+            <ToggleButton value='오프라인'>오프라인</ToggleButton>
+            {place === '오프라인' ? (
               <Box sx={{ minWidth: 90, marginLeft: '10px' }}>
                 <FormControl size='small' fullWidth>
                   <InputLabel>지역</InputLabel>
