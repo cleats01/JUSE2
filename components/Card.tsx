@@ -24,8 +24,8 @@ export default function Card(props: propsType) {
       </CardHeader>
       <Title>{title}</Title>
       <TechStackWrapper>
-        {techStack.map((stack) => (
-          <StackBubble src={`/icons/stacks/${stack}.png`} />
+        {techStack.map((stack, index) => (
+          <StackBubble src={`/icons/stacks/${stack}.png`} key={index} />
         ))}
       </TechStackWrapper>
       <CardFooter></CardFooter>
