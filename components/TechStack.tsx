@@ -147,12 +147,12 @@ const StackBubble = styled.div`
   &.not-selected {
     opacity: 0.6;
   }
-  :hover {
+  /* :hover {
     border: 1px solid ${({ theme }) => theme.colors.purple1};
     opacity: 1;
     transform: scale(1.07);
     transition: 0.2s;
-  }
+  } */
 `;
 
 const Stack = styled.img`
@@ -190,10 +190,10 @@ const ResetButton = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.grey3};
   border-radius: 4px;
   cursor: pointer;
-  :hover {
+  /* :hover {
     color: ${({ theme }) => theme.colors.purple1};
     border: 1px solid ${({ theme }) => theme.colors.purple1};
-  }
+  } */
 `;
 
 export default TechStack;
