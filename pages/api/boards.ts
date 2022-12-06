@@ -13,7 +13,7 @@ export default async function handler(
         return res.json(board);
       }
       case 'GET': {
-        const { id } = req.query;
+        const { id, type } = req.query;
         const isFirstPage = !id;
         const pageCondition = {
           skip: 1,
@@ -23,7 +23,11 @@ export default async function handler(
         };
 
         const boards = await prisma.board
-          .findMany({ take: 5, ...(!isFirstPage && pageCondition) })
+          .findMany({
+            take: 5,
+            where: { type: type ? (type as string) : undefined },
+            ...(!isFirstPage && pageCondition),
+          })
           .then((data) =>
             data.map((board) => ({
               id: board.id,
