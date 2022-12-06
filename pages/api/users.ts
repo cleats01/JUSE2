@@ -8,7 +8,7 @@ import {
   updateUser,
 } from '../../prisma/user';
 
-export default async function handle(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

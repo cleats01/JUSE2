@@ -1,51 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import TabBar from '../components/TabBar';
 import styled from 'styled-components';
 import NavbarMain from '../components/NavbarMain';
 import Card from '../components/Card';
+import axios from 'axios';
+import { useInView } from 'react-intersection-observer';
+import { useInfiniteQuery } from 'react-query';
+
+interface boardData {
+  id: string;
+  type: string;
+  place: string;
+  title: string;
+  techStack: string[];
+}
 
 export default function Home() {
-  const { data, status } = useSession();
+  const { data: session, status } = useSession();
+  const [ref, inView] = useInView();
+
+  const getBoards = (query: string) => {
+    return axios.get('/api/boards' + query).then((res) => res.data);
+  };
+
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
+    ['board'],
+    ({ pageParam = '' }) => getBoards(`?id=${pageParam}`),
+    {
+      getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
+    }
+  );
+
+  useEffect(() => {
+    if (inView) fetchNextPage();
+  }, [inView]);
+
   return (
     <HomeLayout>
       <NavbarMain />
-      <Card
-        data={{
-          type: '스터디',
-          place: '온라인',
-          title:
-            '코딩테스트, 면접 스터디 모집합니다! 제목은 두 줄까지는 보여져야 합니다.',
-          techStack: ['TypeScript', 'React', 'Nextjs', 'Nestjs'],
-        }}
-      />
-      <Card
-        data={{
-          type: '프로젝트',
-          place: '온라인',
-          title:
-            '코딩테스트, 면접 스터디 모집합니다! 제목은 두 줄까지는 보여져야 합니다.',
-          techStack: ['TypeScript', 'React', 'Nextjs', 'Nestjs'],
-        }}
-      />
-      <Card
-        data={{
-          type: '스터디',
-          place: '서울',
-          title:
-            '코딩테스트, 면접 스터디 모집합니다! 제목은 두 줄까지는 보여져야 합니다.',
-          techStack: ['TypeScript', 'React', 'Nextjs', 'Nestjs'],
-        }}
-      />
-      <Card
-        data={{
-          type: '스터디',
-          place: '온라인',
-          title:
-            '코딩테스트, 면접 스터디 모집합니다! 제목은 두 줄까지는 보여져야 합니다.',
-          techStack: ['TypeScript', 'React', 'Nextjs', 'Nestjs'],
-        }}
-      />
+      {data?.pages.map((page, index) => (
+        <React.Fragment key={index}>
+          {page?.map((board: boardData, i: number) => (
+            <Card
+              key={board.id}
+              data={{
+                type: board.type,
+                place: board.place,
+                title: board.title,
+                techStack: board.techStack,
+              }}
+            />
+          ))}
+        </React.Fragment>
+      ))}
+      <div ref={ref}>observer</div>
       <TabBar />
     </HomeLayout>
   );
