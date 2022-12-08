@@ -110,7 +110,9 @@ const TechStack = ({ selected, setSelected }: propsType) => {
   );
 };
 
-const TechStackContainer = styled.div``;
+const TechStackContainer = styled.div`
+  padding-bottom: 20px;
+`;
 
 const StackTab = styled.ul`
   display: flex;
@@ -166,7 +168,7 @@ const SelectedContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  padding: 20px 0;
+  padding-top: 20px;
 `;
 
 const SelectedStack = styled.div`

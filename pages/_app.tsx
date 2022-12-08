@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <GlobalStyle />
           <AppContainer>
             <Component {...pageProps} />
-            <ReactQueryDevtools />
+            {/* <ReactQueryDevtools /> */}
           </AppContainer>
         </ThemeProvider>
       </QueryClientProvider>
