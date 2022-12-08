@@ -23,7 +23,6 @@ import {
 import FilterIcon from '../public/icons/settings-sliders.svg';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TechStack from '../components/TechStack';
-import { isNull } from 'util';
 
 interface boardData {
   id: string;
@@ -162,6 +161,7 @@ export default function Home() {
             <Card
               key={board.id}
               data={{
+                id: board.id,
                 type: board.type,
                 place: board.place,
                 title: board.title,

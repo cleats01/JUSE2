@@ -22,6 +22,7 @@ export interface boardFormData {
     nickname: string;
     name: string;
     image: string;
+    userTechStack: string[];
   };
   techStack: string[];
 }

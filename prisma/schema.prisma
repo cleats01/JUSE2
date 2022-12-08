@@ -15,11 +15,12 @@ type position {
 }
 
 type userSession {
-  id       String
-  email    String
-  image    String
-  name     String
-  nickname String
+  id            String
+  email         String
+  image         String
+  name          String
+  nickname      String
+  userTechStack String[]
 }
 
 model User {
