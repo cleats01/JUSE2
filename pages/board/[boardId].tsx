@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import NavbarBoard from '../../components/NavbarBoard';
 import { StackBubble } from '../add';
 import HeartFilledIcon from '../../public/icons/heart-filled.svg';
+import BookmarkIcon from '../../public/icons/bookmark.svg';
 
 interface propsType {
   data: {
@@ -86,7 +87,7 @@ export default function Board({ data }: propsType) {
           variant={'fullWidth'}>
           <Tab value='모집내용' label='모집내용' />
           <Tab value='모집현황' label='모집현황' />
-          <Tab value='팀장정보' label='팀장정보' />
+          <Tab value='추천' label='추천' />
         </Tabs>
       </Box>
       <ContentContainer>
@@ -122,6 +123,15 @@ export default function Board({ data }: propsType) {
           </LeaderTechStack>
         </LeaderInfo>
       </InfoWrapper>
+      <BottomController>
+        <BookmarkIcon />
+        <Button variant='outlined' size={'large'}>
+          채팅하기
+        </Button>
+        <Button variant='contained' size={'large'} disableElevation>
+          지원하기
+        </Button>
+      </BottomController>
     </BoardLayout>
   );
 }
@@ -248,4 +258,24 @@ const LeaderNickname = styled.div`
 
 const LeaderTechStack = styled(StackWrapper)`
   margin-left: auto;
+`;
+
+const BottomController = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background-color: #fff;
+  padding: 15px;
+  max-width: 480px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  svg {
+    margin: 0 10px 0 5px;
+  }
+  button {
+    flex-grow: 1;
+  }
 `;
