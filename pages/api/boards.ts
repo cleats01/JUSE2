@@ -58,6 +58,7 @@ export default async function handler(
             take: 5,
             where: filterOption,
             ...(!isFirstPage && pageCondition),
+            orderBy: { updatedAt: 'desc' },
           })
           .then((data) =>
             data.map((board) => ({
