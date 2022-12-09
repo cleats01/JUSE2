@@ -24,7 +24,7 @@ import FilterIcon from '../public/icons/settings-sliders.svg';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TechStack from '../components/TechStack';
 
-interface boardData {
+export interface boardData {
   id: string;
   type: string;
   place: string;

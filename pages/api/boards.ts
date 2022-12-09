@@ -13,7 +13,7 @@ export default async function handler(
         return res.json(board);
       }
       case 'GET': {
-        const { id, type, place, period, techStack } = req.query;
+        const { id, type, place, period, techStack, search } = req.query;
         const isFirstPage = !id;
         const pageCondition = {
           skip: 1,
@@ -51,11 +51,12 @@ export default async function handler(
                   hasEvery: (techStack as string).split(','),
                 }
             : undefined,
+          title: { contains: search as string },
         };
 
         const boards = await prisma.board
           .findMany({
-            take: 5,
+            take: search ? 20 : 5,
             where: filterOption,
             ...(!isFirstPage && pageCondition),
             orderBy: { updatedAt: 'desc' },
