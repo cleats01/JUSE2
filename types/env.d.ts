@@ -5,5 +5,6 @@ declare namespace NodeJS {
     GOOGLE_ID: string;
     GOOGLE_SECRET: string;
     NEXTAUTH_URL: string;
+    MONGODB_URI: string;
   }
 }
