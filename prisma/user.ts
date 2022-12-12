@@ -32,6 +32,9 @@ export const createUser = async (
       email,
       nickname,
       userTechStack,
+      myList: [],
+      applyList: [],
+      bookmarkList: [],
     },
   });
   return user;

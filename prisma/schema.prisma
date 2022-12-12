@@ -34,10 +34,10 @@ model User {
   userTechStack String[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  myList        String[] @default([])
-  applyList     String[] @default([])
-  bookmarkList  String[] @default([])
-  likeList      String[] @default([])
+  myList        String[]
+  applyList     String[]
+  bookmarkList  String[]
+  likeList      String[]
   like          Int      @default(0)
 }
 
