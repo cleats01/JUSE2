@@ -12,6 +12,9 @@ generator client {
 type position {
   position String
   count    Int
+  accept   String[]
+  pending  String[]
+  reject   String[]
 }
 
 type userSession {
@@ -21,6 +24,7 @@ type userSession {
   name          String
   nickname      String
   userTechStack String[]
+  like          Int
 }
 
 model User {
@@ -30,6 +34,11 @@ model User {
   userTechStack String[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  myList        String[] @default([])
+  applyList     String[] @default([])
+  bookmarkList  String[] @default([])
+  likeList      String[] @default([])
+  like          Int      @default(0)
 }
 
 model Board {
@@ -45,4 +54,6 @@ model Board {
   techStack String[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
+  bookmark  Int         @default(0)
+  chat      Int         @default(0)
 }

@@ -27,6 +27,7 @@ interface propsType {
       name: string;
       nickname: string;
       userTechStack: string[];
+      like: number;
     };
   };
 }
@@ -113,7 +114,7 @@ export default function Board({ data }: propsType) {
             <span className='nickname'>{user.nickname}</span>
             <span className='likes'>
               <HeartFilledIcon width={'15px'} fill={'tomato'} />
-              13
+              {user.like}
             </span>
           </LeaderNickname>
           <LeaderTechStack>

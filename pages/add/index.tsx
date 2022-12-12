@@ -16,6 +16,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { TextField } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import BottomSheet from '../../components/BottomSheet';
+import { position } from '@prisma/client';
 
 export default function Add() {
   const { data: session, status } = useSession();
@@ -51,9 +52,9 @@ export default function Add() {
     '5개월',
     '6개월 이상',
   ];
-  const [position, setPosition] = useState<
-    { position: string; count: number }[]
-  >([{ position: '', count: 0 }]);
+  const [position, setPosition] = useState<position[]>([
+    { position: '', count: 0, accept: [], pending: [], reject: [] },
+  ]);
   const positions: string[] = ['프론트엔드', '백엔드', '모바일', '기타'];
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -96,7 +97,13 @@ export default function Add() {
     ) {
       const newPosition = position.map((obj) => {
         return obj.position === positionName
-          ? { position: event.target.value as string, count: 0 }
+          ? {
+              position: event.target.value as string,
+              count: 0,
+              accept: [],
+              pending: [],
+              reject: [],
+            }
           : obj;
       });
       setPosition(newPosition);
@@ -111,7 +118,13 @@ export default function Add() {
       setPosition(
         position.map((obj) => {
           return obj.position === positionName && obj.count > 0
-            ? { position: obj.position, count: obj.count - 1 }
+            ? {
+                position: obj.position,
+                count: obj.count - 1,
+                accept: [],
+                pending: [],
+                reject: [],
+              }
             : obj;
         })
       );
@@ -119,7 +132,13 @@ export default function Add() {
       setPosition(
         position.map((obj) => {
           return obj.position === positionName
-            ? { position: obj.position, count: obj.count + 1 }
+            ? {
+                position: obj.position,
+                count: obj.count + 1,
+                accept: [],
+                pending: [],
+                reject: [],
+              }
             : obj;
         })
       );
@@ -131,7 +150,10 @@ export default function Add() {
       position.findIndex((obj) => obj.position === '') === -1 &&
       position.length < 4
     ) {
-      setPosition((prev) => [...prev, { position: '', count: 0 }]);
+      setPosition((prev) => [
+        ...prev,
+        { position: '', count: 0, accept: [], pending: [], reject: [] },
+      ]);
     }
   };
 

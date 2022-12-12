@@ -121,7 +121,11 @@ export default function Search() {
         </RecentSearchContainer>
       </SearchInputContainer>
       <SearchResultContainer>
-        <span>총 {searchResult.length}건의 검색 결과를 찾았습니다.</span>
+        {searchResult.length ? (
+          <span>총 {searchResult.length}건의 검색 결과를 찾았습니다.</span>
+        ) : (
+          ''
+        )}
         {searchResult.map((board: boardData, i: number) => (
           <Card
             key={board.id}

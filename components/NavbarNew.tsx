@@ -1,3 +1,4 @@
+import { position, userSession } from '@prisma/client';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -13,23 +14,17 @@ export interface boardFormData {
   place: string;
   contact: string;
   period: string;
-  position: { position: string; count: number }[];
+  position: position[];
   title: string;
   content: string;
-  user: {
-    id: string;
-    email: string;
-    nickname: string;
-    name: string;
-    image: string;
-    userTechStack: string[];
-  };
+  user: userSession;
   techStack: string[];
 }
 
 export default function NavbarNew(props: propsType) {
   const router = useRouter();
   const { formData } = props;
+  console.log(formData);
 
   const handleSubmit = () => {
     const { contact, period, position, title, content } = formData;
