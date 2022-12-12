@@ -186,6 +186,7 @@ export default function Add() {
             size='small'
             value={type}
             exclusive
+            color='primary'
             onChange={handleType}>
             <ToggleButton value='프로젝트'>프로젝트</ToggleButton>
             <ToggleButton value='스터디'>스터디</ToggleButton>
@@ -195,6 +196,7 @@ export default function Add() {
           <ToggleButtonGroup
             size='small'
             value={place}
+            color='primary'
             exclusive
             onChange={handlePlace}>
             <ToggleButton value='온라인'>온라인</ToggleButton>
@@ -376,7 +378,7 @@ const CountWrapper = styled.div`
 const PositionAddButton = styled.button`
   background-color: ${({ theme }) => theme.colors.grey1};
   border-radius: 4px;
-  padding: 5px;
+  padding: 8px;
 `;
 
 const ContentsContainer = styled.div`

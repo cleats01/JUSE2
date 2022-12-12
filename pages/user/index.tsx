@@ -53,6 +53,7 @@ export default function UserPage() {
             variant='contained'
             disableElevation
             size='small'
+            style={{ color: '#fff' }}
             onClick={signOutHandler}>
             로그아웃
           </Button>

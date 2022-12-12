@@ -129,7 +129,11 @@ export default function Board({ data }: propsType) {
         <Button variant='outlined' size={'large'}>
           채팅하기
         </Button>
-        <Button variant='contained' size={'large'} disableElevation>
+        <Button
+          variant='contained'
+          size={'large'}
+          style={{ color: '#fff' }}
+          disableElevation>
           지원하기
         </Button>
       </BottomController>
