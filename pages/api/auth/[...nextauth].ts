@@ -4,7 +4,9 @@ import GoogleProvider from 'next-auth/providers/google';
 
 import { getUserByEmail } from '../../../prisma/user';
 
-export default NextAuth({
+import type { NextAuthOptions } from 'next-auth';
+
+export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID,
@@ -28,7 +30,6 @@ export default NextAuth({
         const userData = await getUserByEmail(user?.email as string).then(
           (data) => data
         );
-        token.accessToken = account.access_token;
         token.id = userData?.id;
         token.nickname = userData?.nickname;
         token.userTechStack = userData?.userTechStack;
@@ -45,4 +46,6 @@ export default NextAuth({
     },
   },
   // adapter: MongoDBAdapter(clientPromise),
-});
+};
+
+export default NextAuth(authOptions);

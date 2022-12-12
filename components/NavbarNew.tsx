@@ -24,7 +24,6 @@ export interface boardFormData {
 export default function NavbarNew(props: propsType) {
   const router = useRouter();
   const { formData } = props;
-  console.log(formData);
 
   const handleSubmit = () => {
     const { contact, period, position, title, content } = formData;

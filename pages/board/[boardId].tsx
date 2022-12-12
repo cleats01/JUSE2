@@ -7,6 +7,8 @@ import NavbarBoard from '../../components/NavbarBoard';
 import { StackBubble } from '../add';
 import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import BookmarkIcon from '../../public/icons/bookmark.svg';
+import BookmarkFilledIcon from '../../public/icons/bookmark-filled.svg';
+import { useSession } from 'next-auth/react';
 
 interface propsType {
   data: {
@@ -29,6 +31,7 @@ interface propsType {
       userTechStack: string[];
       like: number;
     };
+    isBookmarked: boolean;
   };
 }
 
@@ -45,6 +48,7 @@ export default function Board({ data }: propsType) {
     content,
     createdAt,
     user,
+    isBookmarked,
   } = data;
 
   const [currentTab, setCurrentTab] = useState<string>('모집내용');
@@ -125,7 +129,15 @@ export default function Board({ data }: propsType) {
         </LeaderInfo>
       </InfoWrapper>
       <BottomController>
-        <BookmarkIcon />
+        {isBookmarked ? (
+          <BookmarkFilledIcon
+            onClick={() => axios.post(`/api/bookmarks?boardId=${id}`)}
+          />
+        ) : (
+          <BookmarkIcon
+            onClick={() => axios.post(`/api/bookmarks?boardId=${id}`)}
+          />
+        )}
         <Button variant='outlined' size={'large'}>
           채팅하기
         </Button>
@@ -142,10 +154,20 @@ export default function Board({ data }: propsType) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  let { cookie } = context.req.headers;
+  cookie = cookie ? cookie : '';
+  axios.defaults.headers.Cookie = cookie;
   const { boardId } = context.query;
-  const res = await axios.get(`http://localhost:3000/api/boards/${boardId}`);
+  let res;
+  try {
+    res = await axios.get(`http://localhost:3000/api/boards/${boardId}`);
+  } catch (error) {
+    console.error('getServerSideProps basket/wish >> ', error);
+  } finally {
+    axios.defaults.headers.Cookie = '';
+  }
 
-  return { props: { data: res.data } };
+  return { props: { data: res?.data } };
 }
 
 const BoardLayout = styled.div`

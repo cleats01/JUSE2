@@ -181,6 +181,7 @@ export default function Home() {
             <Label>장소구분</Label>
             <ToggleButtonGroup
               size='small'
+              color='primary'
               value={place}
               exclusive
               onChange={handlePlace}>
@@ -227,7 +228,11 @@ export default function Home() {
             <Button variant={'outlined'} onClick={resetFilter}>
               초기화
             </Button>
-            <Button variant={'contained'} onClick={toggleFilter}>
+            <Button
+              variant={'contained'}
+              onClick={toggleFilter}
+              style={{ color: '#fff' }}
+              disableElevation>
               필터 적용
             </Button>
           </ButtonContainer>
