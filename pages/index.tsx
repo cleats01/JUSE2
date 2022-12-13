@@ -30,6 +30,15 @@ export interface boardData {
   place: string;
   title: string;
   techStack: string[];
+  position: {
+    position: string;
+    count: number;
+    accept: string[];
+    pending: string[];
+    reject: string[];
+  }[];
+  bookmark: number;
+  chat: number;
 }
 
 export default function Home() {
@@ -157,17 +166,8 @@ export default function Home() {
       </TabContainer>
       {data?.pages.map((page, index) => (
         <React.Fragment key={index}>
-          {page?.map((board: boardData, i: number) => (
-            <Card
-              key={board.id}
-              data={{
-                id: board.id,
-                type: board.type,
-                place: board.place,
-                title: board.title,
-                techStack: board.techStack,
-              }}
-            />
+          {page?.map((board: boardData) => (
+            <Card key={board.id} data={board} />
           ))}
         </React.Fragment>
       ))}

@@ -1,23 +1,19 @@
 import styled from 'styled-components';
 
-import HamburgerIcon from '../public/icons/menu-burger.svg';
-import NotificationIcon from '../public/icons/bell.svg';
-import React, { Dispatch, ReactNode, SetStateAction } from 'react';
+import ChatIcon from '../public/icons/chat.svg';
+import BookmarkIcon from '../public/icons/bookmark.svg';
 import { StackBubble } from '../pages/add';
 import Link from 'next/link';
+import { boardData } from '../pages';
+import theme from '../styles/theme';
 
 interface propsType {
-  data: {
-    id: string;
-    type: string;
-    place: string;
-    title: string;
-    techStack: string[];
-  };
+  data: boardData;
 }
 
 export default function Card(props: propsType) {
-  const { id, type, place, title, techStack } = props.data;
+  const { id, type, place, title, techStack, position, bookmark, chat } =
+    props.data;
   return (
     <CardLayout>
       <Link href={`/board/${id}`}>
@@ -32,7 +28,24 @@ export default function Card(props: propsType) {
           ))}
         </TechStackWrapper>
       </Link>
-      <CardFooter></CardFooter>
+      <CardFooter>
+        <span>
+          모집 현황{' '}
+          {position.reduce((acc, cur) => {
+            return acc + cur.accept.length;
+          }, 0)}{' '}
+          /{' '}
+          {position.reduce((acc, cur) => {
+            return acc + cur.count;
+          }, 0)}
+        </span>
+        <IconWrapper>
+          <ChatIcon width={12} fill={theme.colors.grey5} />
+          {chat}
+          <BookmarkIcon width={12} fill={theme.colors.grey5} />
+          {bookmark}
+        </IconWrapper>
+      </CardFooter>
     </CardLayout>
   );
 }
@@ -87,5 +100,17 @@ const TechStackWrapper = styled.div`
 `;
 
 const CardFooter = styled.footer`
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0 5px 0;
+  color: ${({ theme }) => theme.colors.grey4};
+  font-size: 14px;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: ${({ theme }) => theme.colors.grey5};
 `;

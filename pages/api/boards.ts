@@ -68,6 +68,9 @@ export default async function handler(
               place: board.place,
               title: board.title,
               techStack: board.techStack,
+              position: board.position,
+              chat: board.chat,
+              bookmark: board.bookmark,
             }))
           );
         return res.json(boards);
