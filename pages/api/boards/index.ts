@@ -1,11 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createBoard } from '../../prisma/board';
-import prisma from '../../prisma/prisma';
+import { getSession } from 'next-auth/react';
+import { createBoard } from '../../../prisma/board';
+import prisma from '../../../prisma/prisma';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getSession({ req });
+  let user = null;
+  if (session) {
+    user = await prisma.user.findUnique({
+      where: { id: session?.user.id },
+    });
+  }
+
   try {
     switch (req.method) {
       case 'POST': {

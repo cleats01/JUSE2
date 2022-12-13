@@ -15,7 +15,6 @@ interface propsType {
     id: string;
     type: string;
     place: string;
-    contact: string;
     period: string;
     position: {
       position: string;
@@ -48,7 +47,6 @@ export default function Board({ data }: propsType) {
     id,
     type,
     place,
-    contact,
     period,
     position,
     techStack,

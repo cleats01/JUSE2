@@ -45,7 +45,6 @@ model Board {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
   type      String
   place     String
-  contact   String
   period    String
   position  position[]
   title     String

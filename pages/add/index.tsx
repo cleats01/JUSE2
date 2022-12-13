@@ -22,7 +22,6 @@ export default function Add() {
   const { data: session, status } = useSession();
   const [type, setType] = useState<string>('프로젝트');
   const [place, setPlace] = useState<string>('온라인');
-  const [contact, setContact] = useState<string>('');
   const [offline, setOffline] = useState<string>('');
   const offlinePlace: string[] = [
     '서울',
@@ -81,10 +80,6 @@ export default function Add() {
 
   const handleOffline = (event: SelectChangeEvent) => {
     setOffline(event.target.value as string);
-  };
-
-  const handleContact = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContact(event.target.value as string);
   };
 
   const handlePeriod = (event: SelectChangeEvent) => {
@@ -171,7 +166,6 @@ export default function Add() {
         formData={{
           type,
           place: place === '온라인' ? place : offline,
-          contact,
           period,
           position,
           title,
@@ -216,14 +210,6 @@ export default function Add() {
               ''
             )}
           </ToggleButtonGroup>
-        </InputWrapper>
-        <InputWrapper>
-          <TextField
-            value={contact}
-            onChange={handleContact}
-            label='연락 방법'
-            size='small'
-          />
         </InputWrapper>
         <InputWrapper>
           <Box>
@@ -347,11 +333,6 @@ const FormContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.grey2};
   border-radius: 20px;
   padding: 20px;
-`;
-
-const Label = styled.label`
-  font-size: 16px;
-  font-weight: 700;
 `;
 
 const InputWrapper = styled.div`

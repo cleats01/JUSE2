@@ -12,7 +12,6 @@ interface propsType {
 export interface boardFormData {
   type: string;
   place: string;
-  contact: string;
   period: string;
   position: position[];
   title: string;
@@ -26,10 +25,8 @@ export default function NavbarNew(props: propsType) {
   const { formData } = props;
 
   const handleSubmit = () => {
-    const { contact, period, position, title, content } = formData;
-    if (!contact) {
-      alert('연락 방법 혹은 연락처를 입력해주세요.');
-    } else if (!period) {
+    const { period, position, title, content } = formData;
+    if (!period) {
       alert('예상 진행 기간을 선택해주세요.');
     } else if (
       !position.at(-1)?.position ||
