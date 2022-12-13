@@ -247,13 +247,14 @@ const HomeLayout = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 70px 16px;
+  padding: 55px 16px;
 `;
 
 const TabContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-right: 10px;
 `;
 
 const DrawerHeader = styled.div`

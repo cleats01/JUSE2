@@ -17,11 +17,19 @@ interface propsType {
     place: string;
     contact: string;
     period: string;
-    position: { position: string; count: number }[];
+    position: {
+      position: string;
+      count: number;
+      accept: string[];
+      pending: string[];
+      reject: string[];
+    }[];
     techStack: string[];
     title: string;
     content: string;
     createdAt: Date;
+    bookmark: number;
+    chat: number;
     user: {
       id: string;
       email: string;
@@ -52,6 +60,7 @@ export default function Board({ data }: propsType) {
   } = data;
 
   const [currentTab, setCurrentTab] = useState<string>('모집내용');
+  const { data: session, status } = useSession();
 
   const handleTabChange = (e: SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue);
@@ -103,9 +112,27 @@ export default function Board({ data }: propsType) {
         {position.map((position) => (
           <PositionInfo>
             <span className='position-name'>{position.position}</span>
-            <span>0 / {position.count}</span>
-            <Button variant={'outlined'} size={'small'}>
-              지원
+            <span>
+              {position.accept.length} / {position.count}
+            </span>
+            <Button
+              variant={'outlined'}
+              size={'small'}
+              onClick={() => {
+                axios.post(
+                  `/api/applications?boardId=${id}&position=${position.position}`
+                );
+              }}
+              disabled={
+                position.pending.includes(session?.user.id) ||
+                position.accept.includes(session?.user.id) ||
+                position.reject.includes(session?.user.id)
+              }>
+              {position.pending.includes(session?.user.id) ||
+              position.accept.includes(session?.user.id) ||
+              position.reject.includes(session?.user.id)
+                ? '지원완료'
+                : '지원'}
             </Button>
           </PositionInfo>
         ))}
@@ -241,7 +268,7 @@ const StackWrapper = styled.div`
 
 const ContentContainer = styled.div`
   padding: 20px 10px;
-  min-height: 200px;
+  min-height: 150px;
   font-size: 16px;
   line-height: 1.5;
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey2};
