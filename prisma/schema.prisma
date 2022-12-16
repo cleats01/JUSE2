@@ -34,11 +34,11 @@ model User {
   userTechStack String[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  myList        String[]
   applyList     String[]
   bookmarkList  String[]
   likeList      String[]
   like          Int      @default(0)
+  myList        Board[]
 }
 
 model Board {
@@ -49,6 +49,8 @@ model Board {
   position  position[]
   title     String
   content   String
+  author    User        @relation(fields: [authorId], references: [id])
+  authorId  String      @db.ObjectId
   user      userSession
   techStack String[]
   createdAt DateTime    @default(now())

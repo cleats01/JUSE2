@@ -126,17 +126,8 @@ export default function Search() {
         ) : (
           ''
         )}
-        {searchResult.map((board: boardData, i: number) => (
-          <Card
-            key={board.id}
-            data={{
-              id: board.id,
-              type: board.type,
-              place: board.place,
-              title: board.title,
-              techStack: board.techStack,
-            }}
-          />
+        {searchResult.map((board: boardData) => (
+          <Card key={board.id} data={board} />
         ))}
       </SearchResultContainer>
       <TabBar />

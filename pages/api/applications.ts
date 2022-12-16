@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
 import { getSession } from 'next-auth/react';
+import { position } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,6 +23,8 @@ export default async function handler(
 
   try {
     switch (req.method) {
+      case 'GET': {
+      }
       case 'POST': {
         await prisma.board.update({
           where: { id: req.query.boardId as string },

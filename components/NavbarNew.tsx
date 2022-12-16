@@ -16,6 +16,7 @@ export interface boardFormData {
   position: position[];
   title: string;
   content: string;
+  authorId: string;
   user: userSession;
   techStack: string[];
 }

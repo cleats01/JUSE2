@@ -20,6 +20,7 @@ export default async function handler(
         const { boardId } = req.query;
         const boardData = await prisma.board.findUnique({
           where: { id: boardId as string },
+          include: { author: true },
         });
         return res.json({
           ...boardData,

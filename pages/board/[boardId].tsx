@@ -1,7 +1,7 @@
-import { Box, Button, Tab, Tabs } from '@mui/material';
+import { Box, Button, Drawer, Tab, Tabs } from '@mui/material';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NavbarBoard from '../../components/NavbarBoard';
 import { StackBubble } from '../add';
@@ -9,36 +9,23 @@ import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import BookmarkIcon from '../../public/icons/bookmark.svg';
 import BookmarkFilledIcon from '../../public/icons/bookmark-filled.svg';
 import { useSession } from 'next-auth/react';
-
+import { position, User } from '@prisma/client';
 interface propsType {
   data: {
     id: string;
     type: string;
     place: string;
     period: string;
-    position: {
-      position: string;
-      count: number;
-      accept: string[];
-      pending: string[];
-      reject: string[];
-    }[];
+    position: position[];
     techStack: string[];
     title: string;
     content: string;
     createdAt: Date;
     bookmark: number;
     chat: number;
-    user: {
-      id: string;
-      email: string;
-      image: string;
-      name: string;
-      nickname: string;
-      userTechStack: string[];
-      like: number;
-    };
     isBookmarked: boolean;
+    authorId: string;
+    author: User;
   };
 }
 
@@ -53,8 +40,11 @@ export default function Board({ data }: propsType) {
     title,
     content,
     createdAt,
-    user,
+    chat,
+    bookmark,
     isBookmarked,
+    authorId,
+    author,
   } = data;
 
   const [currentTab, setCurrentTab] = useState<string>('모집내용');
@@ -62,6 +52,25 @@ export default function Board({ data }: propsType) {
 
   const handleTabChange = (e: SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue);
+  };
+
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsAdmin(session?.user.id === authorId);
+  }, [session]);
+
+  const [application, setApplication] = useState([]);
+
+  useEffect(() => {});
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState({
+    admin: false,
+    apply: false,
+  });
+
+  const toggleDrawer = (anchor: string, open: boolean) => {
+    setIsDrawerOpen((prev) => ({ ...prev, [anchor]: open }));
   };
 
   return (
@@ -108,7 +117,7 @@ export default function Board({ data }: propsType) {
       <InfoWrapper className='column'>
         <InfoLabel>모집 현황</InfoLabel>
         {position.map((position) => (
-          <PositionInfo>
+          <PositionInfo key={position.position}>
             <span className='position-name'>{position.position}</span>
             <span>
               {position.accept.length} / {position.count}
@@ -138,16 +147,16 @@ export default function Board({ data }: propsType) {
       <InfoWrapper className='column'>
         <InfoLabel>팀장 정보</InfoLabel>
         <LeaderInfo>
-          <LeaderImage src={user.image} />
+          <LeaderImage src={''} />
           <LeaderNickname>
-            <span className='nickname'>{user.nickname}</span>
+            <span className='nickname'>{author.nickname}</span>
             <span className='likes'>
               <HeartFilledIcon width={'15px'} fill={'tomato'} />
-              {user.like}
+              {author.like}
             </span>
           </LeaderNickname>
           <LeaderTechStack>
-            {user.userTechStack?.map((stack) => (
+            {author.userTechStack?.map((stack) => (
               <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
             ))}
           </LeaderTechStack>
@@ -163,17 +172,46 @@ export default function Board({ data }: propsType) {
             onClick={() => axios.post(`/api/bookmarks?boardId=${id}`)}
           />
         )}
-        <Button variant='outlined' size={'large'}>
-          채팅하기
-        </Button>
-        <Button
-          variant='contained'
-          size={'large'}
-          style={{ color: '#fff' }}
-          disableElevation>
-          지원하기
-        </Button>
+        {isAdmin ? (
+          <Button variant='outlined' size={'large'}>
+            채팅방 {`(${chat})`}
+          </Button>
+        ) : (
+          <Button variant='outlined' size={'large'}>
+            채팅하기
+          </Button>
+        )}
+        {isAdmin ? (
+          <Button
+            variant='contained'
+            size={'large'}
+            style={{ color: '#fff' }}
+            onClick={() => {
+              toggleDrawer('admin', true);
+            }}
+            disableElevation>
+            지원관리
+          </Button>
+        ) : (
+          <Button
+            variant='contained'
+            size={'large'}
+            style={{ color: '#fff' }}
+            disableElevation>
+            지원하기
+          </Button>
+        )}
       </BottomController>
+      <Drawer
+        anchor={'bottom'}
+        open={isDrawerOpen.admin}
+        onClose={() => {
+          toggleDrawer('admin', false);
+        }}>
+        <DrawerLayout>
+          <DrawerLabel>지원 관리</DrawerLabel>
+        </DrawerLayout>
+      </Drawer>
     </BoardLayout>
   );
 }
@@ -330,4 +368,16 @@ const BottomController = styled.div`
   button {
     flex-grow: 1;
   }
+`;
+
+const DrawerLayout = styled.div`
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+`;
+
+const DrawerLabel = styled.h3`
+  font-weight: 700;
+  font-size: 18px;
+  margin: auto;
 `;
