@@ -147,7 +147,7 @@ export default function Board({ data }: propsType) {
       <InfoWrapper className='column'>
         <InfoLabel>팀장 정보</InfoLabel>
         <LeaderInfo>
-          <LeaderImage src={''} />
+          <LeaderImage src={author.image} alt={'user-image'} />
           <LeaderNickname>
             <span className='nickname'>{author.nickname}</span>
             <span className='likes'>

@@ -27,8 +27,8 @@ export default async function handler(
         }
       }
       case 'POST': {
-        const { email, nickname, userTechStack } = req.body;
-        const user = await createUser(email, nickname, userTechStack);
+        const { email, nickname, userTechStack, image } = req.body;
+        const user = await createUser(email, nickname, userTechStack, image);
         return res.json(user);
       }
       case 'PUT': {

@@ -63,7 +63,7 @@ export default function UserPage() {
       <NavbarTextOnly centerText='내 정보' />
       <InfoContainer>
         <ProfileWrapper>
-          <img src=''></img>
+          <img src={user.image} alt='user-image' />
           <span>{user.nickname}</span>
           <LikeWrapper>
             <HeartFilledIcon fill={'tomato'} width={25} height={25} />

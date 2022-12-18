@@ -6,5 +6,9 @@ declare namespace NodeJS {
     GOOGLE_SECRET: string;
     NEXTAUTH_URL: string;
     MONGODB_URI: string;
+    MY_AWS_ACCESS_KEY: string;
+    MY_AWS_SECRET_KEY: string;
+    MY_AWS_S3_BUCKET: string;
+    MY_AWS_S3_BUCKET_REGION: string;
   }
 }
