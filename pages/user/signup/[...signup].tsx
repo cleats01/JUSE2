@@ -1,5 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import TabBar from '../../../components/TabBar';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -9,7 +8,6 @@ import { Button, TextField } from '@mui/material';
 import BottomSheet from '../../../components/BottomSheet';
 import TechStack from '../../../components/TechStack';
 import { StackAddButton, BottomSheetHeader, StackBubble } from '../../add';
-import aws from 'aws-sdk';
 
 export default function SignUp() {
   const [nickname, setNickname] = useState<string>('');
@@ -37,7 +35,8 @@ export default function SignUp() {
       alert('닉네임은 한글,영어,숫자만 가능합니다.');
     } else {
       if (imageURL) {
-        await uploadImgClient();
+        // s3에 업로드
+        await uploadImg();
       }
       await axios
         .post('/api/users', {
@@ -72,7 +71,16 @@ export default function SignUp() {
     }
   };
 
-  const uploadImgClient = async () => {
+  const deleteUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setImage(null);
+    setImageURL('');
+    setCreateObjectURL('');
+  };
+
+  const uploadImg = async () => {
     const imageBody = {
       name: imageURL,
       type: image?.type,
@@ -81,27 +89,42 @@ export default function SignUp() {
       const signedUrl = await axios
         .post(`/api/media`, imageBody)
         .then((res) => res.data.url);
-      const uploadRes = await axios.put(signedUrl, image, {
+      await axios.put(signedUrl, image, {
         headers: { 'Content-type': image?.type },
       });
-      console.log(uploadRes);
     } catch (err) {
       console.log(err);
     }
   };
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
     <SignUpLayout>
       <Welcome>
         <span>JUSE</span>에 처음 오셨군요?
       </Welcome>
-      <UserImage src={createObjectURL || '/user-default.png'} alt='' />
-      <input
-        name='myImage'
-        type='file'
-        accept='image/*'
-        onChange={uploadToClient}
-      />
+      <ImageUploadWrapper>
+        <UserImgWrapper size={'100px'}>
+          <img src={createObjectURL || '/user-default.png'} alt='user-image' />
+        </UserImgWrapper>
+        <input
+          ref={fileInputRef}
+          type='file'
+          accept='image/*'
+          hidden
+          onChange={uploadToClient}
+        />
+        <div>
+          <Button
+            onClick={() => {
+              fileInputRef.current?.click();
+            }}>
+            업로드
+          </Button>
+          <Button onClick={deleteUpload}>삭제</Button>
+        </div>
+      </ImageUploadWrapper>
       <TextField
         sx={{ width: '100%' }}
         value={nickname}
@@ -162,15 +185,34 @@ const SignUpLayout = styled.div`
   max-width: 300px;
   margin: auto;
   padding: 20px;
-  height: 90vh;
+  height: 100vh;
   gap: 20px;
 `;
 
-const UserImage = styled.img`
-  width: 200px;
-  height: 200px;
+const ImageUploadWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const UserImgWrapper = styled.div<{ size: string }>`
+  position: relative;
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
   border: 1px solid #fff;
   border-radius: 999px;
+  overflow: hidden;
+  > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(50, 50);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 999px;
+  }
 `;
 
 const ButtonWrapper = styled.div`
