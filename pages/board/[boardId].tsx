@@ -1,22 +1,24 @@
 import { Box, Button, Drawer, Tab, Tabs } from '@mui/material';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NavbarBoard from '../../components/NavbarBoard';
 import { StackBubble } from '../add';
 import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import BookmarkIcon from '../../public/icons/bookmark.svg';
 import BookmarkFilledIcon from '../../public/icons/bookmark-filled.svg';
+import CloseIcon from '../../public/icons/cross-small.svg';
 import { useSession } from 'next-auth/react';
 import { position, User } from '@prisma/client';
+import { UserImgWrapper } from '../user/signup/[...signup]';
 interface propsType {
   data: {
     id: string;
     type: string;
     place: string;
     period: string;
-    position: position[];
+    application: position[];
     techStack: string[];
     title: string;
     content: string;
@@ -35,7 +37,7 @@ export default function Board({ data }: propsType) {
     type,
     place,
     period,
-    position,
+    application,
     techStack,
     title,
     content,
@@ -60,10 +62,6 @@ export default function Board({ data }: propsType) {
     setIsAdmin(session?.user.id === authorId);
   }, [session]);
 
-  const [application, setApplication] = useState([]);
-
-  useEffect(() => {});
-
   const [isDrawerOpen, setIsDrawerOpen] = useState({
     admin: false,
     apply: false,
@@ -71,6 +69,17 @@ export default function Board({ data }: propsType) {
 
   const toggleDrawer = (anchor: string, open: boolean) => {
     setIsDrawerOpen((prev) => ({ ...prev, [anchor]: open }));
+  };
+
+  const [applicationTab, setApplicationTab] = useState<
+    'pending' | 'accept' | 'reject'
+  >('pending');
+
+  const handleApplicationTab = (
+    e: SyntheticEvent,
+    newValue: 'pending' | 'accept' | 'reject'
+  ) => {
+    setApplicationTab(newValue);
   };
 
   return (
@@ -116,7 +125,7 @@ export default function Board({ data }: propsType) {
       </ContentContainer>
       <InfoWrapper className='column'>
         <InfoLabel>모집 현황</InfoLabel>
-        {position.map((position) => (
+        {application.map((position) => (
           <PositionInfo key={position.position}>
             <span className='position-name'>{position.position}</span>
             <span>
@@ -131,13 +140,19 @@ export default function Board({ data }: propsType) {
                 );
               }}
               disabled={
-                position.pending.includes(session?.user.id) ||
-                position.accept.includes(session?.user.id) ||
-                position.reject.includes(session?.user.id)
+                position.pending.filter((user) => user.id === session?.user.id)
+                  .length > 0 ||
+                position.accept.filter((user) => user.id === session?.user.id)
+                  .length > 0 ||
+                position.reject.filter((user) => user.id === session?.user.id)
+                  .length > 0
               }>
-              {position.pending.includes(session?.user.id) ||
-              position.accept.includes(session?.user.id) ||
-              position.reject.includes(session?.user.id)
+              {position.pending.filter((user) => user.id === session?.user.id)
+                .length > 0 ||
+              position.accept.filter((user) => user.id === session?.user.id)
+                .length > 0 ||
+              position.reject.filter((user) => user.id === session?.user.id)
+                .length > 0
                 ? '지원완료'
                 : '지원'}
             </Button>
@@ -147,7 +162,9 @@ export default function Board({ data }: propsType) {
       <InfoWrapper className='column'>
         <InfoLabel>팀장 정보</InfoLabel>
         <LeaderInfo>
-          <LeaderImage src={author.image} alt={'user-image'} />
+          <UserImgWrapper size={'45px'}>
+            <img src={author.image} alt={'user-image'} />
+          </UserImgWrapper>
           <LeaderNickname>
             <span className='nickname'>{author.nickname}</span>
             <span className='likes'>
@@ -209,7 +226,73 @@ export default function Board({ data }: propsType) {
           toggleDrawer('admin', false);
         }}>
         <DrawerLayout>
-          <DrawerLabel>지원 관리</DrawerLabel>
+          <DrawerHeader>
+            <DrawerLabel>지원 관리</DrawerLabel>
+            <CloseIcon
+              onClick={() => {
+                toggleDrawer('admin', false);
+              }}
+            />
+          </DrawerHeader>
+          <Box width={'100%'}>
+            <Tabs
+              value={applicationTab}
+              onChange={handleApplicationTab}
+              variant={'fullWidth'}>
+              <Tab
+                value='pending'
+                label={`지원자 ${application.reduce(
+                  (acc, cur) => acc + cur.pending.length,
+                  0
+                )}`}
+              />
+              <Tab
+                value='accept'
+                label={`수락됨 ${application.reduce(
+                  (acc, cur) => acc + cur.accept.length,
+                  0
+                )}`}
+              />
+              <Tab
+                value='reject'
+                label={`거절됨 ${application.reduce(
+                  (acc, cur) => acc + cur.reject.length,
+                  0
+                )}`}
+              />
+            </Tabs>
+          </Box>
+          <ApplicationContainer>
+            {application.map((position, index) => (
+              <div key={index}>
+                <PostionLabel>{position.position}</PostionLabel>
+                {position[applicationTab].map((user) => (
+                  <UserWrapper>
+                    <UserImgWrapper size='40px'>
+                      <img src={user.image} alt={'user-image'} />
+                    </UserImgWrapper>
+                    <span>{user.nickname}</span>
+                    <ButtonWrapper>
+                      <Button
+                        sx={{ minWidth: '50px' }}
+                        size='small'
+                        variant='outlined'
+                        disableElevation>
+                        거절
+                      </Button>
+                      <Button
+                        sx={{ color: '#fff', minWidth: '50px' }}
+                        size='small'
+                        variant='contained'
+                        disableElevation>
+                        수락
+                      </Button>
+                    </ButtonWrapper>
+                  </UserWrapper>
+                ))}
+              </div>
+            ))}
+          </ApplicationContainer>
         </DrawerLayout>
       </Drawer>
     </BoardLayout>
@@ -221,16 +304,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   cookie = cookie ? cookie : '';
   axios.defaults.headers.Cookie = cookie;
   const { boardId } = context.query;
-  let res;
+  let data;
   try {
-    res = await axios.get(`http://localhost:3000/api/boards/${boardId}`);
+    data = await axios
+      .get(`http://localhost:3000/api/boards/${boardId}`)
+      .then((res) => res.data);
   } catch (error) {
     console.error('getServerSideProps basket/wish >> ', error);
   } finally {
     axios.defaults.headers.Cookie = '';
   }
 
-  return { props: { data: res?.data } };
+  return { props: { data } };
 }
 
 const BoardLayout = styled.div`
@@ -325,11 +410,6 @@ const LeaderInfo = styled.div`
   gap: 15px;
 `;
 
-const LeaderImage = styled.img`
-  width: 45px;
-  border-radius: 99px;
-`;
-
 const LeaderNickname = styled.div`
   display: flex;
   flex-direction: column;
@@ -372,12 +452,60 @@ const BottomController = styled.div`
 
 const DrawerLayout = styled.div`
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  height: 80vh;
+`;
+
+const DrawerHeader = styled.div`
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
+  width: 100%;
+  background-color: #fff;
+  z-index: 2;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey2};
+  > svg {
+    position: absolute;
+    right: 20px;
+  }
 `;
 
 const DrawerLabel = styled.h3`
   font-weight: 700;
   font-size: 18px;
-  margin: auto;
+  margin: 0 auto;
+`;
+
+const ApplicationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 20px;
+`;
+
+const PostionLabel = styled.h4`
+  font-weight: 700;
+  font-size: 18px;
+  padding: 20px 10px;
+`;
+
+const UserWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey2};
+  > span {
+    font-size: 14px;
+    font-weight: 700;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
 `;

@@ -51,7 +51,7 @@ export default function Add() {
     '5개월',
     '6개월 이상',
   ];
-  const [position, setPosition] = useState<position[]>([
+  const [application, setApplication] = useState<position[]>([
     { position: '', count: 0, accept: [], pending: [], reject: [] },
   ]);
   const positions: string[] = ['프론트엔드', '백엔드', '모바일', '기타'];
@@ -86,11 +86,14 @@ export default function Add() {
     setPeriod(event.target.value as string);
   };
 
-  const handlePosition = (event: SelectChangeEvent, positionName: string) => {
+  const handleApplication = (
+    event: SelectChangeEvent,
+    positionName: string
+  ) => {
     if (
-      position.findIndex((obj) => obj.position === event.target.value) === -1
+      application.findIndex((obj) => obj.position === event.target.value) === -1
     ) {
-      const newPosition = position.map((obj) => {
+      const newPosition = application.map((obj) => {
         return obj.position === positionName
           ? {
               position: event.target.value as string,
@@ -101,7 +104,7 @@ export default function Add() {
             }
           : obj;
       });
-      setPosition(newPosition);
+      setApplication(newPosition);
     }
   };
 
@@ -110,8 +113,8 @@ export default function Add() {
     positionName: string
   ) => {
     if (event.currentTarget.id === 'minus') {
-      setPosition(
-        position.map((obj) => {
+      setApplication(
+        application.map((obj) => {
           return obj.position === positionName && obj.count > 0
             ? {
                 position: obj.position,
@@ -124,8 +127,8 @@ export default function Add() {
         })
       );
     } else {
-      setPosition(
-        position.map((obj) => {
+      setApplication(
+        application.map((obj) => {
           return obj.position === positionName
             ? {
                 position: obj.position,
@@ -142,10 +145,10 @@ export default function Add() {
 
   const addPosition = () => {
     if (
-      position.findIndex((obj) => obj.position === '') === -1 &&
-      position.length < 4
+      application.findIndex((obj) => obj.position === '') === -1 &&
+      application.length < 4
     ) {
-      setPosition((prev) => [
+      setApplication((prev) => [
         ...prev,
         { position: '', count: 0, accept: [], pending: [], reject: [] },
       ]);
@@ -167,7 +170,7 @@ export default function Add() {
           type,
           place: place === '온라인' ? place : offline,
           period,
-          position,
+          application,
           title,
           content,
           authorId: session?.user.id,
@@ -202,7 +205,9 @@ export default function Add() {
                   <InputLabel>지역</InputLabel>
                   <Select value={offline} label='지역' onChange={handleOffline}>
                     {offlinePlace.map((el: string) => (
-                      <MenuItem value={el}>{el}</MenuItem>
+                      <MenuItem value={el} key={el}>
+                        {el}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -218,15 +223,17 @@ export default function Add() {
               <InputLabel>진행 기간</InputLabel>
               <Select label='진행 기간' value={period} onChange={handlePeriod}>
                 {periods.map((el: string) => (
-                  <MenuItem value={el}>{el}</MenuItem>
+                  <MenuItem value={el} key={el}>
+                    {el}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Box>
         </InputWrapper>
         <InputWrapper>
-          {position.map((el) => (
-            <Box sx={{ minWidth: 150 }}>
+          {application.map((el) => (
+            <Box sx={{ minWidth: 150 }} key={el.position}>
               <FormControl
                 sx={{
                   display: 'flex',
@@ -242,11 +249,13 @@ export default function Add() {
                   }}
                   value={el.position}
                   onChange={(event) => {
-                    handlePosition(event, el.position);
+                    handleApplication(event, el.position);
                   }}
                   label='모집 포지션'>
                   {positions.map((el: string) => (
-                    <MenuItem value={el}>{el}</MenuItem>
+                    <MenuItem value={el} key={el}>
+                      {el}
+                    </MenuItem>
                   ))}
                 </Select>
                 <CountWrapper>
@@ -295,7 +304,7 @@ export default function Add() {
           <StackAddButton onClick={() => setIsModalOpen((prev) => !prev)}>
             {techStack.length
               ? techStack.map((stack) => (
-                  <StackBubble src={`/icons/stacks/${stack}.png`} />
+                  <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
                 ))
               : '기술 스택 추가'}
           </StackAddButton>

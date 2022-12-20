@@ -23,6 +23,7 @@ import {
 import FilterIcon from '../public/icons/settings-sliders.svg';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TechStack from '../components/TechStack';
+import { position } from '@prisma/client';
 
 export interface boardData {
   id: string;
@@ -30,13 +31,7 @@ export interface boardData {
   place: string;
   title: string;
   techStack: string[];
-  position: {
-    position: string;
-    count: number;
-    accept: string[];
-    pending: string[];
-    reject: string[];
-  }[];
+  application: position[];
   bookmark: number;
   chat: number;
 }

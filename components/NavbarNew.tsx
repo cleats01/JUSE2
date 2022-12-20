@@ -13,7 +13,7 @@ export interface boardFormData {
   type: string;
   place: string;
   period: string;
-  position: position[];
+  application: position[];
   title: string;
   content: string;
   authorId: string;
@@ -26,12 +26,12 @@ export default function NavbarNew(props: propsType) {
   const { formData } = props;
 
   const handleSubmit = () => {
-    const { period, position, title, content } = formData;
+    const { period, application, title, content } = formData;
     if (!period) {
       alert('예상 진행 기간을 선택해주세요.');
     } else if (
-      !position.at(-1)?.position ||
-      position.filter((obj) => obj.count !== 0).length === 0
+      !application.at(-1)?.position ||
+      application.filter((obj) => obj.count !== 0).length === 0
     ) {
       alert('모집 포지션과 인원 수를 확인해주세요.');
     } else if (!title) {

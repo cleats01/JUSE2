@@ -77,7 +77,7 @@ export default async function handler(
               place: board.place,
               title: board.title,
               techStack: board.techStack,
-              position: board.position,
+              application: board.application,
               chat: board.chat,
               bookmark: board.bookmark,
             }))

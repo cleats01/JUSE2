@@ -12,7 +12,7 @@ interface propsType {
 }
 
 export default function Card(props: propsType) {
-  const { id, type, place, title, techStack, position, bookmark, chat } =
+  const { id, type, place, title, techStack, application, bookmark, chat } =
     props.data;
   return (
     <CardLayout>
@@ -31,11 +31,11 @@ export default function Card(props: propsType) {
       <CardFooter>
         <span>
           모집 현황{' '}
-          {position.reduce((acc, cur) => {
+          {application.reduce((acc, cur) => {
             return acc + cur.accept.length;
           }, 0)}{' '}
           /{' '}
-          {position.reduce((acc, cur) => {
+          {application.reduce((acc, cur) => {
             return acc + cur.count;
           }, 0)}
         </span>

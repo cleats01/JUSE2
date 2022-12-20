@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '../../prisma/prisma';
 import {
   createUser,
   deleteUser,
@@ -21,6 +22,11 @@ export default async function handler(
         } else if (req.query.email) {
           const user = await getUserByEmail(req.query.email as string);
           return res.status(200).json(user);
+        } else if (req.query.ids) {
+          const users = await prisma.user.findMany({
+            where: { id: { in: req.query.ids } },
+          });
+          return res.status(200).json(users);
         } else {
           const users = await getAllUsers();
           return res.json(users);

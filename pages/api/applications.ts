@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
 import { getSession } from 'next-auth/react';
-import { position } from '@prisma/client';
+import { User, userSimple } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const session = await getSession({ req });
-  let user = null;
+  let user: User | null = null;
   if (session) {
     user = await prisma.user.findUnique({
       where: { id: session?.user.id },
@@ -19,7 +19,7 @@ export default async function handler(
 
   const positionCurrent = await prisma.board
     .findUnique({ where: { id: req.query.boardId as string } })
-    .then((data) => data?.position);
+    .then((data) => data?.application);
 
   try {
     switch (req.method) {
@@ -29,9 +29,14 @@ export default async function handler(
         await prisma.board.update({
           where: { id: req.query.boardId as string },
           data: {
-            position: positionCurrent?.map((position) => {
-              if (position.position === req.query.position) {
-                position.pending.push(session.user.id);
+            application: positionCurrent?.map((position) => {
+              if (position.position === req.query.position && user) {
+                const userSimpleData: userSimple = {
+                  id: user.id,
+                  nickname: user.nickname,
+                  image: user.image,
+                };
+                position.pending.push(userSimpleData);
               }
               return position;
             }),
