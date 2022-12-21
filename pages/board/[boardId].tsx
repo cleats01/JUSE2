@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 import { position, User } from '@prisma/client';
 import { UserImgWrapper } from '../user/signup/[...signup]';
 import BottomController from '../../components/BottomController';
+import Link from 'next/link';
 interface propsType {
   data: {
     id: string;
@@ -164,23 +165,25 @@ export default function Board({ data }: propsType) {
       </InfoWrapper>
       <InfoWrapper className='column'>
         <InfoLabel>팀장 정보</InfoLabel>
-        <LeaderInfo>
-          <UserImgWrapper size={'45px'}>
-            <img src={author.image} alt={'user-image'} />
-          </UserImgWrapper>
-          <LeaderNickname>
-            <span className='nickname'>{author.nickname}</span>
-            <span className='likes'>
-              <HeartFilledIcon width={'15px'} fill={'tomato'} />
-              {author.like}
-            </span>
-          </LeaderNickname>
-          <LeaderTechStack>
-            {author.userTechStack?.map((stack) => (
-              <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
-            ))}
-          </LeaderTechStack>
-        </LeaderInfo>
+        <Link href={`/user/${author.id}`}>
+          <LeaderInfo>
+            <UserImgWrapper size={'45px'}>
+              <img src={author.image} alt={'user-image'} />
+            </UserImgWrapper>
+            <LeaderNickname>
+              <span className='nickname'>{author.nickname}</span>
+              <span className='likes'>
+                <HeartFilledIcon width={'15px'} fill={'tomato'} />
+                {author.like}
+              </span>
+            </LeaderNickname>
+            <LeaderTechStack>
+              {author.userTechStack?.map((stack) => (
+                <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
+              ))}
+            </LeaderTechStack>
+          </LeaderInfo>
+        </Link>
       </InfoWrapper>
       <BottomController>
         {isBookmarked ? (
@@ -335,14 +338,19 @@ export default function Board({ data }: propsType) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  let { cookie } = context.req.headers;
+  cookie = cookie ? cookie : '';
+  axios.defaults.headers.Cookie = cookie;
   const { boardId } = context.query;
   let data;
   try {
     data = await axios
-      .get(`http://localhost:3000/api/boards/${boardId}`)
+      .get(`${process.env.BASE_URL}/api/boards/${boardId}`)
       .then((res) => res.data);
   } catch (error) {
     console.error('getServerSideProps board/:boardId >> ', error);
+  } finally {
+    axios.defaults.headers.Cookie = '';
   }
 
   return { props: { data } };
