@@ -174,7 +174,7 @@ export default function SignUp() {
       <StackAddButton onClick={() => setIsModalOpen((prev) => !prev)}>
         {userTechStack.length
           ? userTechStack.map((stack) => (
-              <StackBubble src={`/icons/stacks/${stack}.png`} />
+              <StackBubble key={stack} src={`/icons/stacks/${stack}.png`} />
             ))
           : '기술 스택 추가'}
       </StackAddButton>
