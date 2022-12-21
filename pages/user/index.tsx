@@ -121,7 +121,7 @@ export default function UserPage() {
             </Tabs>
             <BoardContainer>
               {boardsData?.myList.map((board) => (
-                <Card data={board} />
+                <Card data={board} key={board.id} />
               ))}
             </BoardContainer>
           </DrawerLayout>
@@ -150,7 +150,7 @@ export default function UserPage() {
             </DrawerHeader>
             <BoardContainer>
               {boardsData?.applyList.map((board) => (
-                <Card data={board} />
+                <Card data={board} key={board.id} />
               ))}
             </BoardContainer>
           </DrawerLayout>
@@ -179,7 +179,7 @@ export default function UserPage() {
             </DrawerHeader>
             <BoardContainer>
               {boardsData?.bookmarkList.map((board) => (
-                <Card data={board} />
+                <Card data={board} key={board.id} />
               ))}
             </BoardContainer>
           </DrawerLayout>

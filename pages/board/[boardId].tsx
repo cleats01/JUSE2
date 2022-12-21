@@ -12,6 +12,7 @@ import CloseIcon from '../../public/icons/cross-small.svg';
 import { useSession } from 'next-auth/react';
 import { position, User } from '@prisma/client';
 import { UserImgWrapper } from '../user/signup/[...signup]';
+import BottomController from '../../components/BottomController';
 interface propsType {
   data: {
     id: string;
@@ -462,26 +463,6 @@ const LeaderNickname = styled.div`
 
 const LeaderTechStack = styled(StackWrapper)`
   margin-left: auto;
-`;
-
-const BottomController = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  background-color: #fff;
-  padding: 15px;
-  max-width: 480px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  svg {
-    margin: 0 10px 0 5px;
-  }
-  button {
-    flex-grow: 1;
-  }
 `;
 
 const DrawerLayout = styled.div`
