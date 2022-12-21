@@ -13,6 +13,8 @@ import AngleLeftIcon from '../../public/icons/angle-small-left.svg';
 import { Button, Drawer, Tab, Tabs } from '@mui/material';
 import { boardData } from '..';
 import Card from '../../components/Card';
+import { UserImgWrapper } from './signup/[...signup]';
+import Link from 'next/link';
 
 interface myBoardsData {
   myList: boardData[];
@@ -27,6 +29,7 @@ export default function UserPage() {
   };
   const [user, setUser] = useState<User>();
   const [boardsData, setBoardsData] = useState<myBoardsData>();
+  const [likeListData, setLikeListData] = useState<User[]>();
   const [isDrawerOpen, setIsDrawerOpen] = useState({
     myList: false,
     applyList: false,
@@ -46,11 +49,17 @@ export default function UserPage() {
 
   useEffect(() => {
     const userInfoData = async () => {
-      await axios.get(`/api/users?id=${session?.user.id}`).then((res) => {
-        setUser(res.data);
-      });
+      const user: User = await axios
+        .get(`/api/users?id=${session?.user.id}`)
+        .then((res) => {
+          setUser(res.data);
+          return res.data;
+        });
       await axios.get(`/api/boards/my?id=${session?.user.id}`).then((res) => {
         setBoardsData(res.data);
+      });
+      await axios.get(`/api/users?ids=${user.likeList}`).then((res) => {
+        setLikeListData(res.data);
       });
     };
     if (status === 'authenticated') {
@@ -63,10 +72,12 @@ export default function UserPage() {
       <NavbarTextOnly centerText='내 정보' />
       <InfoContainer>
         <ProfileWrapper>
-          <img src={user.image} alt='user-image' />
+          <UserImgWrapper size='50px'>
+            <img src={user.image} alt='user-image' />
+          </UserImgWrapper>
           <span>{user.nickname}</span>
           <LikeWrapper>
-            <HeartFilledIcon fill={'tomato'} width={25} height={25} />
+            <HeartFilledIcon fill={'tomato'} />
             <span>{user.like}</span>
           </LikeWrapper>
         </ProfileWrapper>
@@ -77,7 +88,7 @@ export default function UserPage() {
         </TechStackContainer>
         <ButtonWrapper>
           <Button variant='outlined' size='small'>
-            정보 수정
+            <Link href={'/user/edit'}>정보 수정</Link>
           </Button>
           <Button
             variant='contained'
@@ -184,10 +195,56 @@ export default function UserPage() {
             </BoardContainer>
           </DrawerLayout>
         </Drawer>
-        <ListItem>
+        <ListItem
+          onClick={() => {
+            toggleDrawer('likeList', true);
+          }}>
           <h4>좋아요한 사용자</h4>
           <AngleRightIcon width={30} height={30} />
         </ListItem>
+        <Drawer
+          anchor={'right'}
+          open={isDrawerOpen.likeList}
+          onClose={() => {
+            toggleDrawer('likeList', false);
+          }}>
+          <DrawerLayout>
+            <DrawerHeader>
+              <AngleLeftIcon
+                onClick={() => {
+                  toggleDrawer('likeList', false);
+                }}
+              />
+              <span>좋아요한 사용자</span>
+            </DrawerHeader>
+            <BoardContainer>
+              {likeListData?.map((likedUser) => (
+                <Link href={`/user/${likedUser.id}`} key={likedUser.id}>
+                  <InfoContainer className='border'>
+                    <ProfileWrapper>
+                      <UserImgWrapper size='50px'>
+                        <img src={likedUser.image} alt='likedUser-image' />
+                      </UserImgWrapper>
+                      <span>{likedUser.nickname}</span>
+                      <LikeWrapper>
+                        <HeartFilledIcon fill={'tomato'} />
+                        <span>{likedUser.like}</span>
+                      </LikeWrapper>
+                    </ProfileWrapper>
+                    <TechStackContainer>
+                      {likedUser.userTechStack.map((stack) => (
+                        <StackBubble
+                          key={stack}
+                          src={`/icons/stacks/${stack}.png`}
+                        />
+                      ))}
+                    </TechStackContainer>
+                  </InfoContainer>
+                </Link>
+              ))}
+            </BoardContainer>
+          </DrawerLayout>
+        </Drawer>
         <ListItem>
           <h4>알림</h4>
         </ListItem>
@@ -208,6 +265,11 @@ const InfoContainer = styled.div`
   flex-direction: column;
   gap: 15px;
   padding: 0 16px;
+  &.border {
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid ${({ theme }) => theme.colors.grey2};
+  }
 `;
 
 const TechStackContainer = styled.div`
@@ -223,12 +285,6 @@ const ProfileWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 15px;
-  > img {
-    width: 50px;
-    height: 50px;
-    background-color: grey;
-    border-radius: 50px;
-  }
   > span {
     font-weight: 700;
   }
@@ -278,14 +334,15 @@ const DrawerHeader = styled.header`
   right: 0;
   height: 55px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 5px 20px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey1};
   background-color: #fff;
   z-index: 2;
-  > span {
-    margin: auto;
+  > svg {
+    position: absolute;
+    left: 20px;
   }
 `;
 
@@ -296,5 +353,8 @@ const DrawerLayout = styled.div`
 `;
 
 const BoardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-top: 10px;
 `;

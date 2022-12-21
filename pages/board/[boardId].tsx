@@ -277,10 +277,14 @@ export default function Board({ data }: propsType) {
                 </PostionLabel>
                 {position[applicationTab].map((user) => (
                   <UserWrapper key={user.id}>
-                    <UserImgWrapper size='40px'>
-                      <img src={user.image} alt={'user-image'} />
-                    </UserImgWrapper>
-                    <span>{user.nickname}</span>
+                    <Link href={`/user/${user.id}`}>
+                      <UserImgWrapper size='40px'>
+                        <img src={user.image} alt={'user-image'} />
+                      </UserImgWrapper>
+                    </Link>
+                    <Link href={`/user/${user.id}`}>
+                      <span className='user-nickname'>{user.nickname}</span>
+                    </Link>
                     {applicationTab === 'pending' ? (
                       <ButtonWrapper>
                         <Button
@@ -521,7 +525,7 @@ const UserWrapper = styled.div`
   padding: 10px;
   gap: 10px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey2};
-  > span {
+  .user-nickname {
     font-size: 14px;
     font-weight: 700;
   }

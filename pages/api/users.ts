@@ -24,7 +24,11 @@ export default async function handler(
           return res.status(200).json(user);
         } else if (req.query.ids) {
           const users = await prisma.user.findMany({
-            where: { id: { in: req.query.ids } },
+            where: {
+              id: {
+                in: (req.query.ids as string).split(','),
+              },
+            },
           });
           return res.status(200).json(users);
         } else {
