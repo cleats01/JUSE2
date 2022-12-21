@@ -335,9 +335,6 @@ export default function Board({ data }: propsType) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let { cookie } = context.req.headers;
-  cookie = cookie ? cookie : '';
-  axios.defaults.headers.Cookie = cookie;
   const { boardId } = context.query;
   let data;
   try {
@@ -345,9 +342,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       .get(`http://localhost:3000/api/boards/${boardId}`)
       .then((res) => res.data);
   } catch (error) {
-    console.error('getServerSideProps basket/wish >> ', error);
-  } finally {
-    axios.defaults.headers.Cookie = '';
+    console.error('getServerSideProps board/:boardId >> ', error);
   }
 
   return { props: { data } };
