@@ -50,9 +50,11 @@ export default async function handler(
         return res.status(200).json({ message: 'updated!' });
       }
       case 'DELETE': {
-        const { id } = req.body;
-        const user = await deleteUser(id);
-        return res.json(user);
+        await prisma.board.deleteMany({
+          where: { authorId: req.query.id as string },
+        });
+        await prisma.user.delete({ where: { id: req.query.id as string } });
+        return res.status(200).json({ message: 'deleted!' });
       }
       default:
         break;

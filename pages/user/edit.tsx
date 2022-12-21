@@ -9,6 +9,7 @@ import BottomSheet from '../../components/BottomSheet';
 import TechStack from '../../components/TechStack';
 import { StackAddButton, BottomSheetHeader, StackBubble } from '../add';
 import { useSession } from 'next-auth/react';
+import NavbarTextOnly from '../../components/NavbarTextOnly';
 
 export default function SignUp() {
   const { data: session, status } = useSession();
@@ -105,7 +106,7 @@ export default function SignUp() {
   useEffect(() => {
     if (status === 'authenticated') {
       axios.get(`/api/users?id=${session?.user.id}`).then((res) => {
-        const { id, nickname, image, userTechStack } = res.data;
+        const { nickname, image, userTechStack } = res.data;
         setNickname(nickname);
         setImageEdit(image);
         if (image !== '/user-default.png') {
@@ -121,9 +122,18 @@ export default function SignUp() {
     }
   }, [session]);
 
+  const handleWithdrawal = () => {
+    if (confirm('정말 회원 탈퇴하시겠습니까?')) {
+      axios.delete(`/api/users?id=${session?.user.id as string}`).then(() => {
+        alert('JUSE 회원에서 탈퇴되었습니다.');
+        router.replace('/login');
+      });
+    }
+  };
+
   return (
     <SignUpLayout>
-      <Welcome>회원 정보 수정</Welcome>
+      <NavbarTextOnly centerText='회원정보 수정' back={true} />
       <ImageUploadWrapper>
         <UserImgWrapper size={'100px'}>
           <img
@@ -181,16 +191,15 @@ export default function SignUp() {
       <ButtonWrapper>
         <Button
           variant='outlined'
-          onClick={() => {
-            router.replace('/user');
-          }}
+          onClick={handleWithdrawal}
+          style={{ width: '90px' }}
           disableElevation>
-          취소
+          회원 탈퇴
         </Button>
         <Button
           variant='contained'
           onClick={handleSubmit}
-          style={{ color: '#fff' }}
+          style={{ color: '#fff', width: '90px' }}
           disableElevation>
           수정
         </Button>
