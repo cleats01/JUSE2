@@ -23,6 +23,7 @@ interface myBoardsData {
 }
 
 export default function UserPage() {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const signOutHandler = () => {
     signOut({ callbackUrl: '/login' });
@@ -87,8 +88,13 @@ export default function UserPage() {
           ))}
         </TechStackContainer>
         <ButtonWrapper>
-          <Button variant='outlined' size='small'>
-            <Link href={'/user/edit'}>정보 수정</Link>
+          <Button
+            onClick={() => {
+              router.push('/user/edit');
+            }}
+            variant='outlined'
+            size='small'>
+            정보 수정
           </Button>
           <Button
             variant='contained'

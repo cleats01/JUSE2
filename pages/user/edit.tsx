@@ -1,19 +1,22 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
-import TabBar from '../../../components/TabBar';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import TabBar from '../../components/TabBar';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Welcome } from '../../login';
+import { Welcome } from '../login';
 import { Button, TextField } from '@mui/material';
-import BottomSheet from '../../../components/BottomSheet';
-import TechStack from '../../../components/TechStack';
-import { StackAddButton, BottomSheetHeader, StackBubble } from '../../add';
+import BottomSheet from '../../components/BottomSheet';
+import TechStack from '../../components/TechStack';
+import { StackAddButton, BottomSheetHeader, StackBubble } from '../add';
+import { useSession } from 'next-auth/react';
 
 export default function SignUp() {
+  const { data: session, status } = useSession();
   const [nickname, setNickname] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [userTechStack, setUserTechStack] = useState<string[]>([]);
   const [imageURL, setImageURL] = useState<string>('');
+  const [imageEdit, setImageEdit] = useState<string>('');
   const [image, setImage] = useState<File | null>(null);
 
   const router = useRouter();
@@ -34,24 +37,23 @@ export default function SignUp() {
     } else if (!regex.test(nickname)) {
       alert('닉네임은 한글,영어,숫자만 가능합니다.');
     } else {
-      if (imageURL) {
+      if (imageURL && image) {
         // s3에 업로드
         await uploadImg();
       }
-      await axios
-        .post('/api/users', {
-          email,
-          nickname,
-          userTechStack,
-          image: imageURL
-            ? 'https://juse-user-image.s3.ap-northeast-2.amazonaws.com/' +
-              imageURL
-            : '/user-default.png',
-        })
-        .then(() => {
-          alert('회원가입에 성공하였습니다. 다시 로그인하여 주십시오.');
-          router.push('/login');
-        });
+      const data = {
+        id: session?.user.id as string,
+        nickname,
+        userTechStack,
+        image: imageURL
+          ? 'https://juse-user-image.s3.ap-northeast-2.amazonaws.com/' +
+            imageURL
+          : '/user-default.png',
+      };
+      await axios.patch('/api/users', data).then(() => {
+        alert('회원 정보가 수정되었습니다.');
+        router.push('/user');
+      });
     }
   };
 
@@ -75,6 +77,7 @@ export default function SignUp() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    setImageEdit('');
     setImage(null);
     setImageURL('');
     setCreateObjectURL('');
@@ -99,14 +102,34 @@ export default function SignUp() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    if (status === 'authenticated') {
+      axios.get(`/api/users?id=${session?.user.id}`).then((res) => {
+        const { id, nickname, image, userTechStack } = res.data;
+        setNickname(nickname);
+        setImageEdit(image);
+        if (image !== '/user-default.png') {
+          setImageURL(
+            image.replace(
+              'https://juse-user-image.s3.ap-northeast-2.amazonaws.com/',
+              ''
+            )
+          );
+        }
+        setUserTechStack(userTechStack);
+      });
+    }
+  }, [session]);
+
   return (
     <SignUpLayout>
-      <Welcome>
-        <span>JUSE</span>에 처음 오셨군요?
-      </Welcome>
+      <Welcome>회원 정보 수정</Welcome>
       <ImageUploadWrapper>
         <UserImgWrapper size={'100px'}>
-          <img src={createObjectURL || '/user-default.png'} alt='user-image' />
+          <img
+            src={createObjectURL || imageEdit || '/user-default.png'}
+            alt='user-image'
+          />
         </UserImgWrapper>
         <input
           ref={fileInputRef}
@@ -159,7 +182,7 @@ export default function SignUp() {
         <Button
           variant='outlined'
           onClick={() => {
-            router.replace('/login');
+            router.replace('/user');
           }}
           disableElevation>
           취소
@@ -169,7 +192,7 @@ export default function SignUp() {
           onClick={handleSubmit}
           style={{ color: '#fff' }}
           disableElevation>
-          등록
+          수정
         </Button>
       </ButtonWrapper>
     </SignUpLayout>

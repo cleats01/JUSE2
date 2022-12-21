@@ -41,10 +41,13 @@ export default async function handler(
         const user = await createUser(email, nickname, userTechStack, image);
         return res.json(user);
       }
-      case 'PUT': {
-        const { id, ...updateData } = req.body;
-        const user = await updateUser(id, updateData);
-        return res.json(user);
+      case 'PATCH': {
+        const { id, nickname, image, userTechStack } = req.body;
+        await prisma.user.update({
+          where: { id },
+          data: { nickname, image, userTechStack },
+        });
+        return res.status(200).json({ message: 'updated!' });
       }
       case 'DELETE': {
         const { id } = req.body;
