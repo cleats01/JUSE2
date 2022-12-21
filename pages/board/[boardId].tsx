@@ -82,6 +82,8 @@ export default function Board({ data }: propsType) {
     setApplicationTab(newValue);
   };
 
+  const handleAccept = () => {};
+
   return (
     <BoardLayout>
       <NavbarBoard />
@@ -265,29 +267,61 @@ export default function Board({ data }: propsType) {
           <ApplicationContainer>
             {application.map((position, index) => (
               <div key={index}>
-                <PostionLabel>{position.position}</PostionLabel>
+                <PostionLabel>
+                  <span>{position.position}</span>
+                  <span>{`${position.accept.length} / ${position.count}`}</span>
+                </PostionLabel>
                 {position[applicationTab].map((user) => (
-                  <UserWrapper>
+                  <UserWrapper key={user.id}>
                     <UserImgWrapper size='40px'>
                       <img src={user.image} alt={'user-image'} />
                     </UserImgWrapper>
                     <span>{user.nickname}</span>
-                    <ButtonWrapper>
-                      <Button
-                        sx={{ minWidth: '50px' }}
-                        size='small'
-                        variant='outlined'
-                        disableElevation>
-                        거절
-                      </Button>
-                      <Button
-                        sx={{ color: '#fff', minWidth: '50px' }}
-                        size='small'
-                        variant='contained'
-                        disableElevation>
-                        수락
-                      </Button>
-                    </ButtonWrapper>
+                    {applicationTab === 'pending' ? (
+                      <ButtonWrapper>
+                        <Button
+                          sx={{ minWidth: '50px' }}
+                          size='small'
+                          variant='outlined'
+                          disableElevation
+                          onClick={() => {
+                            axios.patch(
+                              `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=reject`
+                            );
+                          }}>
+                          거절
+                        </Button>
+                        <Button
+                          sx={{ color: '#fff', minWidth: '50px' }}
+                          size='small'
+                          variant='contained'
+                          disableElevation
+                          onClick={() => {
+                            position.count === position.accept.length
+                              ? alert('모집 정원이 가득찼습니다.')
+                              : axios.patch(
+                                  `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=accept`
+                                );
+                          }}>
+                          수락
+                        </Button>
+                      </ButtonWrapper>
+                    ) : (
+                      <ButtonWrapper>
+                        <Button
+                          sx={{ minWidth: '50px' }}
+                          size='small'
+                          variant='outlined'
+                          disableElevation
+                          onClick={() => {
+                            axios.patch(
+                              `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=pending`
+                            );
+                          }}>
+                          취소
+                        </Button>
+                      </ButtonWrapper>
+                    )}
                   </UserWrapper>
                 ))}
               </div>
@@ -486,10 +520,15 @@ const ApplicationContainer = styled.div`
   padding-bottom: 20px;
 `;
 
-const PostionLabel = styled.h4`
+const PostionLabel = styled.div`
+  display: flex;
+  justify-content: space-between;
   font-weight: 700;
   font-size: 18px;
-  padding: 20px 10px;
+  padding: 20px 10px 15px 10px;
+  span:nth-child(2) {
+    font-weight: 400;
+  }
 `;
 
 const UserWrapper = styled.div`

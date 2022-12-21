@@ -48,6 +48,85 @@ export default async function handler(
         });
         return res.status(200).json({ message: 'applied' });
       }
+      case 'PATCH': {
+        // pending -> accept
+        if (req.query.to === 'accept') {
+          await prisma.board.update({
+            where: { id: req.query.boardId as string },
+            data: {
+              application: positionCurrent?.map((position) => {
+                if (position.position === req.query.position) {
+                  const acceptedUser = position.pending.filter(
+                    (applicant) => applicant.id === req.query.applicantId
+                  )[0];
+                  position.pending = position.pending.filter(
+                    (applicant) => applicant.id !== req.query.applicantId
+                  );
+                  position.accept.push(acceptedUser);
+                }
+                return position;
+              }),
+            },
+          });
+          await prisma.user.update({
+            where: { id: req.query.applicantId as string },
+            data: { acceptedList: { push: req.query.boardId } },
+          });
+          return res.status(200).json({ message: 'accepted' });
+        }
+        // pending -> reject
+        if (req.query.to === 'reject') {
+          await prisma.board.update({
+            where: { id: req.query.boardId as string },
+            data: {
+              application: positionCurrent?.map((position) => {
+                if (position.position === req.query.position) {
+                  const rejectedUser = position.pending.filter(
+                    (applicant) => applicant.id === req.query.applicantId
+                  )[0];
+                  position.pending = position.pending.filter(
+                    (applicant) => applicant.id !== req.query.applicantId
+                  );
+                  position.reject.push(rejectedUser);
+                }
+                return position;
+              }),
+            },
+          });
+          return res.status(200).json({ message: 'rejected' });
+        }
+        // accept, reject -> pending
+        if (req.query.to === 'pending') {
+          await prisma.board.update({
+            where: { id: req.query.boardId as string },
+            data: {
+              application: positionCurrent?.map((position) => {
+                if (position.position === req.query.position) {
+                  // accept -> pending
+                  let user = position.accept.filter(
+                    (applicant) => applicant.id === req.query.applicantId
+                  )[0];
+                  position.accept = position.accept.filter(
+                    (applicant) => applicant.id !== req.query.applicantId
+                  );
+                  // reject -> pending
+                  if (!user) {
+                    user = position.reject.filter(
+                      (applicant) => applicant.id === req.query.applicantId
+                    )[0];
+                    position.reject = position.reject.filter(
+                      (applicant) => applicant.id !== req.query.applicantId
+                    );
+                  }
+                  position.pending.push(user);
+                }
+                return position;
+              }),
+            },
+          });
+          return res.status(200).json({ message: 'pending' });
+        }
+      }
       default:
         break;
     }
