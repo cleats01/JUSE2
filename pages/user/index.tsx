@@ -59,9 +59,11 @@ export default function UserPage() {
       await axios.get(`/api/boards/my?id=${session?.user.id}`).then((res) => {
         setBoardsData(res.data);
       });
-      await axios.get(`/api/users?ids=${user.likeList}`).then((res) => {
-        setLikeListData(res.data);
-      });
+      if (user.likeList.length) {
+        await axios.get(`/api/users?ids=${user.likeList}`).then((res) => {
+          setLikeListData(res.data);
+        });
+      }
     };
     if (status === 'authenticated') {
       userInfoData();
