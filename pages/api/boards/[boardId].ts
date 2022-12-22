@@ -32,6 +32,7 @@ export default async function handler(
         });
       }
       case 'PATCH': {
+        // 모집중, 모집마감 변경
         if (isClosed !== undefined) {
           await prisma.board.update({
             where: { id: boardId as string },
@@ -39,6 +40,12 @@ export default async function handler(
           });
           return res.status(200).json({ message: 'Success' });
         }
+        // 게시글 수정
+        await prisma.board.update({
+          where: { id: boardId as string },
+          data: req.body,
+        });
+        return res.status(200).json({ message: 'Updated' });
       }
       case 'DELETE': {
         await prisma.board.delete({ where: { id: boardId as string } });

@@ -71,11 +71,9 @@ export default function BoardPage(props: propsType) {
     setApplicationTab(newValue);
   };
 
-  const handleAccept = () => {};
-
   return (
     <BoardLayout>
-      <NavbarBoard isClosed={isClosed} />
+      <NavbarBoard isClosed={isClosed} isAdmin={isAdmin} />
       <BoardHeader>
         <BadgeWrapper>
           <Badge className={type}>{type}</Badge>

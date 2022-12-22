@@ -9,9 +9,10 @@ import MenuIcon from '../public/icons/menu-dots-vertical.svg';
 
 interface propsType {
   isClosed: boolean;
+  isAdmin: boolean;
 }
 
-export default function NavbarBoard({ isClosed }: propsType) {
+export default function NavbarBoard({ isClosed, isAdmin }: propsType) {
   const router = useRouter();
 
   const { boardId } = router.query;
@@ -33,11 +34,15 @@ export default function NavbarBoard({ isClosed }: propsType) {
   return (
     <NavLayout>
       <BackIcon onClick={router.back} />
-      <MenuIcon
-        onClick={() => {
-          setIsDrawerOpen(true);
-        }}
-      />
+      {isAdmin ? (
+        <MenuIcon
+          onClick={() => {
+            setIsDrawerOpen(true);
+          }}
+        />
+      ) : (
+        ''
+      )}
       <Drawer
         anchor={'bottom'}
         open={isDrawerOpen}
@@ -50,7 +55,12 @@ export default function NavbarBoard({ isClosed }: propsType) {
           ) : (
             <li onClick={handleBoardClose}>모집 마감</li>
           )}
-          <li>게시글 수정</li>
+          <li
+            onClick={() => {
+              router.push(`/board/edit/${boardId}`);
+            }}>
+            게시글 수정
+          </li>
           <li onClick={handleDeleteBoard}>게시글 삭제</li>
           <li
             onClick={() => {

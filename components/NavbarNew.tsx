@@ -25,6 +25,8 @@ export default function NavbarNew(props: propsType) {
   const router = useRouter();
   const { formData } = props;
 
+  const isEditPage = router.pathname.includes('edit');
+
   const handleSubmit = () => {
     const { period, application, title, content } = formData;
     if (!period) {
@@ -39,16 +41,24 @@ export default function NavbarNew(props: propsType) {
     } else if (!content) {
       alert('본문을 입력해주세요.');
     } else {
-      axios.post('/api/boards', formData).then(() => {
-        router.push('/');
-      });
+      if (isEditPage) {
+        axios
+          .patch(`/api/boards/${router.query.boardId}`, formData)
+          .then(() => {
+            router.back();
+          });
+      } else {
+        axios.post('/api/boards', formData).then(() => {
+          router.push('/');
+        });
+      }
     }
   };
 
   return (
     <NavLayout>
       <BackIcon onClick={router.back} />
-      <MidSpan>모집 글쓰기</MidSpan>
+      <MidSpan>{isEditPage ? '게시글 수정' : '모집 글쓰기'}</MidSpan>
       <button onClick={handleSubmit}>완료</button>
     </NavLayout>
   );
