@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import NavbarNew from '../../components/NavbarNew';
-import TechStack from '../../components/TechStack';
+import NavbarNew from '../../../components/NavbarNew';
+import TechStack from '../../../components/TechStack';
 
-import PlusIcon from '../../public/icons/plus-circle.svg';
-import MinusIcon from '../../public/icons/minus-circle.svg';
+import PlusIcon from '../../../public/icons/plus-circle.svg';
+import MinusIcon from '../../../public/icons/minus-circle.svg';
 
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -15,10 +15,13 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { TextField } from '@mui/material';
 import { useSession } from 'next-auth/react';
-import BottomSheet from '../../components/BottomSheet';
+import BottomSheet from '../../../components/BottomSheet';
 import { position } from '@prisma/client';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
-export default function Add() {
+export default function EditBoardPage() {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const [type, setType] = useState<string>('프로젝트');
   const [place, setPlace] = useState<string>('온라인');
@@ -162,6 +165,26 @@ export default function Add() {
   const handleContent = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContent(event.target.value as string);
   };
+
+  useEffect(() => {
+    const boardId = router.query.boardId;
+    if (boardId) {
+      axios.get(`/api/boards/${boardId}`).then((res) => {
+        const { type, place, period, application, techStack, title, content } =
+          res.data;
+        setType(type);
+        setPlace(place === '온라인' ? place : '오프라인');
+        if (place !== '온라인') {
+          setOffline(place);
+        }
+        setPeriod(period);
+        setApplication(application);
+        setTechStack(techStack);
+        setTitle(title);
+        setContent(content);
+      });
+    }
+  }, [router]);
 
   return (
     <AddLayout>

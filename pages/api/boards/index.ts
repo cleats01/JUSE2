@@ -1,11 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createBoard } from '../../prisma/board';
-import prisma from '../../prisma/prisma';
+import { getSession } from 'next-auth/react';
+import { createBoard } from '../../../prisma/board';
+import prisma from '../../../prisma/prisma';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getSession({ req });
+  let user = null;
+  if (session) {
+    user = await prisma.user.findUnique({
+      where: { id: session?.user.id },
+    });
+  }
+
   try {
     switch (req.method) {
       case 'POST': {
@@ -13,7 +22,8 @@ export default async function handler(
         return res.json(board);
       }
       case 'GET': {
-        const { id, type, place, period, techStack, search } = req.query;
+        const { id, type, place, period, techStack, search, isClosed } =
+          req.query;
         const isFirstPage = !id;
         const pageCondition = {
           skip: 1,
@@ -52,6 +62,7 @@ export default async function handler(
                 }
             : undefined,
           title: { contains: search as string },
+          isClosed: isClosed === 'false' ? false : undefined,
         };
 
         const boards = await prisma.board
@@ -68,6 +79,10 @@ export default async function handler(
               place: board.place,
               title: board.title,
               techStack: board.techStack,
+              application: board.application,
+              chat: board.chat,
+              bookmark: board.bookmark,
+              isClosed: board.isClosed,
             }))
           );
         return res.json(boards);

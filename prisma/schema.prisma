@@ -9,9 +9,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
+type userSimple {
+  id       String
+  image    String
+  nickname String
+}
+
 type position {
   position String
   count    Int
+  accept   userSimple[]
+  pending  userSimple[]
+  reject   userSimple[]
 }
 
 type userSession {
@@ -21,28 +30,40 @@ type userSession {
   name          String
   nickname      String
   userTechStack String[]
+  like          Int
 }
 
 model User {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  email         String?  @unique
+  email         String   @unique
+  image         String
   nickname      String
   userTechStack String[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  acceptedList  String[]
+  applyList     String[]
+  bookmarkList  String[]
+  likeList      String[]
+  like          Int      @default(0)
+  myList        Board[]
 }
 
 model Board {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  type      String
-  place     String
-  contact   String
-  period    String
-  position  position[]
-  title     String
-  content   String
-  user      userSession
-  techStack String[]
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  type        String
+  place       String
+  period      String
+  application position[]
+  title       String
+  content     String
+  author      User        @relation(fields: [authorId], references: [id])
+  authorId    String      @db.ObjectId
+  user        userSession
+  techStack   String[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  bookmark    Int         @default(0)
+  chat        Int         @default(0)
+  isClosed    Boolean     @default(false)
 }

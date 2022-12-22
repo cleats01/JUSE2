@@ -1,3 +1,4 @@
+import { position, userSession } from '@prisma/client';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -11,19 +12,12 @@ interface propsType {
 export interface boardFormData {
   type: string;
   place: string;
-  contact: string;
   period: string;
-  position: { position: string; count: number }[];
+  application: position[];
   title: string;
   content: string;
-  user: {
-    id: string;
-    email: string;
-    nickname: string;
-    name: string;
-    image: string;
-    userTechStack: string[];
-  };
+  authorId: string;
+  user: userSession;
   techStack: string[];
 }
 
@@ -31,15 +25,15 @@ export default function NavbarNew(props: propsType) {
   const router = useRouter();
   const { formData } = props;
 
+  const isEditPage = router.pathname.includes('edit');
+
   const handleSubmit = () => {
-    const { contact, period, position, title, content } = formData;
-    if (!contact) {
-      alert('연락 방법 혹은 연락처를 입력해주세요.');
-    } else if (!period) {
+    const { period, application, title, content } = formData;
+    if (!period) {
       alert('예상 진행 기간을 선택해주세요.');
     } else if (
-      !position.at(-1)?.position ||
-      position.filter((obj) => obj.count !== 0).length === 0
+      !application.at(-1)?.position ||
+      application.filter((obj) => obj.count !== 0).length === 0
     ) {
       alert('모집 포지션과 인원 수를 확인해주세요.');
     } else if (!title) {
@@ -47,16 +41,24 @@ export default function NavbarNew(props: propsType) {
     } else if (!content) {
       alert('본문을 입력해주세요.');
     } else {
-      axios.post('/api/boards', formData).then(() => {
-        router.push('/');
-      });
+      if (isEditPage) {
+        axios
+          .patch(`/api/boards/${router.query.boardId}`, formData)
+          .then(() => {
+            router.back();
+          });
+      } else {
+        axios.post('/api/boards', formData).then(() => {
+          router.push('/');
+        });
+      }
     }
   };
 
   return (
     <NavLayout>
       <BackIcon onClick={router.back} />
-      <MidSpan>모집 글쓰기</MidSpan>
+      <MidSpan>{isEditPage ? '게시글 수정' : '모집 글쓰기'}</MidSpan>
       <button onClick={handleSubmit}>완료</button>
     </NavLayout>
   );

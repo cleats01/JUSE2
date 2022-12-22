@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '../../prisma/prisma';
 import {
   createUser,
   deleteUser,
@@ -21,25 +22,39 @@ export default async function handler(
         } else if (req.query.email) {
           const user = await getUserByEmail(req.query.email as string);
           return res.status(200).json(user);
+        } else if (req.query.ids) {
+          const users = await prisma.user.findMany({
+            where: {
+              id: {
+                in: (req.query.ids as string).split(','),
+              },
+            },
+          });
+          return res.status(200).json(users);
         } else {
           const users = await getAllUsers();
           return res.json(users);
         }
       }
       case 'POST': {
-        const { email, nickname, userTechStack } = req.body;
-        const user = await createUser(email, nickname, userTechStack);
+        const { email, nickname, userTechStack, image } = req.body;
+        const user = await createUser(email, nickname, userTechStack, image);
         return res.json(user);
       }
-      case 'PUT': {
-        const { id, ...updateData } = req.body;
-        const user = await updateUser(id, updateData);
-        return res.json(user);
+      case 'PATCH': {
+        const { id, nickname, image, userTechStack } = req.body;
+        await prisma.user.update({
+          where: { id },
+          data: { nickname, image, userTechStack },
+        });
+        return res.status(200).json({ message: 'updated!' });
       }
       case 'DELETE': {
-        const { id } = req.body;
-        const user = await deleteUser(id);
-        return res.json(user);
+        await prisma.board.deleteMany({
+          where: { authorId: req.query.id as string },
+        });
+        await prisma.user.delete({ where: { id: req.query.id as string } });
+        return res.status(200).json({ message: 'deleted!' });
       }
       default:
         break;

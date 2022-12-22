@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import TabBar from '../components/TabBar';
 import styled from 'styled-components';
@@ -15,6 +15,7 @@ import {
   InputLabel,
   MenuItem,
   Slider,
+  Switch,
   Tab,
   Tabs,
   ToggleButton,
@@ -23,6 +24,7 @@ import {
 import FilterIcon from '../public/icons/settings-sliders.svg';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TechStack from '../components/TechStack';
+import { position } from '@prisma/client';
 
 export interface boardData {
   id: string;
@@ -30,6 +32,10 @@ export interface boardData {
   place: string;
   title: string;
   techStack: string[];
+  application: position[];
+  bookmark: number;
+  chat: number;
+  isClosed: boolean;
 }
 
 export default function Home() {
@@ -37,6 +43,7 @@ export default function Home() {
   const [ref, inView] = useInView();
   const [currentTab, setCurrentTab] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
 
   const getBoards = (query: string) => {
     return axios.get('/api/boards' + query).then((res) => res.data);
@@ -125,6 +132,7 @@ export default function Home() {
   const [techStack, setTechStack] = useState<string[]>([]);
 
   const resetFilter = () => {
+    setIsClosed(true);
     setOffline('');
     setPlace('');
     setPeriod([1, 6]);
@@ -132,12 +140,14 @@ export default function Home() {
   };
 
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    [currentTab, place, offline, period, techStack],
+    [currentTab, place, offline, period, techStack, isClosed],
     ({ pageParam = '' }) =>
       getBoards(
         `?id=${pageParam}&type=${currentTab}&place=${
           offline ? offline : place
-        }&period=${period.join(',')}&techStack=${techStack.join(',')}`
+        }&period=${period.join(',')}&techStack=${techStack.join(
+          ','
+        )}&isClosed=${isClosed}`
       ),
     {
       getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
@@ -157,17 +167,8 @@ export default function Home() {
       </TabContainer>
       {data?.pages.map((page, index) => (
         <React.Fragment key={index}>
-          {page?.map((board: boardData, i: number) => (
-            <Card
-              key={board.id}
-              data={{
-                id: board.id,
-                type: board.type,
-                place: board.place,
-                title: board.title,
-                techStack: board.techStack,
-              }}
-            />
+          {page?.map((board: boardData) => (
+            <Card key={board.id} data={board} />
           ))}
         </React.Fragment>
       ))}
@@ -178,9 +179,21 @@ export default function Home() {
             <span>상세필터</span>
           </DrawerHeader>
           <Wrapper>
+            <StatusFilterWrapper>
+              <span>모집중만 보기</span>
+              <Switch
+                checked={!isClosed}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  setIsClosed(!event.target.checked);
+                }}
+              />
+            </StatusFilterWrapper>
+          </Wrapper>
+          <Wrapper>
             <Label>장소구분</Label>
             <ToggleButtonGroup
               size='small'
+              color='primary'
               value={place}
               exclusive
               onChange={handlePlace}>
@@ -227,7 +240,11 @@ export default function Home() {
             <Button variant={'outlined'} onClick={resetFilter}>
               초기화
             </Button>
-            <Button variant={'contained'} onClick={toggleFilter}>
+            <Button
+              variant={'contained'}
+              onClick={toggleFilter}
+              style={{ color: '#fff' }}
+              disableElevation>
               필터 적용
             </Button>
           </ButtonContainer>
@@ -242,13 +259,14 @@ const HomeLayout = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 70px 16px;
+  padding: 55px 16px;
 `;
 
 const TabContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-right: 10px;
 `;
 
 const DrawerHeader = styled.div`
@@ -286,5 +304,14 @@ const ButtonContainer = styled.div`
   gap: 15px;
   > button {
     width: 100px;
+  }
+`;
+
+const StatusFilterWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  > span {
+    font-weight: 600;
   }
 `;

@@ -121,18 +121,13 @@ export default function Search() {
         </RecentSearchContainer>
       </SearchInputContainer>
       <SearchResultContainer>
-        <span>총 {searchResult.length}건의 검색 결과를 찾았습니다.</span>
-        {searchResult.map((board: boardData, i: number) => (
-          <Card
-            key={board.id}
-            data={{
-              id: board.id,
-              type: board.type,
-              place: board.place,
-              title: board.title,
-              techStack: board.techStack,
-            }}
-          />
+        {searchResult.length ? (
+          <span>총 {searchResult.length}건의 검색 결과를 찾았습니다.</span>
+        ) : (
+          ''
+        )}
+        {searchResult.map((board: boardData) => (
+          <Card key={board.id} data={board} />
         ))}
       </SearchResultContainer>
       <TabBar />

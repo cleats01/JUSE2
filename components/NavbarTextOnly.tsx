@@ -1,12 +1,17 @@
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import BackIcon from '../public/icons/angle-small-left.svg';
 
 interface propsType {
   centerText: string;
+  back?: boolean;
 }
 
-export default function NavbarTextOnly({ centerText }: propsType) {
+export default function NavbarTextOnly({ centerText, back }: propsType) {
+  const router = useRouter();
   return (
     <NavLayout>
+      {back ? <BackIcon onClick={router.back} /> : ''}
       <CenterSpan>{centerText}</CenterSpan>
     </NavLayout>
   );
@@ -26,6 +31,10 @@ const NavLayout = styled.nav`
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey1};
   background-color: #fff;
   z-index: 2;
+  > svg {
+    position: absolute;
+    left: 20px;
+  }
 `;
 
 const CenterSpan = styled.span`
