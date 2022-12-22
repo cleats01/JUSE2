@@ -10,30 +10,16 @@ import BookmarkIcon from '../../public/icons/bookmark.svg';
 import BookmarkFilledIcon from '../../public/icons/bookmark-filled.svg';
 import CloseIcon from '../../public/icons/cross-small.svg';
 import { useSession } from 'next-auth/react';
-import { position, User } from '@prisma/client';
+import { Board, position, User } from '@prisma/client';
 import { UserImgWrapper } from '../user/signup/[...signup]';
 import BottomController from '../../components/BottomController';
 import Link from 'next/link';
-interface propsType {
-  data: {
-    id: string;
-    type: string;
-    place: string;
-    period: string;
-    application: position[];
-    techStack: string[];
-    title: string;
-    content: string;
-    createdAt: Date;
-    bookmark: number;
-    chat: number;
-    isBookmarked: boolean;
-    authorId: string;
-    author: User;
-  };
+interface propsType extends Board {
+  isBookmarked: boolean;
+  author: User;
 }
 
-export default function Board({ data }: propsType) {
+export default function BoardPage(props: propsType) {
   const {
     id,
     type,
@@ -49,7 +35,8 @@ export default function Board({ data }: propsType) {
     isBookmarked,
     authorId,
     author,
-  } = data;
+    isClosed,
+  } = props;
 
   const [currentTab, setCurrentTab] = useState<string>('모집내용');
   const { data: session, status } = useSession();
@@ -88,7 +75,7 @@ export default function Board({ data }: propsType) {
 
   return (
     <BoardLayout>
-      <NavbarBoard />
+      <NavbarBoard isClosed={isClosed} />
       <BoardHeader>
         <BadgeWrapper>
           <Badge className={type}>{type}</Badge>
@@ -357,7 +344,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     axios.defaults.headers.Cookie = '';
   }
 
-  return { props: { data } };
+  return { props: data };
 }
 
 const BoardLayout = styled.div`

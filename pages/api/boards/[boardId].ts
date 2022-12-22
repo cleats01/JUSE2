@@ -14,10 +14,11 @@ export default async function handler(
     });
   }
 
+  const { boardId, isClosed } = req.query;
+
   try {
     switch (req.method) {
       case 'GET': {
-        const { boardId } = req.query;
         const boardData = await prisma.board.findUnique({
           where: { id: boardId as string },
           include: { author: true },
@@ -29,6 +30,19 @@ export default async function handler(
               ? user.bookmarkList.includes(boardData.id)
               : false,
         });
+      }
+      case 'PATCH': {
+        if (isClosed !== undefined) {
+          await prisma.board.update({
+            where: { id: boardId as string },
+            data: { isClosed: isClosed === 'true' ? true : false },
+          });
+          return res.status(200).json({ message: 'Success' });
+        }
+      }
+      case 'DELETE': {
+        await prisma.board.delete({ where: { id: boardId as string } });
+        return res.status(200).json({ message: 'Deleted' });
       }
       default:
         break;

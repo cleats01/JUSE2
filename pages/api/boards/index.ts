@@ -22,7 +22,8 @@ export default async function handler(
         return res.json(board);
       }
       case 'GET': {
-        const { id, type, place, period, techStack, search } = req.query;
+        const { id, type, place, period, techStack, search, isClosed } =
+          req.query;
         const isFirstPage = !id;
         const pageCondition = {
           skip: 1,
@@ -61,6 +62,7 @@ export default async function handler(
                 }
             : undefined,
           title: { contains: search as string },
+          isClosed: isClosed === 'false' ? false : undefined,
         };
 
         const boards = await prisma.board
@@ -80,6 +82,7 @@ export default async function handler(
               application: board.application,
               chat: board.chat,
               bookmark: board.bookmark,
+              isClosed: board.isClosed,
             }))
           );
         return res.json(boards);

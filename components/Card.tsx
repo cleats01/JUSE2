@@ -12,11 +12,21 @@ interface propsType {
 }
 
 export default function Card(props: propsType) {
-  const { id, type, place, title, techStack, application, bookmark, chat } =
-    props.data;
+  const {
+    id,
+    type,
+    place,
+    title,
+    techStack,
+    application,
+    bookmark,
+    chat,
+    isClosed,
+  } = props.data;
   return (
-    <CardLayout>
+    <CardLayout isClosed={isClosed}>
       <Link href={`/board/${id}`}>
+        {isClosed ? <Closed>모집 마감</Closed> : ''}
         <CardHeader>
           <Badge className={type}>{type}</Badge>
           <Badge>{place}</Badge>
@@ -50,7 +60,8 @@ export default function Card(props: propsType) {
   );
 }
 
-const CardLayout = styled.div`
+const CardLayout = styled.div<{ isClosed: boolean }>`
+  position: relative;
   > a {
     display: flex;
     flex-direction: column;
@@ -59,6 +70,7 @@ const CardLayout = styled.div`
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.grey2};
   padding: 10px 15px;
+  opacity: ${({ isClosed }) => (isClosed ? 0.7 : 1)};
 `;
 
 const CardHeader = styled.header`
@@ -113,4 +125,14 @@ const IconWrapper = styled.div`
   align-items: center;
   gap: 5px;
   color: ${({ theme }) => theme.colors.grey5};
+`;
+
+const Closed = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px;
+  background-color: #000;
+  color: #fff;
 `;

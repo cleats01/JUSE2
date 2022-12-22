@@ -65,4 +65,5 @@ model Board {
   updatedAt   DateTime    @updatedAt
   bookmark    Int         @default(0)
   chat        Int         @default(0)
+  isClosed    Boolean     @default(false)
 }

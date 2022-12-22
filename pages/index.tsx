@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import TabBar from '../components/TabBar';
 import styled from 'styled-components';
@@ -15,6 +15,7 @@ import {
   InputLabel,
   MenuItem,
   Slider,
+  Switch,
   Tab,
   Tabs,
   ToggleButton,
@@ -34,6 +35,7 @@ export interface boardData {
   application: position[];
   bookmark: number;
   chat: number;
+  isClosed: boolean;
 }
 
 export default function Home() {
@@ -41,6 +43,7 @@ export default function Home() {
   const [ref, inView] = useInView();
   const [currentTab, setCurrentTab] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
 
   const getBoards = (query: string) => {
     return axios.get('/api/boards' + query).then((res) => res.data);
@@ -129,6 +132,7 @@ export default function Home() {
   const [techStack, setTechStack] = useState<string[]>([]);
 
   const resetFilter = () => {
+    setIsClosed(true);
     setOffline('');
     setPlace('');
     setPeriod([1, 6]);
@@ -136,12 +140,14 @@ export default function Home() {
   };
 
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    [currentTab, place, offline, period, techStack],
+    [currentTab, place, offline, period, techStack, isClosed],
     ({ pageParam = '' }) =>
       getBoards(
         `?id=${pageParam}&type=${currentTab}&place=${
           offline ? offline : place
-        }&period=${period.join(',')}&techStack=${techStack.join(',')}`
+        }&period=${period.join(',')}&techStack=${techStack.join(
+          ','
+        )}&isClosed=${isClosed}`
       ),
     {
       getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
@@ -172,6 +178,17 @@ export default function Home() {
           <DrawerHeader>
             <span>상세필터</span>
           </DrawerHeader>
+          <Wrapper>
+            <StatusFilterWrapper>
+              <span>모집중만 보기</span>
+              <Switch
+                checked={!isClosed}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  setIsClosed(!event.target.checked);
+                }}
+              />
+            </StatusFilterWrapper>
+          </Wrapper>
           <Wrapper>
             <Label>장소구분</Label>
             <ToggleButtonGroup
@@ -287,5 +304,14 @@ const ButtonContainer = styled.div`
   gap: 15px;
   > button {
     width: 100px;
+  }
+`;
+
+const StatusFilterWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  > span {
+    font-weight: 600;
   }
 `;
