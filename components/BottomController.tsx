@@ -22,6 +22,7 @@ const BottomControllerLayout = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  border-top: 1px solid ${({ theme }) => theme.colors.grey1};
   svg {
     margin: 0 10px 0 5px;
   }
