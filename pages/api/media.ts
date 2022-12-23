@@ -13,7 +13,6 @@ export default async function handler(
         type,
       };
       const signedUrl = await getSignedFileUrl(fileParams);
-      console.log(signedUrl);
       return res.status(201).json({
         message: 'make url succeed',
         url: signedUrl,
