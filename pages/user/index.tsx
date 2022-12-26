@@ -20,6 +20,7 @@ interface myBoardsData {
   myList: boardData[];
   applyList: boardData[];
   bookmarkList: boardData[];
+  acceptedList: boardData[];
 }
 
 export default function UserPage() {
@@ -139,9 +140,13 @@ export default function UserPage() {
               <Tab value='참여중인 모임' label='참여중인 모임' />
             </Tabs>
             <BoardContainer>
-              {boardsData?.myList.map((board) => (
-                <Card data={board} key={board.id} />
-              ))}
+              {myListTab === '내가 만든 모임'
+                ? boardsData?.myList.map((board) => (
+                    <Card data={board} key={board.id} />
+                  ))
+                : boardsData?.acceptedList.map((board) => (
+                    <Card data={board} key={board.id} />
+                  ))}
             </BoardContainer>
           </DrawerLayout>
         </Drawer>

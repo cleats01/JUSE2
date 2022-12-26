@@ -1,7 +1,6 @@
 import {
   Accordion,
   AccordionDetails,
-  AccordionProps,
   AccordionSummary,
   Avatar,
   Box,
@@ -10,7 +9,6 @@ import {
   Drawer,
   Tab,
   Tabs,
-  Typography,
 } from '@mui/material';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
@@ -35,7 +33,6 @@ import { UserImgWrapper } from '../user/signup/[...signup]';
 import BottomController from '../../components/BottomController';
 import Link from 'next/link';
 import { boardData } from '..';
-import Card from '../../components/Card';
 import Related from '../../components/Related';
 import theme from '../../styles/theme';
 interface propsType extends Board {
@@ -236,19 +233,27 @@ export default function BoardPage(props: propsType) {
                   </PositionInfo>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <UserChipsWrapper>
-                    {position.accept.map((user: userSimple) => (
-                      <Chip
-                        key={user.id}
-                        avatar={<Avatar alt={user.nickname} src={user.image} />}
-                        label={user.nickname}
-                        variant='outlined'
-                        component='a'
-                        href={`/user/${user.id}`}
-                        clickable
-                      />
-                    ))}
-                  </UserChipsWrapper>
+                  {position.accept.length ? (
+                    <UserChipsWrapper>
+                      {position.accept.map((user: userSimple) => (
+                        <Chip
+                          key={user.id}
+                          avatar={
+                            <Avatar alt={user.nickname} src={user.image} />
+                          }
+                          label={user.nickname}
+                          variant='outlined'
+                          component='a'
+                          href={`/user/${user.id}`}
+                          clickable
+                        />
+                      ))}
+                    </UserChipsWrapper>
+                  ) : (
+                    <NullMessage>
+                      해당 포지션에 참여중인 유저가 없습니다.
+                    </NullMessage>
+                  )}
                 </AccordionDetails>
               </AccordionCustom>
             ))}
@@ -373,63 +378,67 @@ export default function BoardPage(props: propsType) {
                   <span>{position.position}</span>
                   <span>{`${position.accept.length} / ${position.count}`}</span>
                 </PostionLabel>
-                {position[applicationTab].map((user) => (
-                  <UserWrapper key={user.id}>
-                    <Link href={`/user/${user.id}`}>
-                      <UserImgWrapper size='40px'>
-                        <img src={user.image} alt={'user-image'} />
-                      </UserImgWrapper>
-                    </Link>
-                    <Link href={`/user/${user.id}`}>
-                      <span className='user-nickname'>{user.nickname}</span>
-                    </Link>
-                    {applicationTab === 'pending' ? (
-                      <ButtonWrapper>
-                        <Button
-                          sx={{ minWidth: '50px' }}
-                          size='small'
-                          variant='outlined'
-                          disableElevation
-                          onClick={() => {
-                            axios.patch(
-                              `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=reject`
-                            );
-                          }}>
-                          거절
-                        </Button>
-                        <Button
-                          sx={{ color: '#fff', minWidth: '50px' }}
-                          size='small'
-                          variant='contained'
-                          disableElevation
-                          onClick={() => {
-                            position.count === position.accept.length
-                              ? alert('모집 정원이 가득찼습니다.')
-                              : axios.patch(
-                                  `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=accept`
-                                );
-                          }}>
-                          수락
-                        </Button>
-                      </ButtonWrapper>
-                    ) : (
-                      <ButtonWrapper>
-                        <Button
-                          sx={{ minWidth: '50px' }}
-                          size='small'
-                          variant='outlined'
-                          disableElevation
-                          onClick={() => {
-                            axios.patch(
-                              `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=pending`
-                            );
-                          }}>
-                          취소
-                        </Button>
-                      </ButtonWrapper>
-                    )}
-                  </UserWrapper>
-                ))}
+                {position[applicationTab].length ? (
+                  position[applicationTab].map((user) => (
+                    <UserWrapper key={user.id}>
+                      <Link href={`/user/${user.id}`}>
+                        <UserImgWrapper size='40px'>
+                          <img src={user.image} alt={'user-image'} />
+                        </UserImgWrapper>
+                      </Link>
+                      <Link href={`/user/${user.id}`}>
+                        <span className='user-nickname'>{user.nickname}</span>
+                      </Link>
+                      {applicationTab === 'pending' ? (
+                        <ButtonWrapper>
+                          <Button
+                            sx={{ minWidth: '50px' }}
+                            size='small'
+                            variant='outlined'
+                            disableElevation
+                            onClick={() => {
+                              axios.patch(
+                                `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=reject`
+                              );
+                            }}>
+                            거절
+                          </Button>
+                          <Button
+                            sx={{ color: '#fff', minWidth: '50px' }}
+                            size='small'
+                            variant='contained'
+                            disableElevation
+                            onClick={() => {
+                              position.count === position.accept.length
+                                ? alert('모집 정원이 가득찼습니다.')
+                                : axios.patch(
+                                    `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=accept`
+                                  );
+                            }}>
+                            수락
+                          </Button>
+                        </ButtonWrapper>
+                      ) : (
+                        <ButtonWrapper>
+                          <Button
+                            sx={{ minWidth: '50px' }}
+                            size='small'
+                            variant='outlined'
+                            disableElevation
+                            onClick={() => {
+                              axios.patch(
+                                `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=pending`
+                              );
+                            }}>
+                            취소
+                          </Button>
+                        </ButtonWrapper>
+                      )}
+                    </UserWrapper>
+                  ))
+                ) : (
+                  <NullMessage>유저가 없습니다.</NullMessage>
+                )}
               </div>
             ))}
           </ApplicationContainer>
@@ -710,7 +719,8 @@ const ButtonWrapper = styled.div`
 `;
 
 const NullMessage = styled.span`
-  font-size: 18px;
+  display: flex;
+  justify-content: center;
   color: ${({ theme }) => theme.colors.grey4};
 `;
 
