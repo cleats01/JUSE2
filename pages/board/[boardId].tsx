@@ -1,4 +1,17 @@
-import { Box, Button, Drawer, Tab, Tabs } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionProps,
+  AccordionSummary,
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Drawer,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import React, {
@@ -14,15 +27,17 @@ import { StackBubble } from '../add';
 import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import BookmarkIcon from '../../public/icons/bookmark.svg';
 import BookmarkFilledIcon from '../../public/icons/bookmark-filled.svg';
+import AngleDownIcon from '../../public/icons/angle-small-down.svg';
 import CloseIcon from '../../public/icons/cross-small.svg';
 import { useSession } from 'next-auth/react';
-import { Board, position, User } from '@prisma/client';
+import { Board, position, User, userSimple } from '@prisma/client';
 import { UserImgWrapper } from '../user/signup/[...signup]';
 import BottomController from '../../components/BottomController';
 import Link from 'next/link';
 import { boardData } from '..';
 import Card from '../../components/Card';
 import Related from '../../components/Related';
+import theme from '../../styles/theme';
 interface propsType extends Board {
   isBookmarked: boolean;
   author: User;
@@ -200,40 +215,44 @@ export default function BoardPage(props: propsType) {
       <section ref={(el) => (tabRef.current[1] = el)}>
         <InfoWrapper className='column'>
           <InfoLabel>모집 현황</InfoLabel>
-          {application.map((position) => (
-            <PositionInfo key={position.position}>
-              <span className='position-name'>{position.position}</span>
-              <span>
-                {position.accept.length} / {position.count}
-              </span>
-              <Button
-                variant={'outlined'}
-                size={'small'}
-                onClick={() => {
-                  axios.post(
-                    `/api/applications?boardId=${id}&position=${position.position}`
-                  );
-                }}
-                disabled={
-                  position.pending.filter(
-                    (user) => user.id === session?.user.id
-                  ).length > 0 ||
-                  position.accept.filter((user) => user.id === session?.user.id)
-                    .length > 0 ||
-                  position.reject.filter((user) => user.id === session?.user.id)
-                    .length > 0
-                }>
-                {position.pending.filter((user) => user.id === session?.user.id)
-                  .length > 0 ||
-                position.accept.filter((user) => user.id === session?.user.id)
-                  .length > 0 ||
-                position.reject.filter((user) => user.id === session?.user.id)
-                  .length > 0
-                  ? '지원완료'
-                  : '지원'}
-              </Button>
-            </PositionInfo>
-          ))}
+          <div>
+            {application.map((position) => (
+              <AccordionCustom square disableGutters elevation={0}>
+                <AccordionSummary
+                  expandIcon={
+                    <AngleDownIcon
+                      fill={theme.colors.grey4}
+                      width={25}
+                      height={25}
+                    />
+                  }
+                  aria-controls='panel1a-content'
+                  id='panel1a-header'>
+                  <PositionInfo key={position.position}>
+                    <span className='position-name'>{position.position}</span>
+                    <span className='position-count'>
+                      {position.accept.length} / {position.count}
+                    </span>
+                  </PositionInfo>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <UserChipsWrapper>
+                    {position.accept.map((user: userSimple) => (
+                      <Chip
+                        key={user.id}
+                        avatar={<Avatar alt={user.nickname} src={user.image} />}
+                        label={user.nickname}
+                        variant='outlined'
+                        component='a'
+                        href={`/user/${user.id}`}
+                        clickable
+                      />
+                    ))}
+                  </UserChipsWrapper>
+                </AccordionDetails>
+              </AccordionCustom>
+            ))}
+          </div>
         </InfoWrapper>
         <InfoWrapper className='column'>
           <InfoLabel>팀장 정보</InfoLabel>
@@ -446,6 +465,10 @@ export default function BoardPage(props: propsType) {
                       style={{ color: '#fff' }}
                       disableElevation
                       onClick={() => {
+                        if (!session) {
+                          alert('로그인이 필요한 기능입니다.');
+                          return;
+                        }
                         axios.post(
                           `/api/applications?boardId=${id}&position=${position.position}&applicantId=${session?.user.id}`
                         );
@@ -582,10 +605,14 @@ const PositionInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   height: 35px;
   > .position-name {
     font-weight: 500;
     width: 40%;
+  }
+  > .position-count {
+    margin-right: 60px;
   }
 `;
 
@@ -710,4 +737,23 @@ const ApplyStatus = styled.div`
   > :first-child {
     font-weight: 600;
   }
+`;
+
+const AccordionCustom = styled(Accordion)`
+  &:before {
+    display: none;
+  }
+  .MuiButtonBase-root {
+    padding: 0;
+  }
+  .MuiAccordionDetails-root {
+    padding: 0;
+  }
+`;
+
+const UserChipsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 `;
