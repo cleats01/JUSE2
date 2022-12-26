@@ -29,7 +29,7 @@ export default async function handler(
                 createdAt: 'desc',
               },
             ],
-            take: 5,
+            take: 4,
           })
           .then((data) =>
             data.map((board) => ({
@@ -45,7 +45,7 @@ export default async function handler(
             }))
           );
 
-        if (related.length < 5) {
+        if (related.length < 4) {
           const additionalRelated = await prisma.board
             .findMany({
               where: {
@@ -65,7 +65,41 @@ export default async function handler(
                   createdAt: 'desc',
                 },
               ],
-              take: 5 - related.length,
+              take: 4 - related.length,
+            })
+            .then((data) =>
+              data.map((board) => ({
+                id: board.id,
+                type: board.type,
+                place: board.place,
+                title: board.title,
+                techStack: board.techStack,
+                application: board.application,
+                chat: board.chat,
+                bookmark: board.bookmark,
+                isClosed: board.isClosed,
+              }))
+            );
+          related.push(...additionalRelated);
+        }
+
+        if (related.length < 5) {
+          const additionalRelated = await prisma.board
+            .findMany({
+              where: {
+                NOT: [
+                  { id: boardId },
+                  { id: { in: related.map((board: boardData) => board.id) } },
+                ],
+              },
+              orderBy: [
+                { bookmark: 'desc' },
+                { chat: 'desc' },
+                {
+                  createdAt: 'desc',
+                },
+              ],
+              take: 4 - related.length,
             })
             .then((data) =>
               data.map((board) => ({
