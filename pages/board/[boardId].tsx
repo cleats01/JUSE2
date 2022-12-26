@@ -49,19 +49,7 @@ export default function BoardPage(props: propsType) {
     related,
   } = props;
 
-  const [currentTab, setCurrentTab] = useState<string>('모집내용');
   const { data: session, status } = useSession();
-
-  const handleTabChange = (e: SyntheticEvent, newValue: string) => {
-    const tabs = ['모집내용', '모집현황', '추천'];
-    const index = tabs.indexOf(newValue);
-    const headerHeight = 55 + 48;
-    const { offsetTop } = getDimensions(tabRef.current[index] as HTMLElement);
-    window.scrollTo({
-      top: newValue === '모집내용' ? 0 : offsetTop - headerHeight,
-      behavior: 'smooth',
-    });
-  };
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
@@ -90,7 +78,20 @@ export default function BoardPage(props: propsType) {
   };
 
   // 스크롤 탭 기능
+
+  const [currentTab, setCurrentTab] = useState<string>('모집내용');
   const tabRef = useRef<HTMLElement[] | null[]>([]);
+
+  const handleTabChange = (e: SyntheticEvent, newValue: string) => {
+    const tabs = ['모집내용', '모집현황', '추천'];
+    const index = tabs.indexOf(newValue);
+    const headerHeight = 55 + 48;
+    const { offsetTop } = getDimensions(tabRef.current[index] as HTMLElement);
+    window.scrollTo({
+      top: newValue === '모집내용' ? 0 : offsetTop - headerHeight,
+      behavior: 'smooth',
+    });
+  };
 
   const sectionRefs = [
     { section: '모집내용', ref: tabRef.current[0] },
@@ -133,6 +134,19 @@ export default function BoardPage(props: propsType) {
       window.addEventListener('touchmove', handleScroll);
     };
   });
+
+  const getMyApplyStatus = (position: position): string => {
+    const { pending, accept, reject } = position;
+    let status = '지원한 이력이 없습니다.';
+    if (pending.filter((user) => user.id === session?.user.id).length) {
+      return '지원완료';
+    } else if (accept.filter((user) => user.id === session?.user.id).length) {
+      return '수락됨';
+    } else if (reject.filter((user) => user.id === session?.user.id).length) {
+      return '거절됨';
+    }
+    return status;
+  };
 
   return (
     <BoardLayout>
@@ -282,6 +296,9 @@ export default function BoardPage(props: propsType) {
             variant='contained'
             size={'large'}
             style={{ color: '#fff' }}
+            onClick={() => {
+              toggleDrawer('apply', true);
+            }}
             disableElevation>
             지원하기
           </Button>
@@ -399,6 +416,64 @@ export default function BoardPage(props: propsType) {
           </ApplicationContainer>
         </DrawerLayout>
       </Drawer>
+      <Drawer
+        anchor={'bottom'}
+        open={isDrawerOpen.apply}
+        onClose={() => {
+          toggleDrawer('apply', false);
+        }}>
+        <DrawerLayout>
+          <DrawerHeader>
+            <DrawerLabel>지원하기</DrawerLabel>
+            <CloseIcon
+              onClick={() => {
+                toggleDrawer('apply', false);
+              }}
+            />
+          </DrawerHeader>
+          <ApplyContainer>
+            {application.map((position) => (
+              <ApplyPositionWrapper key={position.position}>
+                <PositionInfo>
+                  <span className='position-name'>{position.position}</span>
+                  <span>
+                    {position.accept.length} / {position.count}
+                  </span>
+                  {getMyApplyStatus(position) === '지원한 이력이 없습니다.' ? (
+                    <Button
+                      variant={'contained'}
+                      size={'small'}
+                      style={{ color: '#fff' }}
+                      disableElevation
+                      onClick={() => {
+                        axios.post(
+                          `/api/applications?boardId=${id}&position=${position.position}&applicantId=${session?.user.id}`
+                        );
+                      }}>
+                      지원
+                    </Button>
+                  ) : (
+                    <Button
+                      variant={'outlined'}
+                      size={'small'}
+                      onClick={() => {
+                        axios.delete(
+                          `/api/applications?boardId=${id}&position=${position.position}&applicantId=${session?.user.id}`
+                        );
+                      }}>
+                      취소
+                    </Button>
+                  )}
+                </PositionInfo>
+                <ApplyStatus>
+                  <span>지원 상태</span>
+                  <span>{getMyApplyStatus(position)}</span>
+                </ApplyStatus>
+              </ApplyPositionWrapper>
+            ))}
+          </ApplyContainer>
+        </DrawerLayout>
+      </Drawer>
     </BoardLayout>
   );
 }
@@ -507,7 +582,9 @@ const PositionInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 35px;
   > .position-name {
+    font-weight: 500;
     width: 40%;
   }
 `;
@@ -523,6 +600,7 @@ const LeaderNickname = styled.div`
   flex-direction: column;
   gap: 5px;
   > .nickname {
+    font-size: 14px;
     font-weight: 700;
   }
   > .likes {
@@ -541,7 +619,9 @@ const LeaderTechStack = styled(StackWrapper)`
 const DrawerLayout = styled.div`
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  min-height: 50vh;
+  max-height: 80vh;
+  padding-bottom: 40px;
 `;
 
 const DrawerHeader = styled.div`
@@ -571,7 +651,6 @@ const ApplicationContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding-bottom: 20px;
 `;
 
 const PostionLabel = styled.div`
@@ -601,4 +680,34 @@ const ButtonWrapper = styled.div`
   display: flex;
   gap: 10px;
   margin-left: auto;
+`;
+
+const NullMessage = styled.span`
+  font-size: 18px;
+  color: ${({ theme }) => theme.colors.grey4};
+`;
+
+const ApplyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+`;
+
+const ApplyPositionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey3};
+`;
+
+const ApplyStatus = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.grey4};
+  > :first-child {
+    font-weight: 600;
+  }
 `;
