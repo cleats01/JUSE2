@@ -274,7 +274,8 @@ export default function Add() {
                   <MenuItem
                     value={'삭제'}
                     key={'삭제'}
-                    disabled={application.length === 1}>
+                    disabled={application.length === 1}
+                    style={{ color: 'tomato' }}>
                     삭제
                   </MenuItem>
                 </Select>
