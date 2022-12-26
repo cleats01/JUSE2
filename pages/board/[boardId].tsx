@@ -1,7 +1,13 @@
 import { Box, Button, Drawer, Tab, Tabs } from '@mui/material';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  SyntheticEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import NavbarBoard from '../../components/NavbarBoard';
 import { StackBubble } from '../add';
@@ -47,7 +53,14 @@ export default function BoardPage(props: propsType) {
   const { data: session, status } = useSession();
 
   const handleTabChange = (e: SyntheticEvent, newValue: string) => {
-    setCurrentTab(newValue);
+    const tabs = ['모집내용', '모집현황', '추천'];
+    const index = tabs.indexOf(newValue);
+    const headerHeight = 55 + 48;
+    const { offsetTop } = getDimensions(tabRef.current[index] as HTMLElement);
+    window.scrollTo({
+      top: newValue === '모집내용' ? 0 : offsetTop - headerHeight,
+      behavior: 'smooth',
+    });
   };
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -75,6 +88,51 @@ export default function BoardPage(props: propsType) {
   ) => {
     setApplicationTab(newValue);
   };
+
+  // 스크롤 탭 기능
+  const tabRef = useRef<HTMLElement[] | null[]>([]);
+
+  const sectionRefs = [
+    { section: '모집내용', ref: tabRef.current[0] },
+    { section: '모집현황', ref: tabRef.current[1] },
+    { section: '추천', ref: tabRef.current[2] },
+  ];
+
+  const getDimensions = (ele: HTMLElement) => {
+    const { height } = ele.getBoundingClientRect();
+    const offsetTop = ele.offsetTop;
+    const offsetBottom = offsetTop + height;
+
+    return {
+      height,
+      offsetTop,
+      offsetBottom,
+    };
+  };
+
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY + 55 + 48;
+
+    const selected = sectionRefs.find(({ section, ref }) => {
+      if (ref) {
+        const { offsetBottom, offsetTop } = getDimensions(ref);
+        return scrollPosition >= offsetTop && scrollPosition < offsetBottom;
+      }
+    });
+
+    if (selected && selected.section !== currentTab) {
+      setCurrentTab(selected.section);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('touchmove', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll); //clean up
+      window.addEventListener('touchmove', handleScroll);
+    };
+  });
 
   return (
     <BoardLayout>
@@ -104,7 +162,13 @@ export default function BoardPage(props: propsType) {
           </StackWrapper>
         </Info>
       </InfoWrapper>
-      <Box width={'100%'}>
+      <Box
+        sx={{
+          position: 'sticky',
+          top: '55px',
+          backgroundColor: '#fff',
+          zIndex: 2,
+        }}>
         <Tabs
           value={currentTab}
           onChange={handleTabChange}
@@ -114,68 +178,75 @@ export default function BoardPage(props: propsType) {
           <Tab value='추천' label='추천' />
         </Tabs>
       </Box>
-      <ContentContainer>
-        <p>{content}</p>
-      </ContentContainer>
-      <InfoWrapper className='column'>
-        <InfoLabel>모집 현황</InfoLabel>
-        {application.map((position) => (
-          <PositionInfo key={position.position}>
-            <span className='position-name'>{position.position}</span>
-            <span>
-              {position.accept.length} / {position.count}
-            </span>
-            <Button
-              variant={'outlined'}
-              size={'small'}
-              onClick={() => {
-                axios.post(
-                  `/api/applications?boardId=${id}&position=${position.position}`
-                );
-              }}
-              disabled={
-                position.pending.filter((user) => user.id === session?.user.id)
+      <section ref={(el) => (tabRef.current[0] = el)}>
+        <ContentContainer>
+          <p>{content}</p>
+        </ContentContainer>
+      </section>
+      <section ref={(el) => (tabRef.current[1] = el)}>
+        <InfoWrapper className='column'>
+          <InfoLabel>모집 현황</InfoLabel>
+          {application.map((position) => (
+            <PositionInfo key={position.position}>
+              <span className='position-name'>{position.position}</span>
+              <span>
+                {position.accept.length} / {position.count}
+              </span>
+              <Button
+                variant={'outlined'}
+                size={'small'}
+                onClick={() => {
+                  axios.post(
+                    `/api/applications?boardId=${id}&position=${position.position}`
+                  );
+                }}
+                disabled={
+                  position.pending.filter(
+                    (user) => user.id === session?.user.id
+                  ).length > 0 ||
+                  position.accept.filter((user) => user.id === session?.user.id)
+                    .length > 0 ||
+                  position.reject.filter((user) => user.id === session?.user.id)
+                    .length > 0
+                }>
+                {position.pending.filter((user) => user.id === session?.user.id)
                   .length > 0 ||
                 position.accept.filter((user) => user.id === session?.user.id)
                   .length > 0 ||
                 position.reject.filter((user) => user.id === session?.user.id)
                   .length > 0
-              }>
-              {position.pending.filter((user) => user.id === session?.user.id)
-                .length > 0 ||
-              position.accept.filter((user) => user.id === session?.user.id)
-                .length > 0 ||
-              position.reject.filter((user) => user.id === session?.user.id)
-                .length > 0
-                ? '지원완료'
-                : '지원'}
-            </Button>
-          </PositionInfo>
-        ))}
-      </InfoWrapper>
-      <InfoWrapper className='column'>
-        <InfoLabel>팀장 정보</InfoLabel>
-        <Link href={`/user/${author.id}`}>
-          <LeaderInfo>
-            <UserImgWrapper size={'45px'}>
-              <img src={author.image} alt={'user-image'} />
-            </UserImgWrapper>
-            <LeaderNickname>
-              <span className='nickname'>{author.nickname}</span>
-              <span className='likes'>
-                <HeartFilledIcon width={'15px'} fill={'tomato'} />
-                {author.like}
-              </span>
-            </LeaderNickname>
-            <LeaderTechStack>
-              {author.userTechStack?.map((stack) => (
-                <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
-              ))}
-            </LeaderTechStack>
-          </LeaderInfo>
-        </Link>
-      </InfoWrapper>
-      <Related data={related} />
+                  ? '지원완료'
+                  : '지원'}
+              </Button>
+            </PositionInfo>
+          ))}
+        </InfoWrapper>
+        <InfoWrapper className='column'>
+          <InfoLabel>팀장 정보</InfoLabel>
+          <Link href={`/user/${author.id}`}>
+            <LeaderInfo>
+              <UserImgWrapper size={'45px'}>
+                <img src={author.image} alt={'user-image'} />
+              </UserImgWrapper>
+              <LeaderNickname>
+                <span className='nickname'>{author.nickname}</span>
+                <span className='likes'>
+                  <HeartFilledIcon width={'15px'} fill={'tomato'} />
+                  {author.like}
+                </span>
+              </LeaderNickname>
+              <LeaderTechStack>
+                {author.userTechStack?.map((stack) => (
+                  <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
+                ))}
+              </LeaderTechStack>
+            </LeaderInfo>
+          </Link>
+        </InfoWrapper>
+      </section>
+      <section ref={(el) => (tabRef.current[2] = el)}>
+        <Related data={related} />
+      </section>
       <BottomController>
         {isBookmarked ? (
           <BookmarkFilledIcon
