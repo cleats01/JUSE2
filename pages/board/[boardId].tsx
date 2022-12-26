@@ -14,9 +14,13 @@ import { Board, position, User } from '@prisma/client';
 import { UserImgWrapper } from '../user/signup/[...signup]';
 import BottomController from '../../components/BottomController';
 import Link from 'next/link';
+import { boardData } from '..';
+import Card from '../../components/Card';
+import Related from '../../components/Related';
 interface propsType extends Board {
   isBookmarked: boolean;
   author: User;
+  related: boardData[];
 }
 
 export default function BoardPage(props: propsType) {
@@ -36,6 +40,7 @@ export default function BoardPage(props: propsType) {
     authorId,
     author,
     isClosed,
+    related,
   } = props;
 
   const [currentTab, setCurrentTab] = useState<string>('모집내용');
@@ -170,6 +175,7 @@ export default function BoardPage(props: propsType) {
           </LeaderInfo>
         </Link>
       </InfoWrapper>
+      <Related data={related} />
       <BottomController>
         {isBookmarked ? (
           <BookmarkFilledIcon
@@ -332,9 +338,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   axios.defaults.headers.Cookie = cookie;
   const { boardId } = context.query;
   let data;
+  let related;
   try {
     data = await axios
       .get(`${process.env.BASE_URL}/api/boards/${boardId}`)
+      .then((res) => res.data);
+    related = await axios
+      .get(`${process.env.BASE_URL}/api/boards/related?boardId=${boardId}`)
       .then((res) => res.data);
   } catch (error) {
     console.error('getServerSideProps board/:boardId >> ', error);
@@ -342,7 +352,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     axios.defaults.headers.Cookie = '';
   }
 
-  return { props: data };
+  return { props: { ...data, related } };
 }
 
 const BoardLayout = styled.div`
