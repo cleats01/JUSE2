@@ -271,13 +271,16 @@ export default function Add() {
                       {el}
                     </MenuItem>
                   ))}
-                  <MenuItem
-                    value={'삭제'}
-                    key={'삭제'}
-                    disabled={application.length === 1}
-                    style={{ color: 'tomato' }}>
-                    삭제
-                  </MenuItem>
+                  {application.length > 1 ? (
+                    <MenuItem
+                      value={'삭제'}
+                      key={'삭제'}
+                      style={{ color: 'tomato' }}>
+                      삭제
+                    </MenuItem>
+                  ) : (
+                    ''
+                  )}
                 </Select>
                 <CountWrapper>
                   <button
