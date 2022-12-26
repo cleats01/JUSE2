@@ -25,6 +25,7 @@ import FilterIcon from '../public/icons/settings-sliders.svg';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TechStack from '../components/TechStack';
 import { position } from '@prisma/client';
+import ScrollToTop from '../components/ScrollToTop';
 
 export interface boardData {
   id: string;
@@ -250,6 +251,7 @@ export default function Home() {
           </ButtonContainer>
         </FilterContainer>
       </Drawer>
+      <ScrollToTop />
       <TabBar />
     </HomeLayout>
   );
