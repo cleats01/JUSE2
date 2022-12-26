@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { boardData } from '..';
 import Card from '../../components/Card';
 import NavbarTextOnly from '../../components/NavbarTextOnly';
+import ScrollToTop from '../../components/ScrollToTop';
 import TabBar from '../../components/TabBar';
 import Trending from '../../components/Trending';
 import SearchIcon from '../../public/icons/search.svg';
@@ -139,6 +140,7 @@ export default function Search({ trending }: { trending: boardData[] }) {
           <Card key={board.id} data={board} />
         ))}
       </SearchResultContainer>
+      <ScrollToTop />
       <TabBar />
     </SearchLayout>
   );
