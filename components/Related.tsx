@@ -1,9 +1,5 @@
-import axios from 'axios';
-import { GetServerSidePropsContext } from 'next';
-import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 import { boardData } from '../pages';
-import CloseBtnIcon from '../public/icons/close.svg';
 import Card from './Card';
 
 export default function Related({ data }: { data: boardData[] }) {
