@@ -133,7 +133,7 @@ export default function Home() {
   const [techStack, setTechStack] = useState<string[]>([]);
 
   const resetFilter = () => {
-    setIsClosed(true);
+    setIsClosed(false);
     setOffline('');
     setPlace('');
     setPeriod([1, 6]);
