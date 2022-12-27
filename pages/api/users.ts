@@ -31,6 +31,13 @@ export default async function handler(
             },
           });
           return res.status(200).json(users);
+        } else if (req.query.nickname) {
+          const user = await prisma.user.findUnique({
+            where: {
+              nickname: req.query.nickname as string,
+            },
+          });
+          return res.json({ available: user ? false : true });
         } else {
           const users = await getAllUsers();
           return res.json(users);
