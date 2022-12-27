@@ -103,6 +103,7 @@ export default function BoardPage(props: propsType) {
       top: newValue === '모집내용' ? 0 : offsetTop - headerHeight,
       behavior: 'smooth',
     });
+    setTimeout(() => setCurrentTab(newValue), 100);
   };
 
   const sectionRefs = [
@@ -124,12 +125,12 @@ export default function BoardPage(props: propsType) {
   };
 
   const handleScroll = () => {
-    const scrollPosition = window.scrollY + 55 + 48;
+    const scrollPosition = window.scrollY + 55 + 48 + 100;
 
     const selected = sectionRefs.find(({ section, ref }) => {
       if (ref) {
         const { offsetBottom, offsetTop } = getDimensions(ref);
-        return scrollPosition >= offsetTop && scrollPosition < offsetBottom;
+        return scrollPosition > offsetTop && scrollPosition < offsetBottom;
       }
     });
 
@@ -143,9 +144,9 @@ export default function BoardPage(props: propsType) {
     window.addEventListener('touchmove', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll); //clean up
-      window.addEventListener('touchmove', handleScroll);
+      window.removeEventListener('touchmove', handleScroll);
     };
-  });
+  }, [currentTab]);
 
   const getMyApplyStatus = (position: position): string => {
     const { pending, accept, reject } = position;
@@ -214,7 +215,11 @@ export default function BoardPage(props: propsType) {
           <InfoLabel>모집 현황</InfoLabel>
           <div>
             {application.map((position) => (
-              <AccordionCustom square disableGutters elevation={0}>
+              <AccordionCustom
+                key={position.position}
+                square
+                disableGutters
+                elevation={0}>
                 <AccordionSummary
                   expandIcon={
                     <AngleDownIcon
@@ -225,7 +230,7 @@ export default function BoardPage(props: propsType) {
                   }
                   aria-controls='panel1a-content'
                   id='panel1a-header'>
-                  <PositionInfo key={position.position}>
+                  <PositionInfo>
                     <span className='position-name'>{position.position}</span>
                     <span className='position-count'>
                       {position.accept.length} / {position.count}

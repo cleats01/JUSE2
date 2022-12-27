@@ -24,10 +24,10 @@ export default function ScrollToTop() {
   };
 
   useEffect(() => {
-    const watch = () => {
-      window.addEventListener('scroll', handleFollow);
+    window.addEventListener('scroll', handleFollow);
+    return () => {
+      window.removeEventListener('scroll', handleFollow);
     };
-    watch();
   });
 
   return (
