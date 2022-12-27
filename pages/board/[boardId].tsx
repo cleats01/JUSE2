@@ -103,7 +103,7 @@ export default function BoardPage(props: propsType) {
       top: newValue === '모집내용' ? 0 : offsetTop - headerHeight,
       behavior: 'smooth',
     });
-    setTimeout(() => setCurrentTab(newValue), 100);
+    setTimeout(() => setCurrentTab(newValue), 300);
   };
 
   const sectionRefs = [
