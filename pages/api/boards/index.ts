@@ -50,7 +50,7 @@ export default async function handler(
             ? (techStack as string).split(',').length === 1
               ? { has: techStack as string }
               : {
-                  hasEvery: (techStack as string).split(','),
+                  hasSome: (techStack as string).split(','),
                 }
             : undefined,
           title: { contains: search as string },
