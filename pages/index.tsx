@@ -25,6 +25,7 @@ import FilterIcon from '../public/icons/settings-sliders.svg';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TechStack from '../components/TechStack';
 import { position } from '@prisma/client';
+import ScrollToTop from '../components/ScrollToTop';
 
 export interface boardData {
   id: string;
@@ -132,7 +133,7 @@ export default function Home() {
   const [techStack, setTechStack] = useState<string[]>([]);
 
   const resetFilter = () => {
-    setIsClosed(true);
+    setIsClosed(false);
     setOffline('');
     setPlace('');
     setPeriod([1, 6]);
@@ -250,6 +251,7 @@ export default function Home() {
           </ButtonContainer>
         </FilterContainer>
       </Drawer>
+      <ScrollToTop />
       <TabBar />
     </HomeLayout>
   );

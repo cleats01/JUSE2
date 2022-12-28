@@ -14,6 +14,8 @@ import NavbarTextOnly from '../../components/NavbarTextOnly';
 export default function SignUp() {
   const { data: session, status } = useSession();
   const [nickname, setNickname] = useState<string>('');
+  const [nicknameCheck, setNicknameCheck] =
+    useState('사용가능한 닉네임입니다.');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [userTechStack, setUserTechStack] = useState<string[]>([]);
   const [imageURL, setImageURL] = useState<string>('');
@@ -21,22 +23,37 @@ export default function SignUp() {
   const [image, setImage] = useState<File | null>(null);
 
   const router = useRouter();
-  const email = router.query.signup?.[0];
+  const regex = /^[가-힣|a-z|A-Z|0-9|]+$/;
 
   const handleNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(event.target.value as string);
+    if (event.target.value) {
+      if (event.target.value.length < 2) {
+        setNicknameCheck('닉네임은 2자 이상 입력해주세요.');
+      } else if (event.target.value.length > 8) {
+        setNicknameCheck('닉네임은 8자 이내로 입력해주세요.');
+      } else if (!regex.test(event.target.value)) {
+        setNicknameCheck('닉네임은 한글,영어,숫자만 가능합니다.');
+      } else {
+        axios.get(`/api/users?nickname=${event.target.value}`).then((res) => {
+          if (
+            event.target.value === session?.user.nickname ||
+            res.data.available
+          ) {
+            setNicknameCheck('사용가능한 닉네임입니다.');
+          } else {
+            setNicknameCheck('중복된 닉네임이 존재합니다.');
+          }
+        });
+      }
+    } else {
+      setNicknameCheck('');
+    }
   };
 
   const handleSubmit = async () => {
-    const regex = /^[가-힣|a-z|A-Z|0-9|]+$/;
-    if (nickname.length === 0) {
-      alert('닉네임을 입력해주세요.');
-    } else if (nickname.length < 2) {
-      alert('닉네임은 2자 이상 입력해주세요.');
-    } else if (nickname.length > 10) {
-      alert('닉네임은 10자 이내로 입력해주세요.');
-    } else if (!regex.test(nickname)) {
-      alert('닉네임은 한글,영어,숫자만 가능합니다.');
+    if (nicknameCheck !== '사용가능한 닉네임입니다.') {
+      alert('닉네임을 확인해주세요.');
     } else {
       if (imageURL && image) {
         // s3에 업로드
@@ -155,16 +172,21 @@ export default function SignUp() {
             }}>
             업로드
           </Button>
-          <Button onClick={deleteUpload}>삭제</Button>
+          <Button sx={{ color: 'tomato' }} onClick={deleteUpload}>
+            삭제
+          </Button>
         </div>
       </ImageUploadWrapper>
-      <TextField
-        sx={{ width: '100%' }}
-        value={nickname}
-        onChange={handleNickname}
-        label='닉네임을 입력해 주세요.'
-        size='small'
-      />
+      <div style={{ width: '100%' }}>
+        <TextField
+          value={nickname}
+          onChange={handleNickname}
+          label='닉네임을 입력해 주세요.'
+          size='small'
+          fullWidth
+        />
+        <NicknameCheck>{nicknameCheck}</NicknameCheck>
+      </div>
       {isModalOpen ? (
         <BottomSheet setIsOpen={setIsModalOpen}>
           <BottomSheetHeader>
@@ -251,4 +273,9 @@ const ButtonWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10px;
+`;
+
+const NicknameCheck = styled.p`
+  padding: 5px 0 0 5px;
+  font-size: 14px;
 `;

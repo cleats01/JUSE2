@@ -1,25 +1,83 @@
-import { Box, Button, Drawer, Tab, Tabs } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Drawer,
+  Tab,
+  Tabs,
+} from '@mui/material';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  SyntheticEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import NavbarBoard from '../../components/NavbarBoard';
 import { StackBubble } from '../add';
 import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import BookmarkIcon from '../../public/icons/bookmark.svg';
 import BookmarkFilledIcon from '../../public/icons/bookmark-filled.svg';
+import AngleDownIcon from '../../public/icons/angle-small-down.svg';
 import CloseIcon from '../../public/icons/cross-small.svg';
 import { useSession } from 'next-auth/react';
-import { Board, position, User } from '@prisma/client';
+import { Board, position, User, userSimple } from '@prisma/client';
 import { UserImgWrapper } from '../user/signup/[...signup]';
 import BottomController from '../../components/BottomController';
 import Link from 'next/link';
-interface propsType extends Board {
+import { boardData } from '..';
+import Related from '../../components/Related';
+import theme from '../../styles/theme';
+import {
+  dehydrate,
+  DehydratedState,
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from 'react-query';
+import {
+  deleteApplications,
+  getBoardById,
+  getRelated,
+  patchApplications,
+  postApplications,
+  postBookmarks,
+} from '../../utils/axios';
+import { useRouter } from 'next/router';
+interface propsType {
+  dehydratedState: DehydratedState;
+}
+interface boardType extends Board {
   isBookmarked: boolean;
   author: User;
+  related: boardData[];
 }
 
 export default function BoardPage(props: propsType) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const boardId: string = router.query.boardId as string;
+
+  const { data: boardData } = useQuery('board', () => getBoardById(boardId), {
+    // refetchOnMount: false,
+  });
+
+  const { data: relatedData } = useQuery('related', () => getRelated(boardId), {
+    // refetchOnMount: false,
+  });
+
+  const board: boardType = { ...boardData, related: relatedData };
+
   const {
     id,
     type,
@@ -36,14 +94,8 @@ export default function BoardPage(props: propsType) {
     authorId,
     author,
     isClosed,
-  } = props;
-
-  const [currentTab, setCurrentTab] = useState<string>('모집내용');
-  const { data: session, status } = useSession();
-
-  const handleTabChange = (e: SyntheticEvent, newValue: string) => {
-    setCurrentTab(newValue);
-  };
+    related,
+  } = board;
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
@@ -70,6 +122,140 @@ export default function BoardPage(props: propsType) {
   ) => {
     setApplicationTab(newValue);
   };
+
+  // 스크롤 탭 기능
+
+  const [currentTab, setCurrentTab] = useState<string>('모집내용');
+  const tabRef = useRef<HTMLElement[] | null[]>([]);
+
+  const handleTabChange = (e: SyntheticEvent, newValue: string) => {
+    const tabs = ['모집내용', '모집현황', '추천'];
+    const index = tabs.indexOf(newValue);
+    const headerHeight = 55 + 48;
+    const { offsetTop } = getDimensions(tabRef.current[index] as HTMLElement);
+    window.scrollTo({
+      top: newValue === '모집내용' ? 0 : offsetTop - headerHeight,
+      behavior: 'smooth',
+    });
+    setTimeout(() => setCurrentTab(newValue), 300);
+  };
+
+  const sectionRefs = [
+    { section: '모집내용', ref: tabRef.current[0] },
+    { section: '모집현황', ref: tabRef.current[1] },
+    { section: '추천', ref: tabRef.current[2] },
+  ];
+
+  const getDimensions = (ele: HTMLElement) => {
+    const { height } = ele.getBoundingClientRect();
+    const offsetTop = ele.offsetTop;
+    const offsetBottom = offsetTop + height;
+
+    return {
+      height,
+      offsetTop,
+      offsetBottom,
+    };
+  };
+
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY + 55 + 48 + 100;
+
+    const selected = sectionRefs.find(({ section, ref }) => {
+      if (ref) {
+        const { offsetBottom, offsetTop } = getDimensions(ref);
+        return scrollPosition > offsetTop && scrollPosition < offsetBottom;
+      }
+    });
+
+    if (selected && selected.section !== currentTab) {
+      setCurrentTab(selected.section);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('touchmove', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll); //clean up
+      window.removeEventListener('touchmove', handleScroll);
+    };
+  }, [currentTab]);
+
+  const getMyApplyStatus = (position: position): string => {
+    const { pending, accept, reject } = position;
+    let status = '지원한 이력이 없습니다.';
+    if (pending.filter((user) => user.id === session?.user.id).length) {
+      return '지원완료';
+    } else if (accept.filter((user) => user.id === session?.user.id).length) {
+      return '수락됨';
+    } else if (reject.filter((user) => user.id === session?.user.id).length) {
+      return '거절됨';
+    }
+    return status;
+  };
+
+  const postBookmarkMutation = useMutation(
+    (boardId: string) => postBookmarks(boardId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
+
+  const postApplicationMutation = useMutation(
+    ({
+      boardId,
+      positionName,
+      applicantId,
+    }: {
+      boardId: string;
+      positionName: string;
+      applicantId: string;
+    }) => postApplications(boardId, positionName, applicantId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
+
+  const deleteApplicationMutation = useMutation(
+    ({
+      boardId,
+      positionName,
+      applicantId,
+    }: {
+      boardId: string;
+      positionName: string;
+      applicantId: string;
+    }) => deleteApplications(boardId, positionName, applicantId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
+
+  const patchApplicationMutation = useMutation(
+    ({
+      boardId,
+      positionName,
+      applicantId,
+      where,
+    }: {
+      boardId: string;
+      positionName: string;
+      applicantId: string;
+      where: string;
+    }) => patchApplications(boardId, positionName, applicantId, where),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
 
   return (
     <BoardLayout>
@@ -99,7 +285,13 @@ export default function BoardPage(props: propsType) {
           </StackWrapper>
         </Info>
       </InfoWrapper>
-      <Box width={'100%'}>
+      <Box
+        sx={{
+          position: 'sticky',
+          top: '55px',
+          backgroundColor: '#fff',
+          zIndex: 2,
+        }}>
         <Tabs
           value={currentTab}
           onChange={handleTabChange}
@@ -109,76 +301,96 @@ export default function BoardPage(props: propsType) {
           <Tab value='추천' label='추천' />
         </Tabs>
       </Box>
-      <ContentContainer>
-        <p>{content}</p>
-      </ContentContainer>
-      <InfoWrapper className='column'>
-        <InfoLabel>모집 현황</InfoLabel>
-        {application.map((position) => (
-          <PositionInfo key={position.position}>
-            <span className='position-name'>{position.position}</span>
-            <span>
-              {position.accept.length} / {position.count}
-            </span>
-            <Button
-              variant={'outlined'}
-              size={'small'}
-              onClick={() => {
-                axios.post(
-                  `/api/applications?boardId=${id}&position=${position.position}`
-                );
-              }}
-              disabled={
-                position.pending.filter((user) => user.id === session?.user.id)
-                  .length > 0 ||
-                position.accept.filter((user) => user.id === session?.user.id)
-                  .length > 0 ||
-                position.reject.filter((user) => user.id === session?.user.id)
-                  .length > 0
-              }>
-              {position.pending.filter((user) => user.id === session?.user.id)
-                .length > 0 ||
-              position.accept.filter((user) => user.id === session?.user.id)
-                .length > 0 ||
-              position.reject.filter((user) => user.id === session?.user.id)
-                .length > 0
-                ? '지원완료'
-                : '지원'}
-            </Button>
-          </PositionInfo>
-        ))}
-      </InfoWrapper>
-      <InfoWrapper className='column'>
-        <InfoLabel>팀장 정보</InfoLabel>
-        <Link href={`/user/${author.id}`}>
-          <LeaderInfo>
-            <UserImgWrapper size={'45px'}>
-              <img src={author.image} alt={'user-image'} />
-            </UserImgWrapper>
-            <LeaderNickname>
-              <span className='nickname'>{author.nickname}</span>
-              <span className='likes'>
-                <HeartFilledIcon width={'15px'} fill={'tomato'} />
-                {author.like}
-              </span>
-            </LeaderNickname>
-            <LeaderTechStack>
-              {author.userTechStack?.map((stack) => (
-                <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
-              ))}
-            </LeaderTechStack>
-          </LeaderInfo>
-        </Link>
-      </InfoWrapper>
+      <section ref={(el) => (tabRef.current[0] = el)}>
+        <ContentContainer>
+          <p>{content}</p>
+        </ContentContainer>
+      </section>
+      <section ref={(el) => (tabRef.current[1] = el)}>
+        <InfoWrapper className='column'>
+          <InfoLabel>모집 현황</InfoLabel>
+          <div>
+            {application.map((position) => (
+              <AccordionCustom
+                key={position.position}
+                square
+                disableGutters
+                elevation={0}>
+                <AccordionSummary
+                  expandIcon={
+                    <AngleDownIcon
+                      fill={theme.colors.grey4}
+                      width={25}
+                      height={25}
+                    />
+                  }
+                  aria-controls='panel1a-content'
+                  id='panel1a-header'>
+                  <PositionInfo>
+                    <span className='position-name'>{position.position}</span>
+                    <span className='position-count'>
+                      {position.accept.length} / {position.count}
+                    </span>
+                  </PositionInfo>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {position.accept.length ? (
+                    <UserChipsWrapper>
+                      {position.accept.map((user: userSimple) => (
+                        <Chip
+                          key={user.id}
+                          avatar={
+                            <Avatar alt={user.nickname} src={user.image} />
+                          }
+                          label={user.nickname}
+                          variant='outlined'
+                          component='a'
+                          href={`/user/${user.id}`}
+                          clickable
+                        />
+                      ))}
+                    </UserChipsWrapper>
+                  ) : (
+                    <NullMessage>
+                      해당 포지션에 참여중인 유저가 없습니다.
+                    </NullMessage>
+                  )}
+                </AccordionDetails>
+              </AccordionCustom>
+            ))}
+          </div>
+        </InfoWrapper>
+        <InfoWrapper className='column'>
+          <InfoLabel>팀장 정보</InfoLabel>
+          <Link href={`/user/${author.id}`}>
+            <LeaderInfo>
+              <UserImgWrapper size={'45px'}>
+                <img src={author.image} alt={'user-image'} />
+              </UserImgWrapper>
+              <LeaderNickname>
+                <span className='nickname'>{author.nickname}</span>
+                <span className='likes'>
+                  <HeartFilledIcon width={'15px'} fill={'tomato'} />
+                  {author.like}
+                </span>
+              </LeaderNickname>
+              <LeaderTechStack>
+                {author.userTechStack?.map((stack) => (
+                  <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
+                ))}
+              </LeaderTechStack>
+            </LeaderInfo>
+          </Link>
+        </InfoWrapper>
+      </section>
+      <section ref={(el) => (tabRef.current[2] = el)}>
+        <Related data={related} />
+      </section>
       <BottomController>
         {isBookmarked ? (
-          <BookmarkFilledIcon
-            onClick={() => axios.post(`/api/bookmarks?boardId=${id}`)}
-          />
+          <BookmarkFilledIcon onClick={() => postBookmarkMutation.mutate(id)} />
         ) : (
-          <BookmarkIcon
-            onClick={() => axios.post(`/api/bookmarks?boardId=${id}`)}
-          />
+          <BookmarkIcon onClick={() => postBookmarkMutation.mutate(id)} />
         )}
         {isAdmin ? (
           <Button variant='outlined' size={'large'}>
@@ -205,6 +417,9 @@ export default function BoardPage(props: propsType) {
             variant='contained'
             size={'large'}
             style={{ color: '#fff' }}
+            onClick={() => {
+              toggleDrawer('apply', true);
+            }}
             disableElevation>
             지원하기
           </Button>
@@ -260,66 +475,145 @@ export default function BoardPage(props: propsType) {
                   <span>{position.position}</span>
                   <span>{`${position.accept.length} / ${position.count}`}</span>
                 </PostionLabel>
-                {position[applicationTab].map((user) => (
-                  <UserWrapper key={user.id}>
-                    <Link href={`/user/${user.id}`}>
-                      <UserImgWrapper size='40px'>
-                        <img src={user.image} alt={'user-image'} />
-                      </UserImgWrapper>
-                    </Link>
-                    <Link href={`/user/${user.id}`}>
-                      <span className='user-nickname'>{user.nickname}</span>
-                    </Link>
-                    {applicationTab === 'pending' ? (
-                      <ButtonWrapper>
-                        <Button
-                          sx={{ minWidth: '50px' }}
-                          size='small'
-                          variant='outlined'
-                          disableElevation
-                          onClick={() => {
-                            axios.patch(
-                              `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=reject`
-                            );
-                          }}>
-                          거절
-                        </Button>
-                        <Button
-                          sx={{ color: '#fff', minWidth: '50px' }}
-                          size='small'
-                          variant='contained'
-                          disableElevation
-                          onClick={() => {
-                            position.count === position.accept.length
-                              ? alert('모집 정원이 가득찼습니다.')
-                              : axios.patch(
-                                  `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=accept`
-                                );
-                          }}>
-                          수락
-                        </Button>
-                      </ButtonWrapper>
-                    ) : (
-                      <ButtonWrapper>
-                        <Button
-                          sx={{ minWidth: '50px' }}
-                          size='small'
-                          variant='outlined'
-                          disableElevation
-                          onClick={() => {
-                            axios.patch(
-                              `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=pending`
-                            );
-                          }}>
-                          취소
-                        </Button>
-                      </ButtonWrapper>
-                    )}
-                  </UserWrapper>
-                ))}
+                {position[applicationTab].length ? (
+                  position[applicationTab].map((user) => (
+                    <UserWrapper key={user.id}>
+                      <Link href={`/user/${user.id}`}>
+                        <UserImgWrapper size='40px'>
+                          <img src={user.image} alt={'user-image'} />
+                        </UserImgWrapper>
+                      </Link>
+                      <Link href={`/user/${user.id}`}>
+                        <span className='user-nickname'>{user.nickname}</span>
+                      </Link>
+                      {applicationTab === 'pending' ? (
+                        <ButtonWrapper>
+                          <Button
+                            sx={{ minWidth: '50px' }}
+                            size='small'
+                            variant='outlined'
+                            disableElevation
+                            onClick={() => {
+                              patchApplicationMutation.mutate({
+                                boardId: id,
+                                positionName: position.position,
+                                applicantId: user.id,
+                                where: 'reject',
+                              });
+                            }}>
+                            거절
+                          </Button>
+                          <Button
+                            sx={{ color: '#fff', minWidth: '50px' }}
+                            size='small'
+                            variant='contained'
+                            disableElevation
+                            onClick={() => {
+                              position.count === position.accept.length
+                                ? alert('모집 정원이 가득찼습니다.')
+                                : patchApplicationMutation.mutate({
+                                    boardId: id,
+                                    positionName: position.position,
+                                    applicantId: user.id,
+                                    where: 'accept',
+                                  });
+                            }}>
+                            수락
+                          </Button>
+                        </ButtonWrapper>
+                      ) : (
+                        <ButtonWrapper>
+                          <Button
+                            sx={{ minWidth: '50px' }}
+                            size='small'
+                            variant='outlined'
+                            disableElevation
+                            onClick={() => {
+                              patchApplicationMutation.mutate({
+                                boardId: id,
+                                positionName: position.position,
+                                applicantId: user.id,
+                                where: 'pending',
+                              });
+                            }}>
+                            취소
+                          </Button>
+                        </ButtonWrapper>
+                      )}
+                    </UserWrapper>
+                  ))
+                ) : (
+                  <NullMessage>유저가 없습니다.</NullMessage>
+                )}
               </div>
             ))}
           </ApplicationContainer>
+        </DrawerLayout>
+      </Drawer>
+      <Drawer
+        anchor={'bottom'}
+        open={isDrawerOpen.apply}
+        onClose={() => {
+          toggleDrawer('apply', false);
+        }}>
+        <DrawerLayout>
+          <DrawerHeader>
+            <DrawerLabel>지원하기</DrawerLabel>
+            <CloseIcon
+              onClick={() => {
+                toggleDrawer('apply', false);
+              }}
+            />
+          </DrawerHeader>
+          <ApplyContainer>
+            {application.map((position) => (
+              <ApplyPositionWrapper key={position.position}>
+                <PositionInfo>
+                  <span className='position-name'>{position.position}</span>
+                  <span>
+                    {position.accept.length} / {position.count}
+                  </span>
+                  {getMyApplyStatus(position) === '지원한 이력이 없습니다.' ? (
+                    <Button
+                      variant={'contained'}
+                      size={'small'}
+                      style={{ color: '#fff' }}
+                      disableElevation
+                      onClick={() => {
+                        if (!session) {
+                          alert('로그인이 필요한 기능입니다.');
+                          return;
+                        }
+                        postApplicationMutation.mutate({
+                          boardId: id,
+                          positionName: position.position,
+                          applicantId: session.user.id,
+                        });
+                      }}>
+                      지원
+                    </Button>
+                  ) : (
+                    <Button
+                      variant={'outlined'}
+                      size={'small'}
+                      onClick={() => {
+                        deleteApplicationMutation.mutate({
+                          boardId: id,
+                          positionName: position.position,
+                          applicantId: session?.user.id,
+                        });
+                      }}>
+                      취소
+                    </Button>
+                  )}
+                </PositionInfo>
+                <ApplyStatus>
+                  <span>지원 상태</span>
+                  <span>{getMyApplyStatus(position)}</span>
+                </ApplyStatus>
+              </ApplyPositionWrapper>
+            ))}
+          </ApplyContainer>
         </DrawerLayout>
       </Drawer>
     </BoardLayout>
@@ -330,19 +624,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let { cookie } = context.req.headers;
   cookie = cookie ? cookie : '';
   axios.defaults.headers.Cookie = cookie;
+  const queryClient = new QueryClient();
   const { boardId } = context.query;
-  let data;
   try {
-    data = await axios
-      .get(`${process.env.BASE_URL}/api/boards/${boardId}`)
-      .then((res) => res.data);
+    await queryClient.prefetchQuery('board', () =>
+      getBoardById(boardId as string)
+    );
+    await queryClient.prefetchQuery('related', () =>
+      getRelated(boardId as string)
+    );
   } catch (error) {
     console.error('getServerSideProps board/:boardId >> ', error);
   } finally {
     axios.defaults.headers.Cookie = '';
   }
 
-  return { props: data };
+  return { props: { dehydratedState: dehydrate(queryClient) } };
 }
 
 const BoardLayout = styled.div`
@@ -426,8 +723,14 @@ const PositionInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  height: 35px;
   > .position-name {
+    font-weight: 500;
     width: 40%;
+  }
+  > .position-count {
+    margin-right: 60px;
   }
 `;
 
@@ -442,6 +745,7 @@ const LeaderNickname = styled.div`
   flex-direction: column;
   gap: 5px;
   > .nickname {
+    font-size: 14px;
     font-weight: 700;
   }
   > .likes {
@@ -460,7 +764,9 @@ const LeaderTechStack = styled(StackWrapper)`
 const DrawerLayout = styled.div`
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  min-height: 50vh;
+  max-height: 80vh;
+  padding-bottom: 40px;
 `;
 
 const DrawerHeader = styled.div`
@@ -490,7 +796,6 @@ const ApplicationContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding-bottom: 20px;
 `;
 
 const PostionLabel = styled.div`
@@ -520,4 +825,54 @@ const ButtonWrapper = styled.div`
   display: flex;
   gap: 10px;
   margin-left: auto;
+`;
+
+const NullMessage = styled.span`
+  display: flex;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.grey4};
+`;
+
+const ApplyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+`;
+
+const ApplyPositionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey3};
+`;
+
+const ApplyStatus = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.grey4};
+  > :first-child {
+    font-weight: 600;
+  }
+`;
+
+const AccordionCustom = styled(Accordion)`
+  &:before {
+    display: none;
+  }
+  .MuiButtonBase-root {
+    padding: 0;
+  }
+  .MuiAccordionDetails-root {
+    padding: 0;
+  }
+`;
+
+const UserChipsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 `;

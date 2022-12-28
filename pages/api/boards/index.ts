@@ -7,14 +7,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req });
-  let user = null;
-  if (session) {
-    user = await prisma.user.findUnique({
-      where: { id: session?.user.id },
-    });
-  }
-
   try {
     switch (req.method) {
       case 'POST': {
@@ -58,7 +50,7 @@ export default async function handler(
             ? (techStack as string).split(',').length === 1
               ? { has: techStack as string }
               : {
-                  hasEvery: (techStack as string).split(','),
+                  hasSome: (techStack as string).split(','),
                 }
             : undefined,
           title: { contains: search as string },
@@ -70,7 +62,7 @@ export default async function handler(
             take: search ? 20 : 5,
             where: filterOption,
             ...(!isFirstPage && pageCondition),
-            orderBy: { updatedAt: 'desc' },
+            orderBy: { createdAt: 'desc' },
           })
           .then((data) =>
             data.map((board) => ({

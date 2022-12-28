@@ -22,9 +22,7 @@ export default async function handler(
         if (user) {
           isLiked = user.likeList.includes(req.query.userId as string);
         }
-        return res.status(200).json({
-          isLiked,
-        });
+        return res.status(200).json(isLiked);
       }
       case 'POST': {
         if (user?.likeList.includes(req.query.userId as string)) {

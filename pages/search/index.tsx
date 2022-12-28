@@ -1,18 +1,22 @@
 import { InputAdornment, TextField } from '@mui/material';
 import axios from 'axios';
+import { GetServerSidePropsContext } from 'next';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { boardData } from '..';
 import Card from '../../components/Card';
 import NavbarTextOnly from '../../components/NavbarTextOnly';
+import ScrollToTop from '../../components/ScrollToTop';
 import TabBar from '../../components/TabBar';
+import Trending from '../../components/Trending';
 import SearchIcon from '../../public/icons/search.svg';
 
-export default function Search() {
+export default function Search({ trending }: { trending: boardData[] }) {
   const [searchInput, setSearchInput] = useState('');
   const [recentSearch, setRecentSearch] = useState<string[]>([]);
   const [recentSwitch, setRecentSwitch] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<boardData[]>([]);
+  const [isSearched, setIsSearched] = useState<boolean>(false);
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
@@ -39,6 +43,7 @@ export default function Search() {
         setSearchResult(res.data);
       });
       setSearchInput('');
+      setIsSearched(true);
     }
   };
 
@@ -48,6 +53,7 @@ export default function Search() {
       .then((res) => {
         setSearchResult(res.data);
       });
+    setIsSearched(true);
   };
 
   const handleSwitch = () => {
@@ -121,18 +127,35 @@ export default function Search() {
         </RecentSearchContainer>
       </SearchInputContainer>
       <SearchResultContainer>
-        {searchResult.length ? (
-          <span>총 {searchResult.length}건의 검색 결과를 찾았습니다.</span>
+        {!isSearched ? (
+          <Trending data={trending} />
+        ) : searchResult.length ? (
+          <SearchResultMessage>
+            총 {searchResult.length}건의 검색 결과를 찾았습니다.
+          </SearchResultMessage>
         ) : (
-          ''
+          <SearchResultMessage>검색 결과가 없습니다.</SearchResultMessage>
         )}
         {searchResult.map((board: boardData) => (
           <Card key={board.id} data={board} />
         ))}
       </SearchResultContainer>
+      <ScrollToTop />
       <TabBar />
     </SearchLayout>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  let data;
+  try {
+    data = await axios
+      .get(`${process.env.BASE_URL}/api/boards/trending`)
+      .then((res) => res.data);
+  } catch (error) {
+    console.error('getServerSideProps search >> ', error);
+  }
+  return { props: { trending: data } };
 }
 
 const SearchLayout = styled.div`
@@ -196,4 +219,9 @@ const SearchResultContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+const SearchResultMessage = styled.span`
+  padding-left: 5px;
+  padding-bottom: 5px;
 `;

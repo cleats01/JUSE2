@@ -27,7 +27,10 @@ export default async function handler(
         const bookmarkList = await prisma.board.findMany({
           where: { id: { in: user?.bookmarkList } },
         });
-        return res.json({ myList, applyList, bookmarkList });
+        const acceptedList = await prisma.board.findMany({
+          where: { id: { in: user?.acceptedList } },
+        });
+        return res.json({ myList, applyList, bookmarkList, acceptedList });
       }
       default:
         break;

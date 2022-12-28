@@ -20,6 +20,7 @@ interface myBoardsData {
   myList: boardData[];
   applyList: boardData[];
   bookmarkList: boardData[];
+  acceptedList: boardData[];
 }
 
 export default function UserPage() {
@@ -59,9 +60,11 @@ export default function UserPage() {
       await axios.get(`/api/boards/my?id=${session?.user.id}`).then((res) => {
         setBoardsData(res.data);
       });
-      await axios.get(`/api/users?ids=${user.likeList}`).then((res) => {
-        setLikeListData(res.data);
-      });
+      if (user.likeList.length) {
+        await axios.get(`/api/users?ids=${user.likeList}`).then((res) => {
+          setLikeListData(res.data);
+        });
+      }
     };
     if (status === 'authenticated') {
       userInfoData();
@@ -137,9 +140,13 @@ export default function UserPage() {
               <Tab value='참여중인 모임' label='참여중인 모임' />
             </Tabs>
             <BoardContainer>
-              {boardsData?.myList.map((board) => (
-                <Card data={board} key={board.id} />
-              ))}
+              {myListTab === '내가 만든 모임'
+                ? boardsData?.myList.map((board) => (
+                    <Card data={board} key={board.id} />
+                  ))
+                : boardsData?.acceptedList.map((board) => (
+                    <Card data={board} key={board.id} />
+                  ))}
             </BoardContainer>
           </DrawerLayout>
         </Drawer>

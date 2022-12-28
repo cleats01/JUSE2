@@ -93,6 +93,13 @@ export default function EditBoardPage() {
     event: SelectChangeEvent,
     positionName: string
   ) => {
+    if (event.target.value === '삭제' && application.length > 1) {
+      const index = application.findIndex(
+        (obj) => obj.position === positionName
+      );
+      const deleted = application.splice(index, 1);
+      setApplication(deleted);
+    }
     if (
       application.findIndex((obj) => obj.position === event.target.value) === -1
     ) {
@@ -276,10 +283,27 @@ export default function EditBoardPage() {
                   }}
                   label='모집 포지션'>
                   {positions.map((el: string) => (
-                    <MenuItem value={el} key={el}>
+                    <MenuItem
+                      value={el}
+                      key={el}
+                      disabled={
+                        application.findIndex(
+                          (position) => position.position === el
+                        ) !== -1
+                      }>
                       {el}
                     </MenuItem>
                   ))}
+                  {application.length > 1 ? (
+                    <MenuItem
+                      value={'삭제'}
+                      key={'삭제'}
+                      style={{ color: 'tomato' }}>
+                      삭제
+                    </MenuItem>
+                  ) : (
+                    ''
+                  )}
                 </Select>
                 <CountWrapper>
                   <button

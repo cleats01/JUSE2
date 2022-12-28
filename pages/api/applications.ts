@@ -127,6 +127,28 @@ export default async function handler(
           return res.status(200).json({ message: 'pending' });
         }
       }
+      case 'DELETE': {
+        await prisma.board.update({
+          where: { id: req.query.boardId as string },
+          data: {
+            application: positionCurrent?.map((position) => {
+              if (position.position === req.query.position) {
+                position.pending = position.pending.filter(
+                  (applicant) => applicant.id !== req.query.applicantId
+                );
+                position.accept = position.accept.filter(
+                  (applicant) => applicant.id !== req.query.applicantId
+                );
+                position.reject = position.reject.filter(
+                  (applicant) => applicant.id !== req.query.applicantId
+                );
+              }
+              return position;
+            }),
+          },
+        });
+        return res.status(200).json({ message: 'canceled' });
+      }
       default:
         break;
     }
