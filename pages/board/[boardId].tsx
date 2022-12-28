@@ -35,13 +35,49 @@ import Link from 'next/link';
 import { boardData } from '..';
 import Related from '../../components/Related';
 import theme from '../../styles/theme';
-interface propsType extends Board {
+import {
+  dehydrate,
+  DehydratedState,
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from 'react-query';
+import {
+  deleteApplications,
+  getBoardById,
+  getRelated,
+  patchApplications,
+  postApplications,
+  postBookmarks,
+} from '../../utils/axios';
+import { useRouter } from 'next/router';
+interface propsType {
+  dehydratedState: DehydratedState;
+}
+interface boardType extends Board {
   isBookmarked: boolean;
   author: User;
   related: boardData[];
 }
 
 export default function BoardPage(props: propsType) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const boardId: string = router.query.boardId as string;
+
+  const { data: boardData } = useQuery('board', () => getBoardById(boardId), {
+    refetchOnMount: false,
+  });
+
+  const { data: relatedData } = useQuery('related', () => getRelated(boardId), {
+    refetchOnMount: false,
+  });
+
+  const board: boardType = { ...boardData, related: relatedData };
+
   const {
     id,
     type,
@@ -59,9 +95,7 @@ export default function BoardPage(props: propsType) {
     author,
     isClosed,
     related,
-  } = props;
-
-  const { data: session, status } = useSession();
+  } = board;
 
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
@@ -160,6 +194,68 @@ export default function BoardPage(props: propsType) {
     }
     return status;
   };
+
+  const postBookmarkMutation = useMutation(
+    (boardId: string) => postBookmarks(boardId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
+
+  const postApplicationMutation = useMutation(
+    ({
+      boardId,
+      positionName,
+      applicantId,
+    }: {
+      boardId: string;
+      positionName: string;
+      applicantId: string;
+    }) => postApplications(boardId, positionName, applicantId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
+
+  const deleteApplicationMutation = useMutation(
+    ({
+      boardId,
+      positionName,
+      applicantId,
+    }: {
+      boardId: string;
+      positionName: string;
+      applicantId: string;
+    }) => deleteApplications(boardId, positionName, applicantId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
+
+  const patchApplicationMutation = useMutation(
+    ({
+      boardId,
+      positionName,
+      applicantId,
+      where,
+    }: {
+      boardId: string;
+      positionName: string;
+      applicantId: string;
+      where: string;
+    }) => patchApplications(boardId, positionName, applicantId, where),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
 
   return (
     <BoardLayout>
@@ -292,13 +388,9 @@ export default function BoardPage(props: propsType) {
       </section>
       <BottomController>
         {isBookmarked ? (
-          <BookmarkFilledIcon
-            onClick={() => axios.post(`/api/bookmarks?boardId=${id}`)}
-          />
+          <BookmarkFilledIcon onClick={() => postBookmarkMutation.mutate(id)} />
         ) : (
-          <BookmarkIcon
-            onClick={() => axios.post(`/api/bookmarks?boardId=${id}`)}
-          />
+          <BookmarkIcon onClick={() => postBookmarkMutation.mutate(id)} />
         )}
         {isAdmin ? (
           <Button variant='outlined' size={'large'}>
@@ -402,9 +494,12 @@ export default function BoardPage(props: propsType) {
                             variant='outlined'
                             disableElevation
                             onClick={() => {
-                              axios.patch(
-                                `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=reject`
-                              );
+                              patchApplicationMutation.mutate({
+                                boardId: id,
+                                positionName: position.position,
+                                applicantId: user.id,
+                                where: 'reject',
+                              });
                             }}>
                             거절
                           </Button>
@@ -416,9 +511,12 @@ export default function BoardPage(props: propsType) {
                             onClick={() => {
                               position.count === position.accept.length
                                 ? alert('모집 정원이 가득찼습니다.')
-                                : axios.patch(
-                                    `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=accept`
-                                  );
+                                : patchApplicationMutation.mutate({
+                                    boardId: id,
+                                    positionName: position.position,
+                                    applicantId: user.id,
+                                    where: 'accept',
+                                  });
                             }}>
                             수락
                           </Button>
@@ -431,9 +529,12 @@ export default function BoardPage(props: propsType) {
                             variant='outlined'
                             disableElevation
                             onClick={() => {
-                              axios.patch(
-                                `/api/applications?boardId=${id}&applicantId=${user.id}&position=${position.position}&to=pending`
-                              );
+                              patchApplicationMutation.mutate({
+                                boardId: id,
+                                positionName: position.position,
+                                applicantId: user.id,
+                                where: 'pending',
+                              });
                             }}>
                             취소
                           </Button>
@@ -483,9 +584,11 @@ export default function BoardPage(props: propsType) {
                           alert('로그인이 필요한 기능입니다.');
                           return;
                         }
-                        axios.post(
-                          `/api/applications?boardId=${id}&position=${position.position}&applicantId=${session?.user.id}`
-                        );
+                        postApplicationMutation.mutate({
+                          boardId: id,
+                          positionName: position.position,
+                          applicantId: session.user.id,
+                        });
                       }}>
                       지원
                     </Button>
@@ -494,9 +597,11 @@ export default function BoardPage(props: propsType) {
                       variant={'outlined'}
                       size={'small'}
                       onClick={() => {
-                        axios.delete(
-                          `/api/applications?boardId=${id}&position=${position.position}&applicantId=${session?.user.id}`
-                        );
+                        deleteApplicationMutation.mutate({
+                          boardId: id,
+                          positionName: position.position,
+                          applicantId: session?.user.id,
+                        });
                       }}>
                       취소
                     </Button>
@@ -519,23 +624,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let { cookie } = context.req.headers;
   cookie = cookie ? cookie : '';
   axios.defaults.headers.Cookie = cookie;
+  const queryClient = new QueryClient();
   const { boardId } = context.query;
-  let data;
-  let related;
   try {
-    data = await axios
-      .get(`${process.env.BASE_URL}/api/boards/${boardId}`)
-      .then((res) => res.data);
-    related = await axios
-      .get(`${process.env.BASE_URL}/api/boards/related?boardId=${boardId}`)
-      .then((res) => res.data);
+    await queryClient.prefetchQuery('board', () =>
+      getBoardById(boardId as string)
+    );
+    await queryClient.prefetchQuery('related', () =>
+      getRelated(boardId as string)
+    );
   } catch (error) {
     console.error('getServerSideProps board/:boardId >> ', error);
   } finally {
     axios.defaults.headers.Cookie = '';
   }
 
-  return { props: { ...data, related } };
+  return { props: { dehydratedState: dehydrate(queryClient) } };
 }
 
 const BoardLayout = styled.div`
