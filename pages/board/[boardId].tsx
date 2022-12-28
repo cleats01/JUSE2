@@ -69,11 +69,11 @@ export default function BoardPage(props: propsType) {
   const boardId: string = router.query.boardId as string;
 
   const { data: boardData } = useQuery('board', () => getBoardById(boardId), {
-    refetchOnMount: false,
+    // refetchOnMount: false,
   });
 
   const { data: relatedData } = useQuery('related', () => getRelated(boardId), {
-    refetchOnMount: false,
+    // refetchOnMount: false,
   });
 
   const board: boardType = { ...boardData, related: relatedData };
