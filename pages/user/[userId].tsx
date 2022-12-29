@@ -32,15 +32,11 @@ export default function UserPage(props: propsType) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data: userData } = useQuery(
-    'user',
-    () => getUserById(router.query.userId as string),
-    { refetchOnMount: false }
+  const { data: userData } = useQuery('user', () =>
+    getUserById(router.query.userId as string)
   );
-  const { data: isLiked } = useQuery(
-    'isLiked',
-    () => getIsLiked(router.query.userId as string),
-    { refetchOnMount: false }
+  const { data: isLiked } = useQuery('isLiked', () =>
+    getIsLiked(router.query.userId as string)
   );
 
   const user = { ...userData, isLiked };
@@ -61,11 +57,12 @@ export default function UserPage(props: propsType) {
         queryClient.setQueryData<boolean>('isLiked', !previousIsLiked);
       }
 
-      return { previousUser };
+      return { previousUser, previousIsLiked };
     },
     onError: (err, variables, context) => {
-      if (context?.previousUser) {
+      if (context?.previousUser && context?.previousIsLiked) {
         queryClient.setQueryData<User>('todos', context.previousUser);
+        queryClient.setQueryData<boolean>('isLiked', context.previousIsLiked);
       }
     },
     onSuccess: () => {
