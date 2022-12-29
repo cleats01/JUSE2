@@ -14,7 +14,7 @@ export default function Login() {
       <LoginButton
         onClick={() =>
           signIn('google', {
-            callbackUrl: '/user',
+            callbackUrl: `${process.env.BASE_URL}/user`,
           })
         }>
         <GoogleIcon width={20} />

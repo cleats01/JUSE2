@@ -23,7 +23,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       const result = await getUserByEmail(user.email as string);
-      return result ? true : `/user/signup/${user.email}`;
+      return result
+        ? true
+        : `${process.env.BASE_URL}/user/signup/${user.email}`;
     },
     async jwt({ token, account, profile, user }) {
       if (account) {
