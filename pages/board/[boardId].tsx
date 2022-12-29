@@ -53,6 +53,7 @@ import {
   postBookmarks,
 } from '../../utils/axios';
 import { useRouter } from 'next/router';
+import ContentViewer from '../../components/ContentViewer';
 interface propsType {
   dehydratedState: DehydratedState;
 }
@@ -302,9 +303,7 @@ export default function BoardPage(props: propsType) {
         </Tabs>
       </Box>
       <section ref={(el) => (tabRef.current[0] = el)}>
-        <ContentContainer>
-          <p>{content}</p>
-        </ContentContainer>
+        <ContentViewer content={content} />
       </section>
       <section ref={(el) => (tabRef.current[1] = el)}>
         <InfoWrapper className='column'>
