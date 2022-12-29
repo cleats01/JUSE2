@@ -155,6 +155,10 @@ export default function Home() {
     }
   );
 
+  useEffect(() => {
+    axios.get('/api/test').then((res) => console.log(res.data.message));
+  });
+
   return (
     <HomeLayout>
       <NavbarMain />
