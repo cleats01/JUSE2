@@ -46,6 +46,28 @@ export default function UserPage(props: propsType) {
   const user = { ...userData, isLiked };
 
   const postLikeMutation = useMutation(() => postLikes(user.id), {
+    onMutate: async () => {
+      await queryClient.cancelQueries('user');
+      await queryClient.cancelQueries('isLiked');
+
+      const previousUser = queryClient.getQueryData<User>('user');
+      const previousIsLiked = queryClient.getQueryData<boolean>('isLiked');
+
+      if (previousUser && previousIsLiked !== undefined) {
+        queryClient.setQueryData<User>('user', {
+          ...previousUser,
+          like: previousIsLiked ? previousUser.like - 1 : previousUser.like + 1,
+        });
+        queryClient.setQueryData<boolean>('isLiked', !previousIsLiked);
+      }
+
+      return { previousUser };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousUser) {
+        queryClient.setQueryData<User>('todos', context.previousUser);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries('user');
       queryClient.invalidateQueries('isLiked');
