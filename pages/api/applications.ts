@@ -17,7 +17,7 @@ export default async function handler(
     return res.status(400).json({ message: 'Login Please' });
   }
 
-  const positionCurrent = await prisma.board
+  const applicationCurrent = await prisma.board
     .findUnique({ where: { id: req.query.boardId as string } })
     .then((data) => data?.application);
 
@@ -29,7 +29,7 @@ export default async function handler(
         await prisma.board.update({
           where: { id: req.query.boardId as string },
           data: {
-            application: positionCurrent?.map((position) => {
+            application: applicationCurrent?.map((position) => {
               if (position.position === req.query.position && user) {
                 const userSimpleData: userSimple = {
                   id: user.id,
@@ -54,7 +54,7 @@ export default async function handler(
           await prisma.board.update({
             where: { id: req.query.boardId as string },
             data: {
-              application: positionCurrent?.map((position) => {
+              application: applicationCurrent?.map((position) => {
                 if (position.position === req.query.position) {
                   const acceptedUser = position.pending.filter(
                     (applicant) => applicant.id === req.query.applicantId
@@ -79,7 +79,7 @@ export default async function handler(
           await prisma.board.update({
             where: { id: req.query.boardId as string },
             data: {
-              application: positionCurrent?.map((position) => {
+              application: applicationCurrent?.map((position) => {
                 if (position.position === req.query.position) {
                   const rejectedUser = position.pending.filter(
                     (applicant) => applicant.id === req.query.applicantId
@@ -100,7 +100,7 @@ export default async function handler(
           await prisma.board.update({
             where: { id: req.query.boardId as string },
             data: {
-              application: positionCurrent?.map((position) => {
+              application: applicationCurrent?.map((position) => {
                 if (position.position === req.query.position) {
                   // accept -> pending
                   let user = position.accept.filter(
@@ -131,7 +131,7 @@ export default async function handler(
         await prisma.board.update({
           where: { id: req.query.boardId as string },
           data: {
-            application: positionCurrent?.map((position) => {
+            application: applicationCurrent?.map((position) => {
               if (position.position === req.query.position) {
                 position.pending = position.pending.filter(
                   (applicant) => applicant.id !== req.query.applicantId
