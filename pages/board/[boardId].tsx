@@ -346,36 +346,42 @@ export default function BoardPage(props: propsType) {
             application: previousBoard.application.map((position) => {
               if (position.position === context.positionName) {
                 if (context.where === 'accept') {
-                  const acceptedUser = position.pending.filter(
+                  const acceptedUser = position.pending.find(
                     (applicant) => applicant.id === context.applicantId
-                  )[0];
-                  position.pending = position.pending.filter(
-                    (applicant) => applicant.id !== context.applicantId
                   );
-                  position.accept.push(acceptedUser);
+                  if (acceptedUser) {
+                    position.pending = position.pending.filter(
+                      (applicant) => applicant.id !== context.applicantId
+                    );
+                    position.accept.push(acceptedUser);
+                  }
                 } else if (context.where === 'reject') {
-                  const rejectedUser = position.pending.filter(
+                  const rejectedUser = position.pending.find(
                     (applicant) => applicant.id === context.applicantId
-                  )[0];
-                  position.pending = position.pending.filter(
-                    (applicant) => applicant.id !== context.applicantId
                   );
-                  position.reject.push(rejectedUser);
+                  if (rejectedUser) {
+                    position.pending = position.pending.filter(
+                      (applicant) => applicant.id !== context.applicantId
+                    );
+                    position.reject.push(rejectedUser);
+                  }
                 } else {
                   const user =
-                    position.accept.filter(
+                    position.accept.find(
                       (applicant) => applicant.id === context.applicantId
-                    )[0] ||
-                    position.reject.filter(
+                    ) ||
+                    position.reject.find(
                       (applicant) => applicant.id === context.applicantId
-                    )[0];
-                  position.accept = position.accept.filter(
-                    (applicant) => applicant.id !== context.applicantId
-                  );
-                  position.reject = position.reject.filter(
-                    (applicant) => applicant.id !== context.applicantId
-                  );
-                  position.pending.push(user);
+                    );
+                  if (user) {
+                    position.accept = position.accept.filter(
+                      (applicant) => applicant.id !== context.applicantId
+                    );
+                    position.reject = position.reject.filter(
+                      (applicant) => applicant.id !== context.applicantId
+                    );
+                    position.pending.push(user);
+                  }
                 }
               }
               return position;
