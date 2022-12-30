@@ -181,7 +181,7 @@ export default function BoardPage(props: propsType) {
       window.removeEventListener('scroll', handleScroll); //clean up
       window.removeEventListener('touchmove', handleScroll);
     };
-  }, [currentTab]);
+  });
 
   const getMyApplyStatus = (position: position): string => {
     const { pending, accept, reject } = position;
