@@ -17,7 +17,7 @@ export default async function handler(
     return res.status(400).json({ message: 'Login Please' });
   }
 
-  const positionCurrent = await prisma.board
+  const applicationCurrent = await prisma.board
     .findUnique({ where: { id: req.query.boardId as string } })
     .then((data) => data?.application);
 
@@ -29,7 +29,7 @@ export default async function handler(
         await prisma.board.update({
           where: { id: req.query.boardId as string },
           data: {
-            application: positionCurrent?.map((position) => {
+            application: applicationCurrent?.map((position) => {
               if (position.position === req.query.position && user) {
                 const userSimpleData: userSimple = {
                   id: user.id,
@@ -54,15 +54,17 @@ export default async function handler(
           await prisma.board.update({
             where: { id: req.query.boardId as string },
             data: {
-              application: positionCurrent?.map((position) => {
+              application: applicationCurrent?.map((position) => {
                 if (position.position === req.query.position) {
-                  const acceptedUser = position.pending.filter(
+                  const acceptedUser = position.pending.find(
                     (applicant) => applicant.id === req.query.applicantId
-                  )[0];
-                  position.pending = position.pending.filter(
-                    (applicant) => applicant.id !== req.query.applicantId
                   );
-                  position.accept.push(acceptedUser);
+                  if (acceptedUser) {
+                    position.pending = position.pending.filter(
+                      (applicant) => applicant.id !== req.query.applicantId
+                    );
+                    position.accept.push(acceptedUser);
+                  }
                 }
                 return position;
               }),
@@ -79,15 +81,17 @@ export default async function handler(
           await prisma.board.update({
             where: { id: req.query.boardId as string },
             data: {
-              application: positionCurrent?.map((position) => {
+              application: applicationCurrent?.map((position) => {
                 if (position.position === req.query.position) {
-                  const rejectedUser = position.pending.filter(
+                  const rejectedUser = position.pending.find(
                     (applicant) => applicant.id === req.query.applicantId
-                  )[0];
-                  position.pending = position.pending.filter(
-                    (applicant) => applicant.id !== req.query.applicantId
                   );
-                  position.reject.push(rejectedUser);
+                  if (rejectedUser) {
+                    position.pending = position.pending.filter(
+                      (applicant) => applicant.id !== req.query.applicantId
+                    );
+                    position.reject.push(rejectedUser);
+                  }
                 }
                 return position;
               }),
@@ -100,25 +104,24 @@ export default async function handler(
           await prisma.board.update({
             where: { id: req.query.boardId as string },
             data: {
-              application: positionCurrent?.map((position) => {
+              application: applicationCurrent?.map((position) => {
                 if (position.position === req.query.position) {
-                  // accept -> pending
-                  let user = position.accept.filter(
-                    (applicant) => applicant.id === req.query.applicantId
-                  )[0];
-                  position.accept = position.accept.filter(
-                    (applicant) => applicant.id !== req.query.applicantId
-                  );
-                  // reject -> pending
-                  if (!user) {
-                    user = position.reject.filter(
+                  let user =
+                    position.accept.find(
                       (applicant) => applicant.id === req.query.applicantId
-                    )[0];
+                    ) ||
+                    position.reject.find(
+                      (applicant) => applicant.id === req.query.applicantId
+                    );
+                  if (user) {
+                    position.accept = position.accept.filter(
+                      (applicant) => applicant.id !== req.query.applicantId
+                    );
                     position.reject = position.reject.filter(
                       (applicant) => applicant.id !== req.query.applicantId
                     );
+                    position.pending.push(user);
                   }
-                  position.pending.push(user);
                 }
                 return position;
               }),
@@ -131,7 +134,7 @@ export default async function handler(
         await prisma.board.update({
           where: { id: req.query.boardId as string },
           data: {
-            application: positionCurrent?.map((position) => {
+            application: applicationCurrent?.map((position) => {
               if (position.position === req.query.position) {
                 position.pending = position.pending.filter(
                   (applicant) => applicant.id !== req.query.applicantId

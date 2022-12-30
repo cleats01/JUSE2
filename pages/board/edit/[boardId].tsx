@@ -19,6 +19,7 @@ import BottomSheet from '../../../components/BottomSheet';
 import { position } from '@prisma/client';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import TextEditor from '../../../components/TextEditor';
 
 export default function EditBoardPage() {
   const router = useRouter();
@@ -362,17 +363,10 @@ export default function EditBoardPage() {
           label='제목'
           value={title}
           onChange={handleTitle}
-          variant='filled'
+          variant='outlined'
           fullWidth
         />
-        <TextField
-          label='본문'
-          value={content}
-          onChange={handleContent}
-          multiline
-          minRows={4}
-          variant='filled'
-        />
+        <TextEditor content={content} setContent={setContent} />
       </ContentsContainer>
     </AddLayout>
   );

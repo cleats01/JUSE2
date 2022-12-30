@@ -32,20 +32,39 @@ export default function UserPage(props: propsType) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data: userData } = useQuery(
-    'user',
-    () => getUserById(router.query.userId as string),
-    { refetchOnMount: false }
+  const { data: userData } = useQuery('user', () =>
+    getUserById(router.query.userId as string)
   );
-  const { data: isLiked } = useQuery(
-    'isLiked',
-    () => getIsLiked(router.query.userId as string),
-    { refetchOnMount: false }
+  const { data: isLiked } = useQuery('isLiked', () =>
+    getIsLiked(router.query.userId as string)
   );
 
   const user = { ...userData, isLiked };
 
   const postLikeMutation = useMutation(() => postLikes(user.id), {
+    onMutate: async () => {
+      await queryClient.cancelQueries('user');
+      await queryClient.cancelQueries('isLiked');
+
+      const previousUser = queryClient.getQueryData<User>('user');
+      const previousIsLiked = queryClient.getQueryData<boolean>('isLiked');
+
+      if (previousUser && previousIsLiked !== undefined) {
+        queryClient.setQueryData<User>('user', {
+          ...previousUser,
+          like: previousIsLiked ? previousUser.like - 1 : previousUser.like + 1,
+        });
+        queryClient.setQueryData<boolean>('isLiked', !previousIsLiked);
+      }
+
+      return { previousUser, previousIsLiked };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousUser && context?.previousIsLiked) {
+        queryClient.setQueryData<User>('todos', context.previousUser);
+        queryClient.setQueryData<boolean>('isLiked', context.previousIsLiked);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries('user');
       queryClient.invalidateQueries('isLiked');

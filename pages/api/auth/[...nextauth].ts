@@ -32,16 +32,14 @@ export const authOptions: NextAuthOptions = {
         );
         token.id = userData?.id;
         token.nickname = userData?.nickname;
-        token.userTechStack = userData?.userTechStack;
-        token.like = userData?.like;
+        token.image = userData?.image;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.nickname = token.nickname;
-      session.user.userTechStack = token.userTechStack;
-      session.user.like = token.like;
+      session.user.image = token.image;
       return session;
     },
   },

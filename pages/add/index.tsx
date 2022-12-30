@@ -18,6 +18,8 @@ import { useSession } from 'next-auth/react';
 import BottomSheet from '../../components/BottomSheet';
 import { position } from '@prisma/client';
 
+import TextEditor from '../../components/TextEditor';
+
 export default function Add() {
   const { data: session, status } = useSession();
   const [type, setType] = useState<string>('프로젝트');
@@ -339,17 +341,10 @@ export default function Add() {
           label='제목'
           value={title}
           onChange={handleTitle}
-          variant='filled'
+          variant='outlined'
           fullWidth
         />
-        <TextField
-          label='본문'
-          value={content}
-          onChange={handleContent}
-          multiline
-          minRows={4}
-          variant='filled'
-        />
+        <TextEditor content={content} setContent={setContent} />
       </ContentsContainer>
     </AddLayout>
   );

@@ -53,6 +53,7 @@ import {
   postBookmarks,
 } from '../../utils/axios';
 import { useRouter } from 'next/router';
+import ContentViewer from '../../components/ContentViewer';
 interface propsType {
   dehydratedState: DehydratedState;
 }
@@ -68,13 +69,17 @@ export default function BoardPage(props: propsType) {
   const queryClient = useQueryClient();
   const boardId: string = router.query.boardId as string;
 
-  const { data: boardData } = useQuery('board', () => getBoardById(boardId), {
-    // refetchOnMount: false,
-  });
+  const { data: boardData } = useQuery(
+    'board',
+    () => getBoardById(boardId),
+    {}
+  );
 
-  const { data: relatedData } = useQuery('related', () => getRelated(boardId), {
-    // refetchOnMount: false,
-  });
+  const { data: relatedData } = useQuery(
+    'related',
+    () => getRelated(boardId),
+    {}
+  );
 
   const board: boardType = { ...boardData, related: relatedData };
 
@@ -180,7 +185,7 @@ export default function BoardPage(props: propsType) {
       window.removeEventListener('scroll', handleScroll); //clean up
       window.removeEventListener('touchmove', handleScroll);
     };
-  }, [currentTab]);
+  });
 
   const getMyApplyStatus = (position: position): string => {
     const { pending, accept, reject } = position;
@@ -198,6 +203,28 @@ export default function BoardPage(props: propsType) {
   const postBookmarkMutation = useMutation(
     (boardId: string) => postBookmarks(boardId),
     {
+      onMutate: async () => {
+        await queryClient.cancelQueries('board');
+
+        const previousBoard = queryClient.getQueryData<boardType>('board');
+
+        if (previousBoard) {
+          queryClient.setQueryData<boardType>('board', {
+            ...previousBoard,
+            bookmark: previousBoard.isBookmarked
+              ? previousBoard.bookmark - 1
+              : previousBoard.bookmark - 1,
+            isBookmarked: !previousBoard.isBookmarked,
+          });
+        }
+
+        return { previousBoard };
+      },
+      onError: (err, variables, context) => {
+        if (context?.previousBoard) {
+          queryClient.setQueryData<boardType>('board', context.previousBoard);
+        }
+      },
       onSuccess: () => {
         queryClient.invalidateQueries('board');
       },
@@ -215,6 +242,34 @@ export default function BoardPage(props: propsType) {
       applicantId: string;
     }) => postApplications(boardId, positionName, applicantId),
     {
+      onMutate: async (context) => {
+        await queryClient.cancelQueries('board');
+
+        const previousBoard = queryClient.getQueryData<boardType>('board');
+
+        if (previousBoard) {
+          queryClient.setQueryData<boardType>('board', {
+            ...previousBoard,
+            application: previousBoard.application.map((position) => {
+              if (position.position === context.positionName) {
+                position.pending.push({
+                  id: context.applicantId,
+                  image: session?.user.image,
+                  nickname: session?.user.nickname,
+                });
+              }
+              return position;
+            }),
+          });
+        }
+
+        return { previousBoard };
+      },
+      onError: (err, variables, context) => {
+        if (context?.previousBoard) {
+          queryClient.setQueryData<boardType>('board', context.previousBoard);
+        }
+      },
       onSuccess: () => {
         queryClient.invalidateQueries('board');
       },
@@ -232,6 +287,36 @@ export default function BoardPage(props: propsType) {
       applicantId: string;
     }) => deleteApplications(boardId, positionName, applicantId),
     {
+      onMutate: async (context) => {
+        await queryClient.cancelQueries('board');
+        const previousBoard = queryClient.getQueryData<boardType>('board');
+
+        if (previousBoard) {
+          queryClient.setQueryData<boardType>('board', {
+            ...previousBoard,
+            application: previousBoard.application.map((position) => {
+              if (position.position === context.positionName) {
+                position.pending = position.pending.filter(
+                  (user) => user.id !== context.applicantId
+                );
+                position.accept = position.accept.filter(
+                  (user) => user.id !== context.applicantId
+                );
+                position.reject = position.reject.filter(
+                  (user) => user.id !== context.applicantId
+                );
+              }
+              return position;
+            }),
+          });
+        }
+        return { previousBoard };
+      },
+      onError: (err, variables, context) => {
+        if (context?.previousBoard) {
+          queryClient.setQueryData<boardType>('board', context.previousBoard);
+        }
+      },
       onSuccess: () => {
         queryClient.invalidateQueries('board');
       },
@@ -251,6 +336,65 @@ export default function BoardPage(props: propsType) {
       where: string;
     }) => patchApplications(boardId, positionName, applicantId, where),
     {
+      onMutate: async (context) => {
+        await queryClient.cancelQueries('board');
+        const previousBoard = queryClient.getQueryData<boardType>('board');
+
+        if (previousBoard) {
+          queryClient.setQueryData<boardType>('board', {
+            ...previousBoard,
+            application: previousBoard.application.map((position) => {
+              if (position.position === context.positionName) {
+                if (context.where === 'accept') {
+                  const acceptedUser = position.pending.find(
+                    (applicant) => applicant.id === context.applicantId
+                  );
+                  if (acceptedUser) {
+                    position.pending = position.pending.filter(
+                      (applicant) => applicant.id !== context.applicantId
+                    );
+                    position.accept.push(acceptedUser);
+                  }
+                } else if (context.where === 'reject') {
+                  const rejectedUser = position.pending.find(
+                    (applicant) => applicant.id === context.applicantId
+                  );
+                  if (rejectedUser) {
+                    position.pending = position.pending.filter(
+                      (applicant) => applicant.id !== context.applicantId
+                    );
+                    position.reject.push(rejectedUser);
+                  }
+                } else {
+                  const user =
+                    position.accept.find(
+                      (applicant) => applicant.id === context.applicantId
+                    ) ||
+                    position.reject.find(
+                      (applicant) => applicant.id === context.applicantId
+                    );
+                  if (user) {
+                    position.accept = position.accept.filter(
+                      (applicant) => applicant.id !== context.applicantId
+                    );
+                    position.reject = position.reject.filter(
+                      (applicant) => applicant.id !== context.applicantId
+                    );
+                    position.pending.push(user);
+                  }
+                }
+              }
+              return position;
+            }),
+          });
+        }
+        return { previousBoard };
+      },
+      onError: (err, variables, context) => {
+        if (context?.previousBoard) {
+          queryClient.setQueryData<boardType>('board', context.previousBoard);
+        }
+      },
       onSuccess: () => {
         queryClient.invalidateQueries('board');
       },
@@ -302,9 +446,7 @@ export default function BoardPage(props: propsType) {
         </Tabs>
       </Box>
       <section ref={(el) => (tabRef.current[0] = el)}>
-        <ContentContainer>
-          <p>{content}</p>
-        </ContentContainer>
+        <ContentViewer content={content} />
       </section>
       <section ref={(el) => (tabRef.current[1] = el)}>
         <InfoWrapper className='column'>
