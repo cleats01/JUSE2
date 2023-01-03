@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'POST': {
       await prisma.room.update({
         where: { id: req.query.chatId as string },
-        data: { chat: req.body.data },
+        data: { chat: { push: req.body.data } },
       });
       return res.end();
     }

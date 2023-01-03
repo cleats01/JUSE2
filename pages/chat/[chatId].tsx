@@ -72,10 +72,7 @@ export default function ChattingRoom() {
         data: messageInput,
       });
       await axios.post(`/api/chat/${router.query.chatId}`, {
-        data: [
-          ...messages,
-          { username: session?.user.nickname, message: messageInput },
-        ],
+        data: { username: session?.user.nickname, message: messageInput },
       });
       setMessageInput('');
     }
