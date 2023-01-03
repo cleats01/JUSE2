@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useChannel } from '../../utils/hooks';
 import axios from 'axios';
+import { Types } from 'ably/ably';
 
 interface IMessage {
   message: string;
@@ -29,12 +30,15 @@ export default function ChattingRoom() {
     }
   }, [router]);
 
-  const [channel, ably] = useChannel(router.query.chatId, (message: any) => {
-    setMessages((prev) => [
-      ...prev,
-      { username: message.name, message: message.data },
-    ]);
-  });
+  const [channel, ably] = useChannel(
+    router.query.chatId as string,
+    (message: any) => {
+      setMessages((prev) => [
+        ...prev,
+        { username: message.name, message: message.data },
+      ]);
+    }
+  );
 
   const messageInputHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,11 +60,11 @@ export default function ChattingRoom() {
   ) => {
     event.preventDefault();
     if (messageInput) {
-      channel.publish({
+      await (channel as Types.RealtimeChannelPromise).publish({
         name: session?.user.nickname,
         data: messageInput,
       });
-      axios.post(`/api/chat/${router.query.chatId}`, {
+      await axios.post(`/api/chat/${router.query.chatId}`, {
         data: [
           ...messages,
           { username: session?.user.nickname, message: messageInput },
