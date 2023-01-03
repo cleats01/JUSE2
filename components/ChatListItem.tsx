@@ -6,12 +6,12 @@ import { StackBubble } from '../pages/add';
 import Link from 'next/link';
 import { boardData } from '../pages';
 import theme from '../styles/theme';
-import { ChattingRoom } from '@prisma/client';
+import { Room } from '@prisma/client';
 import { useState } from 'react';
 import { UserImgWrapper } from '../pages/user/signup/[...signup]';
 import { useSession } from 'next-auth/react';
 
-export default function ChatListItem({ data }: { data: ChattingRoom }) {
+export default function ChatListItem({ data }: { data: Room }) {
   const { data: session } = useSession();
   const { id: chatId, chat, membersId, membersData } = data;
   const otherUser = membersData.find((user) => user.id !== session?.user.id);

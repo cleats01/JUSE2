@@ -5,17 +5,19 @@ import styled from 'styled-components';
 import TabBar from '../../components/TabBar';
 import NavbarTextOnly from '../../components/NavbarTextOnly';
 import { getChatList } from '../../utils/axios';
-import { ChattingRoom } from '@prisma/client';
+import { Room } from '@prisma/client';
 import ChatListItem from '../../components/ChatListItem';
 
 export default function ChatListPage() {
   const { data: session, status } = useSession();
-  const [chatList, setChatList] = useState<ChattingRoom[]>([]);
+  const [chatList, setChatList] = useState<Room[]>([]);
 
   useEffect(() => {
-    getChatList(session?.user.id).then((res) => {
-      setChatList(res);
-    });
+    if (status === 'authenticated') {
+      getChatList(session?.user.id).then((res) => {
+        setChatList(res);
+      });
+    }
   }, []);
 
   return (

@@ -39,7 +39,7 @@ type chatMessage {
   createdAt DateTime @default(now())
 }
 
-model ChattingRoom {
+model Room {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   chat        chatMessage[]
   membersId   String[]

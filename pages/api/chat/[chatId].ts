@@ -13,14 +13,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case 'POST': {
-      await prisma.chattingRoom.update({
+      await prisma.room.update({
         where: { id: req.query.chatId as string },
         data: { chat: req.body.data },
       });
       return res.end();
     }
     case 'GET': {
-      const chatData = await prisma.chattingRoom.findUnique({
+      const chatData = await prisma.room.findUnique({
         where: { id: req.query.chatId as string },
         select: { chat: true },
       });
