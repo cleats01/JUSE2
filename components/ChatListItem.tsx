@@ -1,21 +1,13 @@
 import styled from 'styled-components';
-
-import ChatIcon from '../public/icons/chat.svg';
-import BookmarkIcon from '../public/icons/bookmark.svg';
-import { StackBubble } from '../pages/add';
 import Link from 'next/link';
-import { boardData } from '../pages';
-import theme from '../styles/theme';
-import { chatMessage, Room, userSimple } from '@prisma/client';
-import { useState } from 'react';
 import { UserImgWrapper } from '../pages/user/signup/[...signup]';
 import { useSession } from 'next-auth/react';
 
-interface IRoom {
+export interface IRoom {
   id: string;
-  chat: chatMessage[];
+  chat: { username: string; message: string; createdAt: Date }[];
   membersId: string[];
-  membersData: userSimple[];
+  membersData: { id: string; image: string; nickname: string }[];
   boardId?: string;
 }
 
