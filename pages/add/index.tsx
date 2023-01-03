@@ -183,7 +183,6 @@ export default function Add() {
           title,
           content,
           authorId: session?.user.id,
-          user: session?.user,
           techStack,
         }}
       />

@@ -205,7 +205,6 @@ export default function EditBoardPage() {
           title,
           content,
           authorId: session?.user.id,
-          user: session?.user,
           techStack,
         }}
       />

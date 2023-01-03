@@ -1,4 +1,4 @@
-import { position, userSession } from '@prisma/client';
+import { position } from '@prisma/client';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -17,7 +17,6 @@ export interface boardFormData {
   title: string;
   content: string;
   authorId: string;
-  user: userSession;
   techStack: string[];
 }
 
