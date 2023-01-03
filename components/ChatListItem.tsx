@@ -8,7 +8,7 @@ export interface IRoom {
   chat: { username: string; message: string; createdAt: Date }[];
   membersId: string[];
   membersData: { id: string; image: string; nickname: string }[];
-  boardId?: string;
+  boardId: string[];
 }
 
 export default function ChatListItem({ data }: { data: IRoom }) {

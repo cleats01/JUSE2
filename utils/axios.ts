@@ -61,8 +61,15 @@ export const patchApplications = (
   );
 
 //CHAT
-export const postChattingRoom = (membersId: string[]) =>
-  axios.post(`/api/chat`, { membersId });
+export const postChattingRoom = (membersId: string[], boardId?: string) => {
+  if (boardId) {
+    return axios.post(`/api/chat?boardId=${boardId}`, { membersId });
+  }
+  return axios.post(`/api/chat`, { membersId });
+};
 
 export const getChatList = (userId: string) =>
   axios.get(`/api/chat?userId=${userId}`).then((res) => res.data);
+
+export const getChatListByBoardId = (boardId: string) =>
+  axios.get(`/api/chat?boardId=${boardId}`).then((res) => res.data);

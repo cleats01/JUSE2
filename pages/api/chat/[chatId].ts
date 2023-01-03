@@ -22,9 +22,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET': {
       const chatData = await prisma.room.findUnique({
         where: { id: req.query.chatId as string },
-        select: { chat: true },
+        select: { chat: true, membersData: true },
       });
-      return res.json(chatData?.chat);
+      return res.json(chatData);
     }
     default:
       break;

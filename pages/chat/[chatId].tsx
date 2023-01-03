@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useChannel } from '../../utils/hooks';
 import axios from 'axios';
 import { Types } from 'ably/ably';
+import { userSimple } from '@prisma/client';
 
 interface IMessage {
   message: string;
@@ -21,11 +22,17 @@ export default function ChattingRoom() {
   const router = useRouter();
   const [messageInput, setMessageInput] = useState<string>('');
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [other, setOther] = useState<userSimple>();
 
   useEffect(() => {
     if (router.query.chatId) {
       axios.get(`/api/chat/${router.query.chatId}`).then((res) => {
-        setMessages(res.data);
+        setMessages(res.data.chat);
+        setOther(
+          res.data.membersData.find(
+            (user: userSimple) => user.id !== session?.user.id
+          )
+        );
       });
     }
   }, [router]);
@@ -81,7 +88,7 @@ export default function ChattingRoom() {
 
   return (
     <ChattingLayout>
-      <NavbarTextOnly centerText='채팅' back />
+      <NavbarTextOnly centerText={other?.nickname as string} back />
       <ChatArea>
         {messages.map((message, index) => (
           <ChatBubble

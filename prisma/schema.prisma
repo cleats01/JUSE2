@@ -44,7 +44,7 @@ model Room {
   chat        chatMessage[]
   membersId   String[]
   membersData userSimple[]
-  boardId     String?
+  boardId     String[]
 }
 
 model User {

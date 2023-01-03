@@ -51,6 +51,7 @@ import {
   patchApplications,
   postApplications,
   postBookmarks,
+  postChattingRoom,
 } from '../../utils/axios';
 import { useRouter } from 'next/router';
 import ContentViewer from '../../components/ContentViewer';
@@ -535,11 +536,33 @@ export default function BoardPage(props: propsType) {
           <BookmarkIcon onClick={() => postBookmarkMutation.mutate(id)} />
         )}
         {isAdmin ? (
-          <Button variant='outlined' size={'large'}>
+          <Button
+            onClick={() => {
+              if (session?.user.id !== authorId) {
+                alert('권한이 없습니다.');
+              } else {
+                router.push(`/board/${boardId}/chat`);
+              }
+            }}
+            variant='outlined'
+            size={'large'}>
             채팅방 {`(${chat})`}
           </Button>
         ) : (
-          <Button variant='outlined' size={'large'}>
+          <Button
+            onClick={() => {
+              if (!session) {
+                alert('로그인이 필요한 기능입니다.');
+              } else {
+                postChattingRoom([authorId, session.user.id], boardId).then(
+                  (res) => {
+                    router.push(`/chat/${res.data.id}`);
+                  }
+                );
+              }
+            }}
+            variant='outlined'
+            size={'large'}>
             채팅하기
           </Button>
         )}
