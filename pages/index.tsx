@@ -91,6 +91,9 @@ export default function Home() {
       setPlace('');
       return;
     }
+    if (newPlace === '온라인') {
+      setOffline('');
+    }
     setPlace(newPlace);
   };
   const handleOffline = (event: SelectChangeEvent) => {
@@ -202,14 +205,16 @@ export default function Home() {
               <ToggleButton value='오프라인'>오프라인</ToggleButton>
               {place === '오프라인' ? (
                 <Box sx={{ minWidth: 90, marginLeft: '10px' }}>
-                  <FormControl size='small' fullWidth>
+                  <FormControl size='small' sx={{ width: '100%' }}>
                     <InputLabel>지역</InputLabel>
                     <Select
                       value={offline}
                       label='지역'
                       onChange={handleOffline}>
                       {offlinePlace.map((el: string) => (
-                        <MenuItem value={el}>{el}</MenuItem>
+                        <MenuItem value={el} key={el}>
+                          {el}
+                        </MenuItem>
                       ))}
                     </Select>
                   </FormControl>

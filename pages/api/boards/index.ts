@@ -40,7 +40,31 @@ export default async function handler(
 
         const filterOption = {
           type: type ? (type as string) : undefined,
-          place: place ? (place as string) : undefined,
+          place: place
+            ? place === '오프라인'
+              ? {
+                  in: [
+                    '서울',
+                    '경기',
+                    '인천',
+                    '강원',
+                    '충북',
+                    '충남',
+                    '대전',
+                    '세종',
+                    '경북',
+                    '경남',
+                    '부산',
+                    '대구',
+                    '울산',
+                    '전남',
+                    '광주',
+                    '전북',
+                    '제주',
+                  ],
+                }
+              : (place as string)
+            : undefined,
           period: period
             ? {
                 in: periodGeneretor(period as string),
