@@ -67,14 +67,15 @@ export default function ChattingRoom() {
   ) => {
     event.preventDefault();
     if (messageInput) {
+      const message = messageInput;
+      setMessageInput('');
       await (channel as Types.RealtimeChannelPromise).publish({
         name: session?.user.nickname,
-        data: messageInput,
+        data: message,
       });
       await axios.post(`/api/chat/${router.query.chatId}`, {
-        data: { username: session?.user.nickname, message: messageInput },
+        data: { username: session?.user.nickname, message },
       });
-      setMessageInput('');
     }
   };
 
