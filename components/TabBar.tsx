@@ -3,11 +3,13 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import router, { useRouter } from 'next/router';
 import Link from 'next/link';
 
-import HomeIcon from '../public/icons/home.svg';
-import SearchIcon from '../public/icons/search.svg';
-import AddIcon from '../public/icons/add.svg';
-import ChatIcon from '../public/icons/chat.svg';
-import UserIcon from '../public/icons/user.svg';
+import {
+  AddIcon,
+  HomeIcon,
+  SearchIcon,
+  ChatIcon,
+  UserIcon,
+} from './atoms/Icons';
 
 interface tab {
   id: number;
