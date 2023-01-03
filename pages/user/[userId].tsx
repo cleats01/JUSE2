@@ -11,7 +11,12 @@ import { boardData } from '..';
 import BottomController from '../../components/BottomController';
 import { Button } from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
-import { getIsLiked, getUserById, postLikes } from '../../utils/axios';
+import {
+  getIsLiked,
+  getUserById,
+  postChattingRoom,
+  postLikes,
+} from '../../utils/axios';
 import {
   dehydrate,
   DehydratedState,
@@ -113,6 +118,15 @@ export default function UserPage(props: propsType) {
           />
         )}
         <Button
+          onClick={() => {
+            if (!session) {
+              alert('로그인이 필요한 기능입니다.');
+            } else {
+              postChattingRoom([user.id, session.user.id]).then((res) => {
+                router.push(`/chat/${res.data.id}`);
+              });
+            }
+          }}
           size='large'
           sx={{ color: '#fff' }}
           variant='contained'

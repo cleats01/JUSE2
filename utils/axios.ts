@@ -59,3 +59,10 @@ export const patchApplications = (
   axios.patch(
     `/api/applications?boardId=${boardId}&position=${positionName}&applicantId=${applicantId}&to=${where}`
   );
+
+//CHAT
+export const postChattingRoom = (membersId: string[]) =>
+  axios.post(`/api/chat`, { membersId });
+
+export const getChatList = (userId: string) =>
+  axios.get(`/api/chat?userId=${userId}`).then((res) => res.data);

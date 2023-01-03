@@ -33,6 +33,20 @@ type userSession {
   like          Int
 }
 
+type chatMessage {
+  username  String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model ChattingRoom {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  chat        chatMessage[]
+  membersId   String[]
+  membersData userSimple[]
+  boardId     String?
+}
+
 model User {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   email         String   @unique
@@ -47,6 +61,7 @@ model User {
   likeList      String[]
   like          Int      @default(0)
   myList        Board[]
+  chatList      String[]
 }
 
 model Board {
