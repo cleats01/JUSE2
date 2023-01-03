@@ -6,7 +6,7 @@ import TabBar from '../../components/TabBar';
 import NavbarTextOnly from '../../components/NavbarTextOnly';
 import { getChatList } from '../../utils/axios';
 import { Room } from '@prisma/client';
-import ChatListItem from '../../components/ChatListItem';
+import ChatListItem, { IRoom } from '../../components/ChatListItem';
 
 export default function ChatListPage() {
   const { data: session, status } = useSession();
@@ -18,14 +18,14 @@ export default function ChatListPage() {
         setChatList(res);
       });
     }
-  }, []);
+  }, [status]);
 
   return (
     <ChatListLayout>
       <NavbarTextOnly centerText='주시톡' />
       <ChatListContainer>
         {chatList?.map((chattingRoom) => (
-          <ChatListItem key={chattingRoom.id} data={chattingRoom} />
+          <ChatListItem key={chattingRoom.id} data={chattingRoom as IRoom} />
         ))}
       </ChatListContainer>
       <TabBar />
