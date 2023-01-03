@@ -11,5 +11,6 @@ declare namespace NodeJS {
     MY_AWS_S3_BUCKET: string;
     MY_AWS_S3_BUCKET_REGION: string;
     BASE_URL: string;
+    ABLY_API_KEY: string;
   }
 }
