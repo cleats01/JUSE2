@@ -767,7 +767,8 @@ export default function BoardPage(props: propsType) {
                           positionName: position.position,
                           applicantId: session?.user.id,
                         });
-                      }}>
+                      }}
+                      disabled={getMyApplyStatus(position) !== '지원완료'}>
                       취소
                     </Button>
                   )}
