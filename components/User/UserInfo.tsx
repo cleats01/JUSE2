@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 import { User } from '@prisma/client';
-import { useRouter } from 'next/router';
-import { signOut } from 'next-auth/react';
 
-import { Button } from '@mui/material';
 import UserImgWrapper from 'components/Common/UserImgWrapper';
 import { StackBubble } from 'components/New/FormInput';
 import { HeartFilledIcon } from 'components/Common/Icons';
@@ -14,11 +11,6 @@ interface IProps {
 
 export default function UserInfo(props: IProps) {
   const { image, nickname, like, userTechStack } = props.user;
-  const router = useRouter();
-
-  const signOutHandler = () => {
-    signOut({ callbackUrl: '/login' });
-  };
 
   return (
     <UserInfoContainer>
@@ -37,24 +29,6 @@ export default function UserInfo(props: IProps) {
           <StackBubble key={stack} src={`/icons/stacks/${stack}.png`} />
         ))}
       </TechStackContainer>
-      <ButtonWrapper>
-        <Button
-          onClick={() => {
-            router.push('/user/edit');
-          }}
-          variant='outlined'
-          size='small'>
-          정보 수정
-        </Button>
-        <Button
-          variant='contained'
-          disableElevation
-          size='small'
-          style={{ color: '#fff' }}
-          onClick={signOutHandler}>
-          로그아웃
-        </Button>
-      </ButtonWrapper>
     </UserInfoContainer>
   );
 }
@@ -98,14 +72,5 @@ const LikeWrapper = styled.div`
   > span {
     font-size: 18px;
     width: 22px;
-  }
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  > button {
-    flex-grow: 1;
   }
 `;

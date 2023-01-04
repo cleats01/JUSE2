@@ -30,7 +30,7 @@ import CloseIcon from '../../public/icons/cross-small.svg';
 import { useSession } from 'next-auth/react';
 import { Board, position, User, userSimple } from '@prisma/client';
 import { UserImgWrapper } from '../user/signup/[...signup]';
-import BottomController from '../../components/BottomController';
+import BottomController from '../../components/Common/BottomController';
 import Link from 'next/link';
 import Related from '../../components/Related';
 import theme from '../../styles/theme';
