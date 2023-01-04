@@ -9,7 +9,7 @@ import {
   SearchIcon,
   ChatIcon,
   UserIcon,
-} from './atoms/Icons';
+} from './Common/Icons';
 
 interface tab {
   id: number;

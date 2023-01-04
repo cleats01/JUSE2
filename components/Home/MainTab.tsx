@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Tab, Tabs } from '@mui/material';
 import { Dispatch, SetStateAction, SyntheticEvent } from 'react';
 
-import { SlidersIcon } from '../atoms/Icons';
+import { SlidersIcon } from 'components/Common/Icons';
 
 interface IProps {
   currentTab: string;

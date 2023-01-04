@@ -16,7 +16,7 @@ import {
   ToggleButtonGroup,
 } from '@mui/material';
 
-import TechStack from '../TechStack';
+import TechStack from 'components/TechStack';
 
 interface IProps {
   isFilterOpen: boolean;
