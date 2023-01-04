@@ -32,7 +32,6 @@ import { Board, position, User, userSimple } from '@prisma/client';
 import { UserImgWrapper } from '../user/signup/[...signup]';
 import BottomController from '../../components/BottomController';
 import Link from 'next/link';
-import { boardData } from '..';
 import Related from '../../components/Related';
 import theme from '../../styles/theme';
 import {

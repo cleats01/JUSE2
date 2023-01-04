@@ -11,17 +11,9 @@ import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import AngleRightIcon from '../../public/icons/angle-small-right.svg';
 import AngleLeftIcon from '../../public/icons/angle-small-left.svg';
 import { Button, Drawer, Tab, Tabs } from '@mui/material';
-import { boardData } from '..';
 import Card from '../../components/Card';
 import { UserImgWrapper } from './signup/[...signup]';
 import Link from 'next/link';
-
-interface myBoardsData {
-  myList: boardData[];
-  applyList: boardData[];
-  bookmarkList: boardData[];
-  acceptedList: boardData[];
-}
 
 export default function UserPage() {
   const router = useRouter();

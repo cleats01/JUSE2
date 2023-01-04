@@ -16,7 +16,9 @@
     "incremental": true,
     "paths": {
       "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"]
-    }
+    },
+    "typeRoots": ["./types"],
+    "baseUrl": "."
   },
   "include": ["types/next-env.d.ts", "**/*.ts", "**/*.tsx", "prisma/prisma.js"],
   "exclude": ["node_modules"]

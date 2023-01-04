@@ -7,7 +7,6 @@ import { StackBubble } from '../add';
 import { User } from '@prisma/client';
 import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import HeartIcon from '../../public/icons/heart.svg';
-import { boardData } from '..';
 import BottomController from '../../components/BottomController';
 import { Button } from '@mui/material';
 import { GetServerSidePropsContext } from 'next';
