@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
 import { createBoard } from '../../../prisma/board';
 import prisma from '../../../prisma/prisma';
 
