@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useInView } from 'react-intersection-observer';
+import { useInfiniteQuery } from 'react-query';
+import { getBoards } from 'utils/axios';
 
 import ScrollToTop from 'components/ScrollToTop';
 import MainTab from 'components/Home/MainTab';
@@ -7,10 +10,6 @@ import Boards from 'components/Home/Boards';
 import FilterDrawer from 'components/Home/FilterDrawer';
 import TabBar from 'components/TabBar';
 import NavbarMain from 'components/NavbarMain';
-
-import axios from 'axios';
-import { useInView } from 'react-intersection-observer';
-import { useInfiniteQuery } from 'react-query';
 
 export default function HomePage() {
   // 필터 State
@@ -39,9 +38,6 @@ export default function HomePage() {
 
   // 무한 스크롤
   const [ref, inView] = useInView();
-  const getBoards = (query: string) => {
-    return axios.get('/api/boards' + query).then((res) => res.data);
-  };
   useEffect(() => {
     if (inView) fetchNextPage();
   }, [inView]);

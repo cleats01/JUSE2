@@ -1,5 +1,8 @@
-import { User } from '@prisma/client';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
+
+// BOARDS
+export const getBoards = (query: string) =>
+  axios.get('/api/boards' + query).then((res) => res.data);
 
 // USERS
 export const getUserById = (userId: string) =>
@@ -61,6 +64,9 @@ export const patchApplications = (
   );
 
 //CHAT
+export const getChattingRoom = (chatId: string) =>
+  axios.get(`/api/chat/${chatId}`).then((res) => res.data);
+
 export const postChattingRoom = (membersId: string[], boardId?: string) => {
   if (boardId) {
     return axios.post(`/api/chat?boardId=${boardId}`, { membersId });
@@ -73,3 +79,8 @@ export const getChatList = (userId: string) =>
 
 export const getChatListByBoardId = (boardId: string) =>
   axios.get(`/api/chat?boardId=${boardId}`).then((res) => res.data);
+
+export const postMessage = (chatId: string, data: IMessage) =>
+  axios.post(`/api/chat/${chatId}`, {
+    data,
+  });
