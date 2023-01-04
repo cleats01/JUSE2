@@ -12,6 +12,12 @@ export const getUserById = (userId: string) =>
   axios
     .get(`${process.env.BASE_URL}/api/users?id=${userId}`)
     .then((res) => res.data);
+export const getUsersByIds = (userIds: string[]) =>
+  axios.get(`/api/users?ids=${userIds}`).then((res) => res.data);
+
+// MY
+export const getMyLists = (userId: string) =>
+  axios.get(`/api/boards/my?id=${userId}`).then((res) => res.data);
 
 // LIKES
 export const getIsLiked = (userId: string) =>

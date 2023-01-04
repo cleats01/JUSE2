@@ -12,46 +12,49 @@ export const AddIcon = () => (
   </svg>
 );
 
-export const AngleDownIcon = () => (
+export const AngleDownIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    onClick={props.onClick}>
     <path d='M18.71,8.21a1,1,0,0,0-1.42,0l-4.58,4.58a1,1,0,0,1-1.42,0L6.71,8.21a1,1,0,0,0-1.42,0,1,1,0,0,0,0,1.41l4.59,4.59a3,3,0,0,0,4.24,0l4.59-4.59A1,1,0,0,0,18.71,8.21Z' />
   </svg>
 );
 
-export const AngleLeftIcon = () => (
+export const AngleLeftIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    onClick={props.onClick}>
     <path d='M10.6,12.71a1,1,0,0,1,0-1.42l4.59-4.58a1,1,0,0,0,0-1.42,1,1,0,0,0-1.41,0L9.19,9.88a3,3,0,0,0,0,4.24l4.59,4.59a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.42Z' />
   </svg>
 );
 
-export const AngleRightIcon = () => (
+export const AngleRightIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    onClick={props.onClick}>
     <path d='M15.4,9.88,10.81,5.29a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42L14,11.29a1,1,0,0,1,0,1.42L9.4,17.29a1,1,0,0,0,1.41,1.42l4.59-4.59A3,3,0,0,0,15.4,9.88Z' />
   </svg>
 );
 
-export const AngleUpIcon = () => (
+export const AngleUpIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}>
     <path d='M18,15.5a1,1,0,0,1-.71-.29l-4.58-4.59a1,1,0,0,0-1.42,0L6.71,15.21a1,1,0,0,1-1.42-1.42L9.88,9.21a3.06,3.06,0,0,1,4.24,0l4.59,4.58a1,1,0,0,1,0,1.42A1,1,0,0,1,18,15.5Z' />
   </svg>
 );
@@ -157,23 +160,25 @@ export const GoogleIcon = () => (
   </svg>
 );
 
-export const HeartFilledIcon = () => (
+export const HeartFilledIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Filled'
     viewBox='0 0 24 24'
     width='20'
-    height='20'>
+    height='20'
+    fill={props.fill}>
     <path d='M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z' />
   </svg>
 );
-export const HeartIcon = () => (
+export const HeartIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
     width='20'
-    height='20'>
+    height='20'
+    fill={props.fill}>
     <path d='M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z' />
   </svg>
 );
