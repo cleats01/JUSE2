@@ -1,6 +1,5 @@
 import { Board } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { boardData } from '../..';
 import prisma from '../../../prisma/prisma';
 
 export default async function handler(
