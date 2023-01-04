@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useSession } from 'next-auth/react';
 import styled from 'styled-components';
@@ -6,7 +6,7 @@ import TabBar from '../../../components/TabBar';
 import NavbarTextOnly from '../../../components/NavbarTextOnly';
 import { getChatListByBoardId } from '../../../utils/axios';
 import { Room } from '@prisma/client';
-import ChatListItem, { IRoom } from '../../../components/ChatListItem';
+import ChatListItem from '../../../components/Chat/ChatListItem';
 import { useRouter } from 'next/router';
 
 export default function ChatListPage() {

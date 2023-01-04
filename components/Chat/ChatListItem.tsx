@@ -1,19 +1,12 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import { UserImgWrapper } from '../pages/user/signup/[...signup]';
 import { useSession } from 'next-auth/react';
 
-export interface IRoom {
-  id: string;
-  chat: { username: string; message: string; createdAt: Date }[];
-  membersId: string[];
-  membersData: { id: string; image: string; nickname: string }[];
-  boardId: string[];
-}
+import { UserImgWrapper } from 'pages/user/signup/[...signup]';
 
 export default function ChatListItem({ data }: { data: IRoom }) {
   const { data: session } = useSession();
-  const { id: chatId, chat, membersId, membersData } = data;
+  const { id: chatId, chat, membersData } = data;
   const otherUser = membersData.find((user) => user.id !== session?.user.id);
 
   return (
