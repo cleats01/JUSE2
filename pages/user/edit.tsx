@@ -7,7 +7,7 @@ import { Welcome } from '../login';
 import { Button, TextField } from '@mui/material';
 import BottomSheet from '../../components/BottomSheet';
 import TechStack from '../../components/TechStack';
-import { StackAddButton, BottomSheetHeader, StackBubble } from '../add';
+import { StackAddButton, BottomSheetHeader, StackBubble } from '../new';
 import { useSession } from 'next-auth/react';
 import NavbarTextOnly from '../../components/NavbarTextOnly';
 

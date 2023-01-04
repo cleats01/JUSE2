@@ -2,9 +2,8 @@ import styled from 'styled-components';
 
 import ChatIcon from '../public/icons/chat.svg';
 import BookmarkIcon from '../public/icons/bookmark.svg';
-import { StackBubble } from '../pages/add';
+import { StackBubble } from 'components/New/FormInput';
 import Link from 'next/link';
-import { boardData } from '../pages';
 import theme from '../styles/theme';
 
 interface propsType {

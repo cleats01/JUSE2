@@ -21,7 +21,7 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import NavbarBoard from '../../components/NavbarBoard';
-import { StackBubble } from '../add';
+import { StackBubble } from 'components/New/FormInput';
 import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import BookmarkIcon from '../../public/icons/bookmark.svg';
 import BookmarkFilledIcon from '../../public/icons/bookmark-filled.svg';

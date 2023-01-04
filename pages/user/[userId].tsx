@@ -3,7 +3,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import NavbarTextOnly from '../../components/NavbarTextOnly';
 import styled from 'styled-components';
 import axios from 'axios';
-import { StackBubble } from '../add';
+import { StackBubble } from 'components/New/FormInput';
 import { User } from '@prisma/client';
 import HeartFilledIcon from '../../public/icons/heart-filled.svg';
 import HeartIcon from '../../public/icons/heart.svg';

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import BackIcon from '../public/icons/angle-small-left.svg';
 
-interface propsType {
+interface IProps {
   formData: boardFormData;
 }
 
@@ -20,7 +20,7 @@ export interface boardFormData {
   techStack: string[];
 }
 
-export default function NavbarNew(props: propsType) {
+export default function NavbarNew(props: IProps) {
   const router = useRouter();
   const { formData } = props;
 

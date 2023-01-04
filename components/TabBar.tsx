@@ -42,8 +42,8 @@ export default function TabBar() {
       id: 3,
       icon: <AddIcon />,
       label: '등록',
-      path: status === 'authenticated' ? '/add' : '/login',
-      selected: router.pathname === '/add',
+      path: status === 'authenticated' ? '/new' : '/login',
+      selected: router.pathname === '/new',
     },
     {
       id: 4,
