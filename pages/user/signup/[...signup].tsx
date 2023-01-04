@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
-import TabBar from '../../../components/TabBar';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
@@ -7,7 +6,11 @@ import { Welcome } from '../../login';
 import { Button, TextField } from '@mui/material';
 import BottomSheet from '../../../components/BottomSheet';
 import TechStack from '../../../components/TechStack';
-import { StackAddButton, BottomSheetHeader, StackBubble } from '../../new';
+import {
+  StackAddButton,
+  BottomSheetHeader,
+  StackBubble,
+} from 'components/New/FormInput';
 
 export default function SignUp() {
   const [nickname, setNickname] = useState<string>('');
