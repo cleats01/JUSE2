@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-
-import { Tab, Tabs } from '@mui/material';
 import { Dispatch, SetStateAction, SyntheticEvent } from 'react';
 
+import { Tab, Tabs } from '@mui/material';
 import { SlidersIcon } from 'components/Common/Icons';
 
 interface IProps {

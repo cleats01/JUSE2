@@ -4,6 +4,9 @@ import axios from 'axios';
 export const getBoards = (query: string) =>
   axios.get('/api/boards' + query).then((res) => res.data);
 
+export const getBoardsBySearch = (search: string) =>
+  axios.get(`/api/boards?search=${search}`).then((res) => res.data);
+
 // USERS
 export const getUserById = (userId: string) =>
   axios
@@ -63,7 +66,7 @@ export const patchApplications = (
     `/api/applications?boardId=${boardId}&position=${positionName}&applicantId=${applicantId}&to=${where}`
   );
 
-//CHAT
+// CHAT
 export const getChattingRoom = (chatId: string) =>
   axios.get(`/api/chat/${chatId}`).then((res) => res.data);
 
@@ -84,3 +87,9 @@ export const postMessage = (chatId: string, data: IMessage) =>
   axios.post(`/api/chat/${chatId}`, {
     data,
   });
+
+// TRENDING
+export const getTrendings = () =>
+  axios
+    .get(`${process.env.BASE_URL}/api/boards/trending`)
+    .then((res) => res.data);

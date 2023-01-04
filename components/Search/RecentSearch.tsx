@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import axios from 'axios';
-
 import { Dispatch, SetStateAction, useEffect } from 'react';
+import { getBoardsBySearch } from 'utils/axios';
 
 interface IProps {
   recentSearch: string[];
@@ -33,12 +32,10 @@ export default function RecentSearch(props: IProps) {
   }, []);
 
   // 최근 검색어를 클릭했을 때 해당 키워드로 검색
-  const recentClick = (event: React.MouseEvent<HTMLElement>) => {
-    axios
-      .get(`/api/boards?search=${event.currentTarget.innerText}`)
-      .then((res) => {
-        setSearchResult(res.data);
-      });
+  const recentClick = async (event: React.MouseEvent<HTMLElement>) => {
+    await getBoardsBySearch(event.currentTarget.innerText).then((data) =>
+      setSearchResult(data)
+    );
     setIsSearched(true);
   };
 

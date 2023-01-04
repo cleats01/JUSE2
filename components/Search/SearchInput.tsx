@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { getBoardsBySearch } from 'utils/axios';
+
 import { InputAdornment, TextField } from '@mui/material';
 import { SearchIcon } from 'components/Common/Icons';
-import axios from 'axios';
 
 interface IProps {
   searchInput: string;
@@ -47,9 +47,7 @@ export default function SearchInput(props: IProps) {
       );
     }
     if (event.key === 'Enter') {
-      axios.get(`/api/boards?search=${searchInput}`).then((res) => {
-        setSearchResult(res.data);
-      });
+      getBoardsBySearch(searchInput).then((data) => setSearchResult(data));
       setSearchInput('');
       setIsSearched(true);
     }

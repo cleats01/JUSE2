@@ -15,7 +15,6 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-
 import TechStack from 'components/TechStack';
 
 interface IProps {

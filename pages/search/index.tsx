@@ -1,4 +1,5 @@
-import axios from 'axios';
+import { getTrendings } from 'utils/axios';
+
 import SearchPage from 'components/Search/SearchPage';
 
 interface IProps {
@@ -12,9 +13,7 @@ export default function Search({ trending }: IProps) {
 export async function getServerSideProps() {
   let data;
   try {
-    data = await axios
-      .get(`${process.env.BASE_URL}/api/boards/trending`)
-      .then((res) => res.data);
+    data = await getTrendings();
   } catch (error) {
     console.error('getServerSideProps search >> ', error);
   }
