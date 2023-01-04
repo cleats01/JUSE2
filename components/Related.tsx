@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { boardData } from '../pages';
 import Card from './Card';
 
 export default function Related({ data }: { data: boardData[] }) {
