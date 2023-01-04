@@ -12,8 +12,22 @@ export const getUserById = (userId: string) =>
   axios
     .get(`${process.env.BASE_URL}/api/users?id=${userId}`)
     .then((res) => res.data);
+
 export const getUsersByIds = (userIds: string[]) =>
   axios.get(`/api/users?ids=${userIds}`).then((res) => res.data);
+
+export const getNickname = (nickname: string) =>
+  axios.get(`/api/users?nickname=${nickname}`).then((res) => res.data);
+
+export const patchUser = (data: {
+  id: string;
+  nickname: string;
+  userTechStack: string[];
+  image: string;
+}) => axios.patch('/api/users', data);
+
+export const deleteUser = (userId: string) =>
+  axios.delete(`/api/users?id=${userId}`);
 
 // MY
 export const getMyLists = (userId: string) =>
