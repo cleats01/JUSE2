@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
+import { Dispatch, MouseEvent, SetStateAction } from 'react';
 import { position } from '@prisma/client';
 
 import {
@@ -12,9 +12,8 @@ import {
   ToggleButtonGroup,
   SelectChangeEvent,
 } from '@mui/material';
-import BottomSheet from 'components/BottomSheet';
-import TechStack from 'components/TechStack';
 import { PlusIcon, MinusIcon } from 'components/Common/Icons';
+import TechStackSelector from 'components/Common/TechStackSelector';
 
 interface IProps {
   type: string;
@@ -32,7 +31,6 @@ interface IProps {
 }
 
 export default function FormInput(props: IProps) {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const {
     type,
     setType,
@@ -175,6 +173,11 @@ export default function FormInput(props: IProps) {
     }
   };
 
+  const techStackSelectorProps = {
+    techStack,
+    setTechStack,
+  };
+
   return (
     <FormContainer>
       <InputWrapper>
@@ -298,29 +301,7 @@ export default function FormInput(props: IProps) {
         <PositionAddButton onClick={addPosition}>포지션 추가</PositionAddButton>
       </InputWrapper>
       <InputWrapper>
-        {isModalOpen ? (
-          <BottomSheet setIsOpen={setIsModalOpen}>
-            <BottomSheetHeader>
-              사용 기술 스택
-              <button
-                onClick={() => {
-                  setIsModalOpen(false);
-                }}>
-                완료
-              </button>
-            </BottomSheetHeader>
-            <TechStack selected={techStack} setSelected={setTechStack} />
-          </BottomSheet>
-        ) : (
-          ''
-        )}
-        <StackAddButton onClick={() => setIsModalOpen((prev) => !prev)}>
-          {techStack.length
-            ? techStack.map((stack) => (
-                <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
-              ))
-            : '기술 스택 추가'}
-        </StackAddButton>
+        <TechStackSelector {...techStackSelectorProps} />
       </InputWrapper>
     </FormContainer>
   );

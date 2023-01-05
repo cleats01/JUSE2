@@ -1,31 +1,27 @@
+import { useState } from 'react';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import { deleteUser, getUserById, patchUser } from 'utils/axios';
+import { Welcome } from 'pages/login';
 import { handleUserSubmit } from 'utils/functions';
 
 import { Button } from '@mui/material';
-import NavbarTextOnly from 'components/NavbarTextOnly';
 import UserImgUploader from 'components/User/UserImgUploader';
 import UserNicknameInput from 'components/User/UserNicknameInput';
 import TechStackSelector from 'components/Common/TechStackSelector';
 
-export default function UserEditPage() {
-  const { data: session, status } = useSession();
+export default function SignUpPage() {
   const [nickname, setNickname] = useState<string>('');
-  const [nicknameCheck, setNicknameCheck] =
-    useState<string>('사용가능한 닉네임입니다.');
+  const [nicknameCheck, setNicknameCheck] = useState('');
   const [userTechStack, setUserTechStack] = useState<string[]>([]);
   const [imageURL, setImageURL] = useState<string>('');
-  const [imageEdit, setImageEdit] = useState<string>('');
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const router = useRouter();
+  const email = router.query.signup?.[0];
 
   const handleSubmit = async () => {
     const data = {
-      id: session?.user.id,
+      email,
       nickname,
       userTechStack,
       image: imageURL
@@ -34,44 +30,9 @@ export default function UserEditPage() {
     };
     await handleUserSubmit(imageURL, imageFile, nicknameCheck, data).then(
       () => {
-        router.push('/user');
+        router.push('/login');
       }
     );
-  };
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      getUserById(session.user.id).then((data) => {
-        const { nickname, image, userTechStack } = data;
-        setNickname(nickname);
-        setImageEdit(image);
-        if (image !== '/user-default.png') {
-          setImageURL(
-            image.replace(
-              'https://juse-user-image.s3.ap-northeast-2.amazonaws.com/',
-              ''
-            )
-          );
-        }
-        setUserTechStack(userTechStack);
-      });
-    }
-  }, [session]);
-
-  const handleWithdrawal = () => {
-    if (confirm('정말 회원 탈퇴하시겠습니까?')) {
-      deleteUser(session?.user.id).then(() => {
-        alert('JUSE 회원에서 탈퇴되었습니다.');
-        router.replace('/login');
-      });
-    }
-  };
-
-  const userImgUploaderProps = {
-    imageEdit,
-    setImageEdit,
-    setImageFile,
-    setImageURL,
   };
 
   const userNicknameInputProps = {
@@ -88,24 +49,27 @@ export default function UserEditPage() {
 
   return (
     <SignUpLayout>
-      <NavbarTextOnly centerText='회원정보 수정' back={true} />
-      <UserImgUploader {...userImgUploaderProps} />
+      <Welcome>
+        <span>JUSE</span>에 처음 오셨군요?
+      </Welcome>
+      <UserImgUploader setImageFile={setImageFile} setImageURL={setImageURL} />
       <UserNicknameInput {...userNicknameInputProps} />
       <TechStackSelector {...techStackSelectorProps} />
       <ButtonWrapper>
         <Button
           variant='outlined'
-          onClick={handleWithdrawal}
-          style={{ width: '90px' }}
+          onClick={() => {
+            router.replace('/login');
+          }}
           disableElevation>
-          회원 탈퇴
+          취소
         </Button>
         <Button
           variant='contained'
           onClick={handleSubmit}
-          style={{ color: '#fff', width: '90px' }}
+          style={{ color: '#fff' }}
           disableElevation>
-          수정
+          등록
         </Button>
       </ButtonWrapper>
     </SignUpLayout>
@@ -121,7 +85,7 @@ const SignUpLayout = styled.div`
   margin: auto;
   padding: 20px;
   height: 100vh;
-  gap: 20px;
+  gap: 15px;
 `;
 
 const ButtonWrapper = styled.div`

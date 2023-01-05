@@ -19,6 +19,13 @@ export const getUsersByIds = (userIds: string[]) =>
 export const getNickname = (nickname: string) =>
   axios.get(`/api/users?nickname=${nickname}`).then((res) => res.data);
 
+export const postUser = (data: {
+  email: string;
+  nickname: string;
+  userTechStack: string[];
+  image: string;
+}) => axios.post('/api/users', data);
+
 export const patchUser = (data: {
   id: string;
   nickname: string;
