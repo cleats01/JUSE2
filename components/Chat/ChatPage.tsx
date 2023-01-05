@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import TabBar from 'components/TabBar';
-import NavbarTextOnly from 'components/NavbarTextOnly';
+import TabBar from 'components/Common/TabBar';
+import NavbarTextOnly from 'components/Common/NavbarTextOnly';
 import ChatList from 'components/Chat/ChatList';
 
 export default function ChatListPage() {

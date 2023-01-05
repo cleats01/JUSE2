@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Fragment } from 'react';
 import { InfiniteData } from 'react-query';
 
-import Card from 'components/Card';
+import Card from 'components/Common/Card';
 
 interface IProps {
   data: InfiniteData<any> | undefined;

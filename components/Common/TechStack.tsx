@@ -1,17 +1,18 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
-import CloseBtnIcon from '../public/icons/close.svg';
+import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
 
-interface propsType {
+import { CloseIcon } from 'components/Common/Icons';
+
+interface IProps {
   selected: string[];
   setSelected: Dispatch<SetStateAction<string[]>>;
 }
 
-const TechStack = ({ selected, setSelected }: propsType) => {
+const TechStack = ({ selected, setSelected }: IProps) => {
   const [currentTab, setCurrentTab] = useState<string>('프론트엔드');
 
   //현재 탭 변경
-  const tabHandler = (e: React.MouseEvent<HTMLElement>) => {
+  const tabHandler = (e: MouseEvent<HTMLElement>) => {
     const eventTarget = e.target as HTMLElement;
     setCurrentTab(eventTarget.innerText);
   };
@@ -98,7 +99,7 @@ const TechStack = ({ selected, setSelected }: propsType) => {
           {selected.map((e, i) => (
             <SelectedStack key={i}>
               {e}
-              <CloseBtnIcon onClick={() => stackDeleteHandler(i)} />
+              <CloseIcon onClick={() => stackDeleteHandler(i)} />
             </SelectedStack>
           ))}
           <ResetButton onClick={stackResetHandler}>선택 초기화</ResetButton>
@@ -149,12 +150,6 @@ const StackBubble = styled.div`
   &.not-selected {
     opacity: 0.6;
   }
-  /* :hover {
-    border: 1px solid ${({ theme }) => theme.colors.purple1};
-    opacity: 1;
-    transform: scale(1.07);
-    transition: 0.2s;
-  } */
 `;
 
 const Stack = styled.img`
@@ -192,10 +187,6 @@ const ResetButton = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.grey3};
   border-radius: 4px;
   cursor: pointer;
-  /* :hover {
-    color: ${({ theme }) => theme.colors.purple1};
-    border: 1px solid ${({ theme }) => theme.colors.purple1};
-  } */
 `;
 
 export default TechStack;

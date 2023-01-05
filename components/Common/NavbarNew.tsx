@@ -1,23 +1,11 @@
-import { position } from '@prisma/client';
-import axios from 'axios';
-import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
+import { patchBoard, postBoard } from 'utils/axios';
 
-import BackIcon from '../public/icons/angle-small-left.svg';
+import { AngleLeftIcon } from 'components/Common/Icons';
 
 interface IProps {
   formData: boardFormData;
-}
-
-export interface boardFormData {
-  type: string;
-  place: string;
-  period: string;
-  application: position[];
-  title: string;
-  content: string;
-  authorId: string;
-  techStack: string[];
 }
 
 export default function NavbarNew(props: IProps) {
@@ -41,13 +29,11 @@ export default function NavbarNew(props: IProps) {
       alert('본문을 입력해주세요.');
     } else {
       if (isEditPage) {
-        axios
-          .patch(`/api/boards/${router.query.boardId}`, formData)
-          .then(() => {
-            router.back();
-          });
+        patchBoard(router.query.boardId as string, formData).then(() => {
+          router.back();
+        });
       } else {
-        axios.post('/api/boards', formData).then(() => {
+        postBoard(formData).then(() => {
           router.push('/');
         });
       }
@@ -56,7 +42,7 @@ export default function NavbarNew(props: IProps) {
 
   return (
     <NavLayout>
-      <BackIcon onClick={router.back} />
+      <AngleLeftIcon onClick={router.back} />
       <MidSpan>{isEditPage ? '게시글 수정' : '모집 글쓰기'}</MidSpan>
       <button onClick={handleSubmit}>완료</button>
     </NavLayout>

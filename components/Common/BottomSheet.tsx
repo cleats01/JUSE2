@@ -1,15 +1,14 @@
 import styled from 'styled-components';
+import { Dispatch, MouseEvent, ReactNode, SetStateAction } from 'react';
 
-import React, { Dispatch, ReactNode, SetStateAction } from 'react';
-
-interface propsType {
+interface IProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   children: ReactNode;
 }
 
-export default function BottomSheet(props: propsType) {
+export default function BottomSheet(props: IProps) {
   const { setIsOpen, children } = props;
-  const handleClose = (event: React.MouseEvent) => {
+  const handleClose = (event: MouseEvent) => {
     if (event.target === event.currentTarget) setIsOpen((prev) => !prev);
   };
   return (

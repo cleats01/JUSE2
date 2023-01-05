@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Dispatch, SetStateAction } from 'react';
 
 import { TextField } from '@mui/material';
-import TextEditor from 'components/TextEditor';
+import TextEditor from 'components/Common/TextEditor';
 
 interface IProps {
   title: string;

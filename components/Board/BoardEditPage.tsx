@@ -7,7 +7,7 @@ import { getBoardById } from 'utils/axios';
 
 import FormInput from 'components/New/FormInput';
 import ContentsInput from 'components/New/ContentsInput';
-import NavbarNew from 'components/NavbarNew';
+import NavbarNew from 'components/Common/NavbarNew';
 
 export default function BoardEditPage() {
   const { data: session, status } = useSession();

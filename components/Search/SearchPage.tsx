@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import NavbarTextOnly from 'components/NavbarTextOnly';
-import ScrollToTop from 'components/ScrollToTop';
-import TabBar from 'components/TabBar';
+import NavbarTextOnly from 'components/Common/NavbarTextOnly';
+import ScrollToTop from 'components/Common/ScrollToTop';
+import TabBar from 'components/Common/TabBar';
 import RecentSearch from 'components/Search/RecentSearch';
 import SearchInput from 'components/Search/SearchInput';
 import SearchResult from 'components/Search/SearchResult';

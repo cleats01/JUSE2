@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import router, { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import {
@@ -9,9 +9,9 @@ import {
   SearchIcon,
   ChatIcon,
   UserIcon,
-} from './Common/Icons';
+} from 'components/Common/Icons';
 
-interface tab {
+interface ITab {
   id: number;
   icon: JSX.Element;
   label: string;
@@ -23,7 +23,7 @@ export default function TabBar() {
   const { data, status } = useSession();
   const router = useRouter();
 
-  const tabList: tab[] = [
+  const tabList: ITab[] = [
     {
       id: 1,
       icon: <HomeIcon />,
@@ -65,7 +65,7 @@ export default function TabBar() {
     <TabBarLayout>
       <UlRow>
         {tabList.map(
-          (tab: tab): JSX.Element => (
+          (tab: ITab): JSX.Element => (
             <TabIcon key={tab.id}>
               <Link href={tab.path} className={tab.selected.toString()}>
                 {tab.icon}

@@ -1,19 +1,18 @@
+import styled from 'styled-components';
 import { useMemo, Dispatch, SetStateAction } from 'react';
 import 'react-quill/dist/quill.snow.css';
-
 import dynamic from 'next/dynamic';
-import styled from 'styled-components';
 
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false,
 });
 
-interface propsType {
+interface IProps {
   content: string;
   setContent: Dispatch<SetStateAction<string>>;
 }
 
-export default function TextEditor(props: propsType) {
+export default function TextEditor(props: IProps) {
   const { content, setContent } = props;
 
   const modules = useMemo(

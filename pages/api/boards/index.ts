@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createBoard } from '../../../prisma/board';
 import prisma from '../../../prisma/prisma';
 
 export default async function handler(
@@ -9,7 +8,9 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'POST': {
-        const board = await createBoard(req.body);
+        const board = await prisma.board.create({
+          data: req.body,
+        });
         return res.json(board);
       }
       case 'GET': {

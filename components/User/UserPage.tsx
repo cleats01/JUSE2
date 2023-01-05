@@ -6,10 +6,10 @@ import { getMyLists, getUserById, getUsersByIds } from 'utils/axios';
 import { useRouter } from 'next/router';
 
 import { Button } from '@mui/material';
-import NavbarTextOnly from 'components/NavbarTextOnly';
+import NavbarTextOnly from 'components/Common/NavbarTextOnly';
 import UserInfo from 'components/User/UserInfo';
 import MyLists from 'components/User/MyLists';
-import TabBar from 'components/TabBar';
+import TabBar from 'components/Common/TabBar';
 
 export default function UserPage() {
   const { data: session, status } = useSession();

@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { getChattingRoom } from 'utils/axios';
 
-import NavbarTextOnly from 'components/NavbarTextOnly';
+import NavbarTextOnly from 'components/Common/NavbarTextOnly';
 import ChatArea from 'components/Chat/ChatArea';
 import ChatInput from 'components/Chat/ChatInput';
 

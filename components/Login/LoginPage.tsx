@@ -1,8 +1,9 @@
 import React from 'react';
-import { signIn } from 'next-auth/react';
-import TabBar from '../../components/TabBar';
 import styled from 'styled-components';
-import GoogleIcon from '../../public/icons/google.svg';
+import { signIn } from 'next-auth/react';
+
+import TabBar from 'components/Common/TabBar';
+import { GoogleIcon } from 'components/Common/Icons';
 
 export default function LoginPage() {
   return (

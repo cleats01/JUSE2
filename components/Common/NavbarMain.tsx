@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 
-import HamburgerIcon from '../public/icons/menu-burger.svg';
-import NotificationIcon from '../public/icons/bell.svg';
-
 export default function NavbarMain() {
   return (
     <NavLayout>
-      <HamburgerIcon />
+      {/* <HamburgerIcon /> */}
       <LogoSpan>JUSE</LogoSpan>
-      <NotificationIcon />
+      {/* <NotificationIcon /> */}
     </NavLayout>
   );
 }
@@ -21,7 +18,7 @@ const NavLayout = styled.nav`
   right: 0;
   top: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 5px 20px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey1};
@@ -34,5 +31,3 @@ const LogoSpan = styled.span`
   font-weight: 900;
   color: ${({ theme }) => theme.colors.purple1};
 `;
-
-const LoginButton = styled.button``;

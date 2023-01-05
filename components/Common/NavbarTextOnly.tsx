@@ -1,17 +1,18 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import BackIcon from '../public/icons/angle-small-left.svg';
 
-interface propsType {
+import { AngleLeftIcon } from 'components/Common/Icons';
+
+interface IProps {
   centerText: string;
   back?: boolean;
 }
 
-export default function NavbarTextOnly({ centerText, back }: propsType) {
+export default function NavbarTextOnly({ centerText, back }: IProps) {
   const router = useRouter();
   return (
     <NavLayout>
-      {back ? <BackIcon onClick={router.back} /> : ''}
+      {back ? <AngleLeftIcon onClick={router.back} /> : ''}
       <CenterSpan>{centerText}</CenterSpan>
     </NavLayout>
   );

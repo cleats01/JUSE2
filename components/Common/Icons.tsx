@@ -54,7 +54,8 @@ export const AngleUpIcon = (props: SvgIconProps) => (
     id='Outline'
     viewBox='0 0 24 24'
     width={props.width || 20}
-    height={props.width || 20}>
+    height={props.width || 20}
+    fill={props.fill}>
     <path d='M18,15.5a1,1,0,0,1-.71-.29l-4.58-4.59a1,1,0,0,0-1.42,0L6.71,15.21a1,1,0,0,1-1.42-1.42L9.88,9.21a3.06,3.06,0,0,1,4.24,0l4.59,4.58a1,1,0,0,1,0,1.42A1,1,0,0,1,18,15.5Z' />
   </svg>
 );
@@ -94,14 +95,15 @@ export const BookmarkIcon = (props: SvgIconProps) => (
   </svg>
 );
 
-export const ChatIcon = () => (
+export const ChatIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Layer_1'
     data-name='Layer 1'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    onClick={props.onClick}>
     <path d='M12.009,23.665c-.476,0-.955-.168-1.337-.507l-3.748-3.157h-2.923c-2.206,0-4-1.794-4-4V4C0,1.794,1.794,0,4,0H20c2.206,0,4,1.794,4,4v12c0,2.206-1.794,4-4,4h-2.852l-3.847,3.18c-.362,.322-.825,.484-1.293,.484ZM4,2c-1.103,0-2,.897-2,2v12c0,1.103,.897,2,2,2h3.289c.236,0,.464,.083,.645,.235l4.047,3.41,4.17-3.416c.18-.148,.405-.229,.638-.229h3.212c1.103,0,2-.897,2-2V4c0-1.103-.897-2-2-2H4Z' />
   </svg>
 );
@@ -143,11 +145,14 @@ export const GithubIcon = () => (
   </svg>
 );
 
-export const GoogleIcon = () => (
+export const GoogleIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     xmlnsXlink='http://www.w3.org/1999/xlink'
-    viewBox='0 0 48 48'>
+    viewBox='0 0 48 48'
+    width={props.width || 20}
+    height={props.width || 20}
+    onClick={props.onClick}>
     <defs>
       <path
         id='a'
@@ -157,10 +162,10 @@ export const GoogleIcon = () => (
     <clipPath id='b'>
       <use xlinkHref='#a' overflow='visible' />
     </clipPath>
-    <path clip-path='url(#b)' fill='#FBBC05' d='M0 37V11l17 13z' />
-    <path clip-path='url(#b)' fill='#EA4335' d='M0 11l17 13 7-6.1L48 14V0H0z' />
-    <path clip-path='url(#b)' fill='#34A853' d='M0 37l30-23 7.9 1L48 0v48H0z' />
-    <path clip-path='url(#b)' fill='#4285F4' d='M48 48L17 24l-4-3 35-10z' />
+    <path clipPath='url(#b)' fill='#FBBC05' d='M0 37V11l17 13z' />
+    <path clipPath='url(#b)' fill='#EA4335' d='M0 11l17 13 7-6.1L48 14V0H0z' />
+    <path clipPath='url(#b)' fill='#34A853' d='M0 37l30-23 7.9 1L48 0v48H0z' />
+    <path clipPath='url(#b)' fill='#4285F4' d='M48 48L17 24l-4-3 35-10z' />
   </svg>
 );
 
@@ -210,25 +215,29 @@ export const BurgerIcon = () => (
     <rect y='18' width='24' height='2' rx='1' />
   </svg>
 );
-export const DotsVerticalIcon = () => (
+export const DotsVerticalIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    fill={props.fill}
+    onClick={props.onClick}>
     <circle cx='12' cy='2' r='2' />
     <circle cx='12' cy='12' r='2' />
     <circle cx='12' cy='22' r='2' />
   </svg>
 );
-export const DotsIcon = () => (
+export const DotsIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    fill={props.fill}
+    onClick={props.onClick}>
     <circle cx='2' cy='12' r='2' />
     <circle cx='12' cy='12' r='2' />
     <circle cx='22' cy='12' r='2' />
@@ -242,9 +251,9 @@ export const MinusIcon = () => (
     viewBox='0 0 24 24'
     fill='none'
     stroke='currentColor'
-    stroke-width='2'
-    stroke-linecap='round'
-    stroke-linejoin='round'
+    strokeWidth='2'
+    strokeLinecap='round'
+    strokeLinejoin='round'
     className='feather feather-minus-circle'>
     <circle cx='12' cy='12' r='10'></circle>
     <line x1='8' y1='12' x2='16' y2='12'></line>
@@ -258,9 +267,9 @@ export const PlusIcon = () => (
     viewBox='0 0 24 24'
     fill='none'
     stroke='currentColor'
-    stroke-width='2'
-    stroke-linecap='round'
-    stroke-linejoin='round'
+    strokeWidth='2'
+    strokeLinecap='round'
+    strokeLinejoin='round'
     className='feather feather-plus-circle'>
     <circle cx='12' cy='12' r='10'></circle>
     <line x1='12' y1='8' x2='12' y2='16'></line>
@@ -287,7 +296,6 @@ export const SlidersIcon = (props: SvgIconProps) => (
     x='0px'
     y='0px'
     viewBox='0 0 512.051 512.051'
-    // style='enable-background:new 0 0 512.051 512.051;'
     xmlSpace='preserve'
     width={props.width}
     height={props.width}

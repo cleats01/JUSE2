@@ -6,7 +6,7 @@ import { deleteUser, getUserById, patchUser } from 'utils/axios';
 import { handleUserSubmit } from 'utils/functions';
 
 import { Button } from '@mui/material';
-import NavbarTextOnly from 'components/NavbarTextOnly';
+import NavbarTextOnly from 'components/Common/NavbarTextOnly';
 import UserImgUploader from 'components/User/UserImgUploader';
 import UserNicknameInput from 'components/User/UserNicknameInput';
 import TechStackSelector from 'components/Common/TechStackSelector';

@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { GetServerSidePropsContext } from 'next';
-import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
-import CloseBtnIcon from '../public/icons/close.svg';
-import Card from './Card';
+import Card from 'components/Common/Card';
 
-export default function Trending({ data }: { data: boardData[] }) {
+interface IProps {
+  data: boardData[];
+}
+
+export default function Trending({ data }: IProps) {
   return (
     <TrendingContainer>
       <TrendingHeader>현재 🔥한 게시물</TrendingHeader>

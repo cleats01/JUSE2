@@ -9,7 +9,7 @@ import {
   AngleRightIcon,
   HeartFilledIcon,
 } from 'components/Common/Icons';
-import Card from 'components/Card';
+import Card from 'components/Common/Card';
 import { StackBubble } from 'components/Common/TechStackSelector';
 import UserImgWrapper from 'components/Common/UserImgWrapper';
 

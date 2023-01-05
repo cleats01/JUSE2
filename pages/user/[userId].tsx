@@ -1,8 +1,9 @@
 import axios from 'axios';
-import OtherUserPage from 'components/User/OtherUserPage';
 import { GetServerSidePropsContext } from 'next';
 import { dehydrate, DehydratedState, QueryClient } from 'react-query';
 import { getIsLiked, getUserById } from 'utils/axios';
+
+import OtherUserPage from 'components/User/OtherUserPage';
 
 interface IProps {
   dehydratedState: DehydratedState;

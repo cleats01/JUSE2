@@ -17,6 +17,18 @@ export const getRelated = (boardId: string) =>
     .get(`${process.env.BASE_URL}/api/boards/related?boardId=${boardId}`)
     .then((res) => res.data);
 
+export const postBoard = (data: boardFormData) =>
+  axios.post('/api/boards', data);
+
+export const patchBoardClose = (boardId: string, isClosed: boolean) =>
+  axios.patch(`/api/boards/${boardId}?isClosed=${!isClosed}`);
+
+export const patchBoard = (boardId: string, data: boardFormData) =>
+  axios.patch(`/api/boards/${boardId}`, data);
+
+export const deleteBoard = (boardId: string) =>
+  axios.delete(`/api/boards/${boardId}`);
+
 // USERS
 export const getUserById = (userId: string) =>
   axios

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import Trending from 'components/Trending';
-import Card from 'components/Card';
+import Trending from 'components/Search/Trending';
+import Card from 'components/Common/Card';
 
 interface IProps {
   isSearched: boolean;

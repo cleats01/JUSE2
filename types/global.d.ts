@@ -17,6 +17,17 @@ interface myBoardsData {
   acceptedList: boardData[];
 }
 
+interface boardFormData {
+  type: string;
+  place: string;
+  period: string;
+  application: position[];
+  title: string;
+  content: string;
+  authorId: string;
+  techStack: string[];
+}
+
 interface IRoom {
   id: string;
   chat: { username: string; message: string; createdAt: Date }[];

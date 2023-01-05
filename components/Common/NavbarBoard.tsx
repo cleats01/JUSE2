@@ -1,18 +1,17 @@
-import { Drawer } from '@mui/material';
-import axios from 'axios';
+import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import styled from 'styled-components';
+import { deleteBoard, patchBoardClose } from 'utils/axios';
 
-import BackIcon from '../public/icons/angle-small-left.svg';
-import MenuIcon from '../public/icons/menu-dots-vertical.svg';
+import { Drawer } from '@mui/material';
+import { AngleLeftIcon, DotsVerticalIcon } from 'components/Common/Icons';
 
-interface propsType {
+interface IProps {
   isClosed: boolean;
   isAdmin: boolean;
 }
 
-export default function NavbarBoard({ isClosed, isAdmin }: propsType) {
+export default function NavbarBoard({ isClosed, isAdmin }: IProps) {
   const router = useRouter();
 
   const { boardId } = router.query;
@@ -21,21 +20,21 @@ export default function NavbarBoard({ isClosed, isAdmin }: propsType) {
 
   const handleDeleteBoard = async () => {
     if (confirm('게시글을 삭제하시겠습니까?')) {
-      await axios.delete(`/api/boards/${boardId}`);
+      await deleteBoard(boardId as string);
       alert('게시글이 삭제되었습니다.');
       await router.replace('/');
     }
   };
 
   const handleBoardClose = async () => {
-    await axios.patch(`/api/boards/${boardId}?isClosed=${!isClosed}`);
+    await patchBoardClose(boardId as string, isClosed);
   };
 
   return (
     <NavLayout>
-      <BackIcon onClick={router.back} />
+      <AngleLeftIcon onClick={router.back} />
       {isAdmin ? (
-        <MenuIcon
+        <DotsVerticalIcon
           onClick={() => {
             setIsDrawerOpen(true);
           }}

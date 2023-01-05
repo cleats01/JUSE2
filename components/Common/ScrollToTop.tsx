@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import TopIcon from '../public/icons/angle-small-up.svg';
-import theme from '../styles/theme';
+import theme from 'styles/theme';
+
+import { AngleUpIcon } from 'components/Common/Icons';
 
 export default function ScrollToTop() {
   const [scrollY, setScrollY] = useState(0);
@@ -32,7 +33,7 @@ export default function ScrollToTop() {
 
   return (
     <PositionContainer onClick={handleScroll} btnStatus={btnStatus}>
-      <TopIcon fill={theme.colors.purple1} width={'35px'} height={'35px'} />
+      <AngleUpIcon fill={theme.colors.purple1} width={'35px'} height={'35px'} />
     </PositionContainer>
   );
 }

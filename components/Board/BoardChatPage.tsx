@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import NavbarTextOnly from 'components/NavbarTextOnly';
+import NavbarTextOnly from 'components/Common/NavbarTextOnly';
 import ChatList from 'components/Chat/ChatList';
 
 export default function BoardChatPage() {

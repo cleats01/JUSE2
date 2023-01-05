@@ -4,12 +4,12 @@ import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery } from 'react-query';
 import { getBoards } from 'utils/axios';
 
-import ScrollToTop from 'components/ScrollToTop';
+import ScrollToTop from 'components/Common/ScrollToTop';
 import MainTab from 'components/Home/MainTab';
 import Boards from 'components/Home/Boards';
 import FilterDrawer from 'components/Home/FilterDrawer';
-import TabBar from 'components/TabBar';
-import NavbarMain from 'components/NavbarMain';
+import TabBar from 'components/Common/TabBar';
+import NavbarMain from 'components/Common/NavbarMain';
 
 export default function HomePage() {
   // 필터 State

@@ -5,7 +5,7 @@ import { position } from '@prisma/client';
 
 import FormInput from 'components/New/FormInput';
 import ContentsInput from 'components/New/ContentsInput';
-import NavbarNew from 'components/NavbarNew';
+import NavbarNew from 'components/Common/NavbarNew';
 
 export default function NewPage() {
   const { data: session, status } = useSession();

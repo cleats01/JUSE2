@@ -3,7 +3,7 @@ import { getUserById } from 'utils/axios';
 import { DehydratedState, useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
-import NavbarTextOnly from 'components/NavbarTextOnly';
+import NavbarTextOnly from 'components/Common/NavbarTextOnly';
 import OtherUserBottomController from 'components/User/OtherUserBottomController';
 import UserInfo from 'components/User/UserInfo';
 

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 import { Dispatch, SetStateAction, useState } from 'react';
-import BottomSheet from 'components/BottomSheet';
-import TechStack from 'components/TechStack';
+import BottomSheet from 'components/Common/BottomSheet';
+import TechStack from 'components/Common/TechStack';
 
 interface IProps {
   techStack: string[];
