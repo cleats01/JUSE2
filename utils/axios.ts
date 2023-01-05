@@ -7,6 +7,16 @@ export const getBoards = (query: string) =>
 export const getBoardsBySearch = (search: string) =>
   axios.get(`/api/boards?search=${search}`).then((res) => res.data);
 
+export const getBoardById = (boardId: string) =>
+  axios
+    .get(`${process.env.BASE_URL}/api/boards/${boardId}`)
+    .then((res) => res.data);
+
+export const getRelated = (boardId: string) =>
+  axios
+    .get(`${process.env.BASE_URL}/api/boards/related?boardId=${boardId}`)
+    .then((res) => res.data);
+
 // USERS
 export const getUserById = (userId: string) =>
   axios
@@ -48,17 +58,6 @@ export const getIsLiked = (userId: string) =>
 
 export const postLikes = (userId: string) =>
   axios.post(`${process.env.BASE_URL}/api/likes?userId=${userId}`);
-
-// BOARDS
-export const getBoardById = (boardId: string) =>
-  axios
-    .get(`${process.env.BASE_URL}/api/boards/${boardId}`)
-    .then((res) => res.data);
-
-export const getRelated = (boardId: string) =>
-  axios
-    .get(`${process.env.BASE_URL}/api/boards/related?boardId=${boardId}`)
-    .then((res) => res.data);
 
 // BOOKMARKS
 export const postBookmarks = (boardId: string) =>

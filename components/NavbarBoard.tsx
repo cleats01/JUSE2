@@ -57,7 +57,7 @@ export default function NavbarBoard({ isClosed, isAdmin }: propsType) {
           )}
           <li
             onClick={() => {
-              router.push(`/board/edit/${boardId}`);
+              router.push(`/board/${boardId}/edit`);
             }}>
             게시글 수정
           </li>
