@@ -10,7 +10,7 @@ import {
   HeartFilledIcon,
 } from 'components/Common/Icons';
 import Card from 'components/Card';
-import { StackBubble } from 'components/New/FormInput';
+import { StackBubble } from 'components/Common/TechStackSelector';
 import UserImgWrapper from 'components/Common/UserImgWrapper';
 
 interface drawer {
