@@ -20,7 +20,7 @@ export default async function handler(
       case 'GET': {
         const myList = await prisma.board
           .findMany()
-          .then((data) => data.filter((board) => board.user.id === user?.id));
+          .then((data) => data.filter((board) => board.authorId === user?.id));
         const applyList = await prisma.board.findMany({
           where: { id: { in: user?.applyList } },
         });

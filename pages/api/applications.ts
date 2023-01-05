@@ -139,15 +139,17 @@ export default async function handler(
                 position.pending = position.pending.filter(
                   (applicant) => applicant.id !== req.query.applicantId
                 );
-                position.accept = position.accept.filter(
-                  (applicant) => applicant.id !== req.query.applicantId
-                );
-                position.reject = position.reject.filter(
-                  (applicant) => applicant.id !== req.query.applicantId
-                );
               }
               return position;
             }),
+          },
+        });
+        await prisma.user.update({
+          where: { id: req.query.applicantId as string },
+          data: {
+            applyList: user?.applyList.filter(
+              (boardId) => boardId !== req.query.boardId
+            ),
           },
         });
         return res.status(200).json({ message: 'canceled' });

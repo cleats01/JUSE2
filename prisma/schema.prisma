@@ -24,13 +24,11 @@ type position {
 }
 
 type userSession {
-  id            String
-  email         String
-  image         String
-  name          String
-  nickname      String
-  userTechStack String[]
-  like          Int
+  id       String
+  email    String
+  image    String
+  name     String
+  nickname String
 }
 
 type chatMessage {
@@ -39,12 +37,12 @@ type chatMessage {
   createdAt DateTime @default(now())
 }
 
-model ChattingRoom {
+model Room {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   chat        chatMessage[]
   membersId   String[]
   membersData userSimple[]
-  boardId     String?
+  boardId     String[]
 }
 
 model User {
@@ -65,20 +63,19 @@ model User {
 }
 
 model Board {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
   type        String
   place       String
   period      String
   application position[]
   title       String
   content     String
-  author      User        @relation(fields: [authorId], references: [id])
-  authorId    String      @db.ObjectId
-  user        userSession
+  author      User       @relation(fields: [authorId], references: [id])
+  authorId    String     @db.ObjectId
   techStack   String[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  bookmark    Int         @default(0)
-  chat        Int         @default(0)
-  isClosed    Boolean     @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  bookmark    Int        @default(0)
+  chat        Int        @default(0)
+  isClosed    Boolean    @default(false)
 }
