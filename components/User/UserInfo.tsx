@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { User } from '@prisma/client';
 
 import UserImgWrapper from 'components/Common/UserImgWrapper';
-import { StackBubble } from 'components/New/FormInput';
+import { StackBubble } from 'components/Common/TechStackSelector';
 import { HeartFilledIcon } from 'components/Common/Icons';
 
 interface IProps {

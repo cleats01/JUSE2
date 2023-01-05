@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import ChatIcon from '../public/icons/chat.svg';
 import BookmarkIcon from '../public/icons/bookmark.svg';
-import { StackBubble } from 'components/New/FormInput';
+import { StackBubble } from 'components/Common/TechStackSelector';
 import Link from 'next/link';
 import theme from '../styles/theme';
 

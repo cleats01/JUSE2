@@ -342,29 +342,3 @@ const PositionAddButton = styled.button`
   border-radius: 4px;
   padding: 8px;
 `;
-
-export const StackAddButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.colors.grey3};
-  border-radius: 5px;
-  padding: 10px;
-`;
-
-export const StackBubble = styled.img`
-  width: 30px;
-  border: 1px solid ${({ theme }) => theme.colors.grey2};
-  border-radius: 999px;
-`;
-
-export const BottomSheetHeader = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  font-weight: 700;
-`;
