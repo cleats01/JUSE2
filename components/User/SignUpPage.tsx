@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Welcome } from 'pages/login';
 import { handleUserSubmit } from 'utils/functions';
 
 import { Button } from '@mui/material';
+import { Welcome } from 'components/Login/LoginPage';
 import UserImgUploader from 'components/User/UserImgUploader';
 import UserNicknameInput from 'components/User/UserNicknameInput';
 import TechStackSelector from 'components/Common/TechStackSelector';
