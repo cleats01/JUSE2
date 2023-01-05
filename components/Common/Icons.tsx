@@ -70,24 +70,26 @@ export const BellIcon = () => (
   </svg>
 );
 
-export const BookmarkFilledIcon = () => (
+export const BookmarkFilledIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Filled'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    onClick={props.onClick}>
     <path d='M2.849,23.55a2.954,2.954,0,0,0,3.266-.644L12,17.053l5.885,5.853a2.956,2.956,0,0,0,2.1.881,3.05,3.05,0,0,0,1.17-.237A2.953,2.953,0,0,0,23,20.779V5a5.006,5.006,0,0,0-5-5H6A5.006,5.006,0,0,0,1,5V20.779A2.953,2.953,0,0,0,2.849,23.55Z' />
   </svg>
 );
 
-export const BookmarkIcon = () => (
+export const BookmarkIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    onClick={props.onClick}>
     <path d='M20.137,24a2.8,2.8,0,0,1-1.987-.835L12,17.051,5.85,23.169a2.8,2.8,0,0,1-3.095.609A2.8,2.8,0,0,1,1,21.154V5A5,5,0,0,1,6,0H18a5,5,0,0,1,5,5V21.154a2.8,2.8,0,0,1-1.751,2.624A2.867,2.867,0,0,1,20.137,24ZM6,2A3,3,0,0,0,3,5V21.154a.843.843,0,0,0,1.437.6h0L11.3,14.933a1,1,0,0,1,1.41,0l6.855,6.819a.843.843,0,0,0,1.437-.6V5a3,3,0,0,0-3-3Z' />
   </svg>
 );
@@ -104,11 +106,12 @@ export const ChatIcon = () => (
   </svg>
 );
 
-export const CloseIcon = () => (
+export const CloseIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
-    width='16'
-    height='16'
+    width={props.width || 16}
+    height={props.width || 16}
+    onClick={props.onClick}
     fill='currentColor'
     className='bi bi-x-circle-fill'
     viewBox='0 0 16 16'>
@@ -116,13 +119,14 @@ export const CloseIcon = () => (
   </svg>
 );
 
-export const CrossIcon = () => (
+export const CrossIcon = (props: SvgIconProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     id='Outline'
     viewBox='0 0 24 24'
-    width='20'
-    height='20'>
+    width={props.width || 20}
+    height={props.width || 20}
+    onClick={props.onClick}>
     <path d='M18,6h0a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,6H6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,6,18H6a1,1,0,0,0,1.414,0L12,13.414,16.586,18A1,1,0,0,0,18,18h0a1,1,0,0,0,0-1.414L13.414,12,18,7.414A1,1,0,0,0,18,6Z' />
   </svg>
 );
