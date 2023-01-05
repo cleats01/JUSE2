@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { getChattingRoom, postMessage } from 'utils/axios';
+import { getChattingRoom } from 'utils/axios';
 
 import NavbarTextOnly from 'components/NavbarTextOnly';
 import ChatArea from 'components/Chat/ChatArea';

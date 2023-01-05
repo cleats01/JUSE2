@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
-import { UserImgWrapper } from 'pages/user/signup/[...signup]';
+import UserImgWrapper from 'components/Common/UserImgWrapper';
 
 export default function ChatListItem({ data }: { data: IRoom }) {
   const { data: session } = useSession();
