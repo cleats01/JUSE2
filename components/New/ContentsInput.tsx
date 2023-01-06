@@ -38,4 +38,6 @@ const ContentsContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 0 5px;
+  margin: 16px;
+  margin-top: 0;
 `;

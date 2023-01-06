@@ -59,6 +59,6 @@ export default function SearchPage({ trending }: IProps) {
 const SearchLayout = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 55px 16px;
+  min-height: 100vh;
+  position: relative;
 `;

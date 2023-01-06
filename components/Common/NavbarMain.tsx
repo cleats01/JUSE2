@@ -11,7 +11,7 @@ export default function NavbarMain() {
 }
 
 const NavLayout = styled.nav`
-  position: fixed;
+  position: sticky;
   max-width: 480px;
   height: 55px;
   left: 0;

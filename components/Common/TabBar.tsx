@@ -81,10 +81,10 @@ export default function TabBar() {
 
 const TabBarLayout = styled.div`
   padding: 8px 20px;
-  position: fixed;
+  position: sticky;
+  width: 100%;
   max-width: 480px;
-  left: 0;
-  right: 0;
+  margin-top: auto;
   bottom: 0;
   border-top: 1px solid ${({ theme }) => theme.colors.grey1};
   background-color: #fff;

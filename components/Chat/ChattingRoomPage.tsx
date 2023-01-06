@@ -50,6 +50,8 @@ export default function ChattingRoomPage() {
 }
 
 const ChattingLayout = styled.div`
-  max-width: 480px;
-  padding: 55px 0 50px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
 `;

@@ -244,6 +244,7 @@ const LikeWrapper = styled.div`
 
 const ListsContainer = styled.ul`
   margin-top: 10px;
+  flex-grow: 1;
 `;
 
 const ListItem = styled.li`
@@ -259,7 +260,7 @@ const ListItem = styled.li`
 `;
 
 const DrawerHeader = styled.header`
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -278,7 +279,6 @@ const DrawerHeader = styled.header`
 `;
 
 const DrawerLayout = styled.div`
-  padding: 55px 16px;
   width: 100vw;
   max-width: 480px;
 `;
@@ -287,5 +287,5 @@ const BoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 10px;
+  padding: 16px;
 `;

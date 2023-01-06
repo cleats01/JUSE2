@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { getChatList, getChatListByBoardId } from 'utils/axios';
@@ -26,10 +27,16 @@ export default function ChatList() {
   }, [status]);
 
   return (
-    <>
+    <ChatListContainer>
       {chatList?.map((chattingRoom) => (
         <ChatListItem key={chattingRoom.id} data={chattingRoom} />
       ))}
-    </>
+    </ChatListContainer>
   );
 }
+
+const ChatListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`;

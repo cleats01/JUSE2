@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { handleUserSubmit } from 'utils/functions';
 
 import { Button } from '@mui/material';
-import { Welcome } from 'components/Login/LoginPage';
 import UserImgUploader from 'components/User/UserImgUploader';
 import UserNicknameInput from 'components/User/UserNicknameInput';
 import TechStackSelector from 'components/Common/TechStackSelector';
@@ -79,13 +78,20 @@ export default function SignUpPage() {
 const SignUpLayout = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  max-width: 300px;
+  justify-content: center;
+  gap: 20px;
+  width: 300px;
+  min-height: 100vh;
   margin: auto;
-  padding: 20px;
-  height: 100vh;
-  gap: 15px;
+`;
+
+const Welcome = styled.h1`
+  font-size: 20px;
+  > span {
+    font-weight: 900;
+    color: ${({ theme }) => theme.colors.purple1};
+  }
 `;
 
 const ButtonWrapper = styled.div`

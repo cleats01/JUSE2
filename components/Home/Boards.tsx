@@ -30,4 +30,7 @@ const BoardsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 10px;
+  padding: 0 16px;
+  min-height: 100vh;
 `;

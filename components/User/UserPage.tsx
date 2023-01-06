@@ -78,7 +78,10 @@ export default function UserPage() {
 }
 
 const UserInfoLayout = styled.div`
-  padding: 70px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
 `;
 
 const ButtonWrapper = styled.div`

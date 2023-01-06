@@ -34,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <GlobalStyle />
               <AppContainer>
                 <Component {...pageProps} />
-                {/* <ReactQueryDevtools /> */}
+                <ReactQueryDevtools />
               </AppContainer>
             </MuiThemeProvider>
           </ThemeProvider>
@@ -44,4 +44,6 @@ export default function App({ Component, pageProps }: AppProps) {
   );
 }
 
-const AppContainer = styled.div``;
+const AppContainer = styled.div`
+  box-shadow: rgb(0 0 0 / 16%) 0px 0px 8px;
+`;

@@ -314,6 +314,7 @@ const FormContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.grey2};
   border-radius: 20px;
   padding: 20px;
+  margin: 16px;
 `;
 
 const InputWrapper = styled.div`

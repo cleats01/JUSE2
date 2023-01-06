@@ -46,7 +46,7 @@ const PositionContainer = styled.div<{ btnStatus?: boolean }>`
   width: 45px;
   height: 45px;
   bottom: 80px;
-  right: 35px;
+  right: max(calc(50% - 205px), 35px);
   z-index: 10;
   color: ${({ theme }) => theme.colors.purple1};
   border-radius: 50%;

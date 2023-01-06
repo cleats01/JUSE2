@@ -25,6 +25,7 @@ const ChatAreaContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: calc(100vh - 105px);
   height: 100%;
   width: 100%;
   padding: 10px;

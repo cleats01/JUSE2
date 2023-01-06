@@ -11,12 +11,13 @@ export default function BottomController(props: propsType) {
 }
 
 const BottomControllerLayout = styled.div`
-  position: fixed;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 2;
   background-color: #fff;
+  margin-top: auto;
   padding: 15px;
   max-width: 480px;
   display: flex;

@@ -33,6 +33,7 @@ const SearchResultContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 16px;
 `;
 
 const SearchResultMessage = styled.span`

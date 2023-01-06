@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-
 import { Dispatch, SetStateAction, useState } from 'react';
-import BottomSheet from 'components/Common/BottomSheet';
+
+import { Drawer } from '@mui/material';
 import TechStack from 'components/Common/TechStack';
 
 interface IProps {
@@ -15,8 +15,18 @@ export default function TechStackSelector(props: IProps) {
 
   return (
     <>
-      {isModalOpen ? (
-        <BottomSheet setIsOpen={setIsModalOpen}>
+      <StackAddButton onClick={() => setIsModalOpen((prev) => !prev)}>
+        {techStack.length
+          ? techStack.map((stack) => (
+              <StackBubble key={stack} src={`/icons/stacks/${stack}.png`} />
+            ))
+          : '기술 스택 추가'}
+      </StackAddButton>
+      <CustomDrawer
+        anchor='bottom'
+        open={isModalOpen}
+        onClose={() => setIsModalOpen((prev) => !prev)}>
+        <DrawerContainer>
           <BottomSheetHeader>
             사용 기술 스택
             <button
@@ -27,20 +37,32 @@ export default function TechStackSelector(props: IProps) {
             </button>
           </BottomSheetHeader>
           <TechStack selected={techStack} setSelected={setTechStack} />
-        </BottomSheet>
-      ) : (
-        ''
-      )}
-      <StackAddButton onClick={() => setIsModalOpen((prev) => !prev)}>
-        {techStack.length
-          ? techStack.map((stack) => (
-              <StackBubble key={stack} src={`/icons/stacks/${stack}.png`} />
-            ))
-          : '기술 스택 추가'}
-      </StackAddButton>
+        </DrawerContainer>
+      </CustomDrawer>
     </>
   );
 }
+
+const CustomDrawer = styled(Drawer)`
+  max-width: 480px;
+  margin: auto;
+  .MuiDrawer-paper {
+    position: absolute;
+    bottom: 0;
+    border-radius: 15px 15px 0 0;
+    max-width: 480px;
+  }
+`;
+
+const DrawerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  min-height: 50vh;
+  max-width: 480px;
+  margin: auto;
+`;
 
 export const StackAddButton = styled.button`
   display: flex;

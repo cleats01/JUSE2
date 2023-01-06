@@ -15,5 +15,8 @@ export default function ChatListPage() {
 }
 
 const ChatListLayout = styled.div`
-  padding: 65px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
 `;

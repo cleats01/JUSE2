@@ -37,7 +37,7 @@ const UserInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  padding: 0 16px;
+  padding: 16px;
   &.border {
     padding: 16px;
     border-radius: 10px;

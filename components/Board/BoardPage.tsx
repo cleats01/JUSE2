@@ -74,23 +74,25 @@ export default function BoardPage(props: IProps) {
   return (
     <BoardLayout>
       <NavbarBoard isClosed={isClosed} isAdmin={isAdmin} />
-      <BoardHeader type={type} place={place} title={title} />
-      <BasicInfo place={place} period={period} techStack={techStack} />
-      <BoardTab
-        currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
-        tabRef={tabRef}
-      />
-      <section ref={(el) => (tabRef.current[0] = el)}>
-        <ContentViewer content={content} />
-      </section>
-      <section ref={(el) => (tabRef.current[1] = el)}>
-        <AcceptedStatus application={application} />
-        <LeaderInfo author={author} />
-      </section>
-      <section ref={(el) => (tabRef.current[2] = el)}>
-        <Related data={related} />
-      </section>
+      <ContentsWrapper>
+        <BoardHeader type={type} place={place} title={title} />
+        <BasicInfo place={place} period={period} techStack={techStack} />
+        <BoardTab
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+          tabRef={tabRef}
+        />
+        <section ref={(el) => (tabRef.current[0] = el)}>
+          <ContentViewer content={content} />
+        </section>
+        <section ref={(el) => (tabRef.current[1] = el)}>
+          <AcceptedStatus application={application} />
+          <LeaderInfo author={author} />
+        </section>
+        <section ref={(el) => (tabRef.current[2] = el)}>
+          <Related data={related} />
+        </section>
+      </ContentsWrapper>
       <BoardBottomController {...{ board, isAdmin, setIsDrawerOpen }} />
       <ApplicationAdminDrawer {...drawerProps} />
       <ApplyDrawer {...drawerProps} />
@@ -99,7 +101,14 @@ export default function BoardPage(props: IProps) {
 }
 
 const BoardLayout = styled.div`
-  padding: 70px 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+`;
+
+const ContentsWrapper = styled.div`
+  padding: 16px;
 `;
 
 export const InfoWrapper = styled.div`

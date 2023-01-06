@@ -19,7 +19,7 @@ export default function NavbarTextOnly({ centerText, back }: IProps) {
 }
 
 const NavLayout = styled.nav`
-  position: fixed;
+  position: sticky;
   max-width: 480px;
   height: 55px;
   left: 0;

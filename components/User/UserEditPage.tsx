@@ -89,25 +89,27 @@ export default function UserEditPage() {
   return (
     <SignUpLayout>
       <NavbarTextOnly centerText='회원정보 수정' back={true} />
-      <UserImgUploader {...userImgUploaderProps} />
-      <UserNicknameInput {...userNicknameInputProps} />
-      <TechStackSelector {...techStackSelectorProps} />
-      <ButtonWrapper>
-        <Button
-          variant='outlined'
-          onClick={handleWithdrawal}
-          style={{ width: '90px' }}
-          disableElevation>
-          회원 탈퇴
-        </Button>
-        <Button
-          variant='contained'
-          onClick={handleSubmit}
-          style={{ color: '#fff', width: '90px' }}
-          disableElevation>
-          수정
-        </Button>
-      </ButtonWrapper>
+      <ContentsWrapper>
+        <UserImgUploader {...userImgUploaderProps} />
+        <UserNicknameInput {...userNicknameInputProps} />
+        <TechStackSelector {...techStackSelectorProps} />
+        <ButtonWrapper>
+          <Button
+            variant='outlined'
+            onClick={handleWithdrawal}
+            style={{ width: '90px' }}
+            disableElevation>
+            회원 탈퇴
+          </Button>
+          <Button
+            variant='contained'
+            onClick={handleSubmit}
+            style={{ color: '#fff', width: '90px' }}
+            disableElevation>
+            수정
+          </Button>
+        </ButtonWrapper>
+      </ContentsWrapper>
     </SignUpLayout>
   );
 }
@@ -115,13 +117,16 @@ export default function UserEditPage() {
 const SignUpLayout = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-width: 300px;
-  margin: auto;
-  padding: 20px;
-  height: 100vh;
+  min-height: 100vh;
+  position: relative;
+`;
+
+const ContentsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 20px;
+  width: 300px;
+  margin: auto;
 `;
 
 const ButtonWrapper = styled.div`

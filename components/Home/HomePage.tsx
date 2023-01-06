@@ -75,6 +75,6 @@ export default function HomePage() {
 const HomeLayout = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 55px 16px;
+  min-height: 100vh;
+  position: relative;
 `;
