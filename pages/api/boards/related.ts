@@ -15,11 +15,43 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET': {
-        const related = await prisma.board
-          .findMany({
+        const related = await prisma.board.findMany({
+          where: {
+            OR: [{ techStack: { hasSome: originalBoard?.techStack } }],
+            NOT: { id: boardId },
+          },
+          orderBy: [
+            { bookmark: 'desc' },
+            { chat: 'desc' },
+            {
+              createdAt: 'desc',
+            },
+          ],
+          take: 4,
+          select: {
+            id: true,
+            type: true,
+            place: true,
+            title: true,
+            techStack: true,
+            application: true,
+            chat: true,
+            bookmark: true,
+            isClosed: true,
+          },
+        });
+
+        if (related.length < 4) {
+          const additionalRelated = await prisma.board.findMany({
             where: {
-              OR: [{ techStack: { hasSome: originalBoard?.techStack } }],
-              NOT: { id: boardId },
+              OR: [
+                { type: originalBoard?.type },
+                { place: originalBoard?.place },
+              ],
+              NOT: [
+                { id: boardId },
+                { id: { in: related.map((board: boardData) => board.id) } },
+              ],
             },
             orderBy: [
               { bookmark: 'desc' },
@@ -28,91 +60,50 @@ export default async function handler(
                 createdAt: 'desc',
               },
             ],
-            take: 4,
-          })
-          .then((data) =>
-            data.map((board) => ({
-              id: board.id,
-              type: board.type,
-              place: board.place,
-              title: board.title,
-              techStack: board.techStack,
-              application: board.application,
-              chat: board.chat,
-              bookmark: board.bookmark,
-              isClosed: board.isClosed,
-            }))
-          );
-
-        if (related.length < 4) {
-          const additionalRelated = await prisma.board
-            .findMany({
-              where: {
-                OR: [
-                  { type: originalBoard?.type },
-                  { place: originalBoard?.place },
-                ],
-                NOT: [
-                  { id: boardId },
-                  { id: { in: related.map((board: boardData) => board.id) } },
-                ],
-              },
-              orderBy: [
-                { bookmark: 'desc' },
-                { chat: 'desc' },
-                {
-                  createdAt: 'desc',
-                },
-              ],
-              take: 4 - related.length,
-            })
-            .then((data) =>
-              data.map((board) => ({
-                id: board.id,
-                type: board.type,
-                place: board.place,
-                title: board.title,
-                techStack: board.techStack,
-                application: board.application,
-                chat: board.chat,
-                bookmark: board.bookmark,
-                isClosed: board.isClosed,
-              }))
-            );
+            take: 4 - related.length,
+            select: {
+              id: true,
+              type: true,
+              place: true,
+              title: true,
+              techStack: true,
+              application: true,
+              chat: true,
+              bookmark: true,
+              isClosed: true,
+            },
+          });
           related.push(...additionalRelated);
         }
 
         if (related.length < 5) {
-          const additionalRelated = await prisma.board
-            .findMany({
-              where: {
-                NOT: [
-                  { id: boardId },
-                  { id: { in: related.map((board: boardData) => board.id) } },
-                ],
-              },
-              orderBy: [
-                { bookmark: 'desc' },
-                { chat: 'desc' },
-                {
-                  createdAt: 'desc',
-                },
+          const additionalRelated = await prisma.board.findMany({
+            where: {
+              NOT: [
+                { id: boardId },
+                { id: { in: related.map((board: boardData) => board.id) } },
               ],
-              take: 4 - related.length,
-            })
-            .then((data) =>
-              data.map((board) => ({
-                id: board.id,
-                type: board.type,
-                place: board.place,
-                title: board.title,
-                techStack: board.techStack,
-                application: board.application,
-                chat: board.chat,
-                bookmark: board.bookmark,
-                isClosed: board.isClosed,
-              }))
-            );
+            },
+            orderBy: [
+              { bookmark: 'desc' },
+              { chat: 'desc' },
+              {
+                createdAt: 'desc',
+              },
+            ],
+            take: 4 - related.length,
+            select: {
+              id: true,
+              type: true,
+              place: true,
+              title: true,
+              techStack: true,
+              application: true,
+              chat: true,
+              bookmark: true,
+              isClosed: true,
+            },
+          });
           related.push(...additionalRelated);
         }
 
