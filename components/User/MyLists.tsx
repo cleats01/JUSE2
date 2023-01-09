@@ -70,13 +70,21 @@ export default function MyLists(props: IProps) {
             <Tab value='참여중인 모임' label='참여중인 모임' />
           </Tabs>
           <BoardContainer>
-            {myListTab === '내가 만든 모임'
-              ? boardsData?.myList.map((board) => (
+            {myListTab === '내가 만든 모임' ? (
+              boardsData?.myList.length ? (
+                boardsData.myList.map((board) => (
                   <Card data={board} key={board.id} />
                 ))
-              : boardsData?.acceptedList.map((board) => (
-                  <Card data={board} key={board.id} />
-                ))}
+              ) : (
+                <NullMessage>해당하는 모임이 없습니다.</NullMessage>
+              )
+            ) : boardsData?.acceptedList.length ? (
+              boardsData.acceptedList.map((board) => (
+                <Card data={board} key={board.id} />
+              ))
+            ) : (
+              <NullMessage>해당하는 모임이 없습니다.</NullMessage>
+            )}
           </BoardContainer>
         </DrawerLayout>
       </Drawer>
@@ -103,9 +111,13 @@ export default function MyLists(props: IProps) {
             <span>지원한 모임</span>
           </DrawerHeader>
           <BoardContainer>
-            {boardsData?.applyList.map((board) => (
-              <Card data={board} key={board.id} />
-            ))}
+            {boardsData?.applyList.length ? (
+              boardsData.applyList.map((board) => (
+                <Card data={board} key={board.id} />
+              ))
+            ) : (
+              <NullMessage>해당하는 모임이 없습니다.</NullMessage>
+            )}
           </BoardContainer>
         </DrawerLayout>
       </Drawer>
@@ -132,9 +144,13 @@ export default function MyLists(props: IProps) {
             <span>북마크한 모임</span>
           </DrawerHeader>
           <BoardContainer>
-            {boardsData?.bookmarkList.map((board) => (
-              <Card data={board} key={board.id} />
-            ))}
+            {boardsData?.bookmarkList.length ? (
+              boardsData.bookmarkList.map((board) => (
+                <Card data={board} key={board.id} />
+              ))
+            ) : (
+              <NullMessage>해당하는 모임이 없습니다.</NullMessage>
+            )}
           </BoardContainer>
         </DrawerLayout>
       </Drawer>
@@ -161,19 +177,20 @@ export default function MyLists(props: IProps) {
             <span>좋아요한 사용자</span>
           </DrawerHeader>
           <BoardContainer>
-            {likeListData?.map((likedUser) => (
-              <Link href={`/user/${likedUser.id}`} key={likedUser.id}>
-                <InfoContainer className='border'>
-                  <UserInfo user={likedUser} />
-                </InfoContainer>
-              </Link>
-            ))}
+            {likeListData?.length ? (
+              likeListData.map((likedUser) => (
+                <Link href={`/user/${likedUser.id}`} key={likedUser.id}>
+                  <InfoContainer className='border'>
+                    <UserInfo user={likedUser} />
+                  </InfoContainer>
+                </Link>
+              ))
+            ) : (
+              <NullMessage>좋아요한 사용자가 없습니다.</NullMessage>
+            )}
           </BoardContainer>
         </DrawerLayout>
       </Drawer>
-      <ListItem>
-        <h4>알림</h4>
-      </ListItem>
     </ListsContainer>
   );
 }
@@ -231,4 +248,14 @@ const BoardContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 16px;
+`;
+
+const NullMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 25vh;
+  color: ${({ theme }) => theme.colors.grey4};
 `;

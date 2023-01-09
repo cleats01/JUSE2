@@ -10,6 +10,7 @@ import NavbarTextOnly from 'components/Common/NavbarTextOnly';
 import UserInfo from 'components/User/UserInfo';
 import MyLists from 'components/User/MyLists';
 import TabBar from 'components/Common/TabBar';
+import LoadingSpinner from 'components/Common/LoadingSpinner';
 
 export default function UserPage() {
   const { data: session, status } = useSession();
@@ -73,7 +74,7 @@ export default function UserPage() {
       <TabBar />
     </UserInfoLayout>
   ) : (
-    <div>loading...</div>
+    <LoadingSpinner fullScreen />
   );
 }
 
