@@ -10,6 +10,7 @@ import Boards from 'components/Home/Boards';
 import FilterDrawer from 'components/Home/FilterDrawer';
 import TabBar from 'components/Common/TabBar';
 import NavbarMain from 'components/Common/NavbarMain';
+import Spinner from 'public/icons/loading-spinner.svg';
 
 export default function HomePage() {
   // 필터 State
@@ -41,7 +42,7 @@ export default function HomePage() {
   useEffect(() => {
     if (inView) fetchNextPage();
   }, [inView]);
-  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, status } = useInfiniteQuery(
     [currentTab, place, offline, period, techStack, isClosed],
     ({ pageParam = '' }) =>
       getBoards(
@@ -64,6 +65,7 @@ export default function HomePage() {
         setCurrentTab={setCurrentTab}
         setIsFilterOpen={setIsFilterOpen}
       />
+      {status === 'loading' ? <Spinner /> : ''}
       <Boards data={data} lastRef={ref} />
       <FilterDrawer {...filterProps} />
       <ScrollToTop />

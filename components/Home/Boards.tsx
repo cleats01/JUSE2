@@ -16,9 +16,17 @@ export default function Boards(props: IProps) {
     <BoardsContainer>
       {data?.pages.map((page, index) => (
         <Fragment key={index}>
-          {page?.map((board: boardData) => (
-            <Card key={board.id} data={board} />
-          ))}
+          {page.length ? (
+            page.map((board: boardData) => <Card key={board.id} data={board} />)
+          ) : (
+            <NullMessage>
+              <p>해당하는 모임이 존재하지 않습니다.</p>
+              <p>직접 원하는 모임을 만들어 보세요!</p>
+              <br />
+              <p style={{ fontWeight: 700 }}>모임 만들러 가기</p>
+              <p style={{ fontSize: '20px' }}>⬇</p>
+            </NullMessage>
+          )}
         </Fragment>
       ))}
       <div id='lastBoard' ref={lastRef} />
@@ -32,5 +40,14 @@ const BoardsContainer = styled.div`
   gap: 10px;
   margin-top: 10px;
   padding: 0 16px;
-  min-height: 100vh;
+`;
+
+const NullMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 25vh;
+  color: ${({ theme }) => theme.colors.grey4};
 `;
