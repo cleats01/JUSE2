@@ -10,7 +10,7 @@ import Boards from 'components/Home/Boards';
 import FilterDrawer from 'components/Home/FilterDrawer';
 import TabBar from 'components/Common/TabBar';
 import NavbarMain from 'components/Common/NavbarMain';
-import Spinner from 'public/icons/loading-spinner.svg';
+import LoadingSpinner from 'components/Common/LoadingSpinner';
 
 export default function HomePage() {
   // 필터 State
@@ -66,7 +66,7 @@ export default function HomePage() {
         setIsFilterOpen={setIsFilterOpen}
       />
       {status === 'loading' ? (
-        <Spinner />
+        <LoadingSpinner />
       ) : (
         <Boards data={data} lastRef={ref} />
       )}
