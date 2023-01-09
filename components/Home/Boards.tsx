@@ -14,21 +14,23 @@ export default function Boards(props: IProps) {
 
   return (
     <BoardsContainer>
-      {data?.pages.map((page, index) => (
-        <Fragment key={index}>
-          {page.length ? (
-            page.map((board: boardData) => <Card key={board.id} data={board} />)
-          ) : (
-            <NullMessage>
-              <p>해당하는 모임이 존재하지 않습니다.</p>
-              <p>직접 원하는 모임을 만들어 보세요!</p>
-              <br />
-              <p style={{ fontWeight: 700 }}>모임 만들러 가기</p>
-              <p style={{ fontSize: '20px' }}>⬇</p>
-            </NullMessage>
-          )}
-        </Fragment>
-      ))}
+      {data?.pages[0].length ? (
+        data?.pages.map((page, index) => (
+          <Fragment key={index}>
+            {page?.map((board: boardData) => (
+              <Card key={board.id} data={board} />
+            ))}
+          </Fragment>
+        ))
+      ) : (
+        <NullMessage>
+          <p>해당하는 모임이 존재하지 않습니다.</p>
+          <p>직접 원하는 모임을 만들어 보세요!</p>
+          <br />
+          <p style={{ fontWeight: 700 }}>모임 만들러 가기</p>
+          <p style={{ fontSize: '20px' }}>⬇</p>
+        </NullMessage>
+      )}
       <div id='lastBoard' ref={lastRef} />
     </BoardsContainer>
   );

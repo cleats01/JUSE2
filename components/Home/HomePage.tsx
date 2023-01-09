@@ -65,8 +65,11 @@ export default function HomePage() {
         setCurrentTab={setCurrentTab}
         setIsFilterOpen={setIsFilterOpen}
       />
-      {status === 'loading' ? <Spinner /> : ''}
-      <Boards data={data} lastRef={ref} />
+      {status === 'loading' ? (
+        <Spinner />
+      ) : (
+        <Boards data={data} lastRef={ref} />
+      )}
       <FilterDrawer {...filterProps} />
       <ScrollToTop />
       <TabBar />
