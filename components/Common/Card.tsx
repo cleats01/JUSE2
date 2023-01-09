@@ -33,7 +33,15 @@ export default function Card(props: IProps) {
         <Title>{title}</Title>
         <TechStackWrapper>
           {techStack.map((stack, index) => (
-            <StackBubble src={`/icons/stacks/${stack}.png`} key={index} />
+            <StackBubble
+              src={`/icons/stacks/${stack}.png`}
+              key={index}
+              alt={stack}
+              width={30}
+              height={30}
+              sizes={'30px'}
+              priority
+            />
           ))}
         </TechStackWrapper>
       </Link>

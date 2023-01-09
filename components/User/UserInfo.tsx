@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { User } from '@prisma/client';
+import Image from 'next/image';
 
 import UserImgWrapper from 'components/Common/UserImgWrapper';
 import { StackBubble } from 'components/Common/TechStackSelector';
@@ -16,7 +17,14 @@ export default function UserInfo(props: IProps) {
     <UserInfoContainer>
       <ProfileWrapper>
         <UserImgWrapper size='50px'>
-          <img src={image} alt='user-image' />
+          <Image
+            src={image}
+            alt='user-image'
+            width={50}
+            height={50}
+            sizes='50px'
+            priority
+          />
         </UserImgWrapper>
         <span>{nickname}</span>
         <LikeWrapper>
@@ -26,7 +34,15 @@ export default function UserInfo(props: IProps) {
       </ProfileWrapper>
       <TechStackContainer>
         {userTechStack.map((stack) => (
-          <StackBubble key={stack} src={`/icons/stacks/${stack}.png`} />
+          <StackBubble
+            key={stack}
+            src={`/icons/stacks/${stack}.png`}
+            alt={stack}
+            width={35}
+            height={35}
+            sizes={'35px'}
+            priority
+          />
         ))}
       </TechStackContainer>
     </UserInfoContainer>
@@ -68,7 +84,6 @@ const LikeWrapper = styled.div`
   align-items: center;
   gap: 10px;
   margin-left: auto;
-  margin-right: 10px;
   > span {
     font-size: 18px;
     width: 22px;
