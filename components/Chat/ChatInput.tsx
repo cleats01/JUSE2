@@ -65,7 +65,7 @@ export default function ChatInput(props: IProps) {
           name: 'date',
           data: 'line',
         });
-        await postMessage(router.query.chatId as string, {
+        postMessage(router.query.chatId as string, {
           userId: 'date',
           message: 'line',
         });
@@ -74,7 +74,7 @@ export default function ChatInput(props: IProps) {
         name: session?.user.id,
         data: message,
       });
-      await postMessage(router.query.chatId as string, {
+      postMessage(router.query.chatId as string, {
         userId: session?.user.id,
         message,
       });
