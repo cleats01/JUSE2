@@ -81,6 +81,7 @@ const ChatBubble = styled.div<{ isMe: boolean }>`
   border: ${({ theme, isMe }) =>
     isMe ? '' : `1px solid ${theme.colors.grey2}`};
   padding: 10px 15px;
-  max-width: 50vw;
+  width: 70vw;
+  max-width: 336px;
   overflow-wrap: break-word;
 `;
