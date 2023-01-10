@@ -38,6 +38,7 @@ export default async function handler(
             chat: true,
             bookmark: true,
             isClosed: true,
+            createdAt: true,
           },
         });
 
@@ -71,6 +72,7 @@ export default async function handler(
               chat: true,
               bookmark: true,
               isClosed: true,
+              createdAt: true,
             },
           });
           related.push(...additionalRelated);
@@ -102,6 +104,7 @@ export default async function handler(
               chat: true,
               bookmark: true,
               isClosed: true,
+              createdAt: true,
             },
           });
           related.push(...additionalRelated);

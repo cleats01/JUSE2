@@ -8,6 +8,7 @@ interface boardData {
   bookmark: number;
   chat: number;
   isClosed: boolean;
+  createdAt: Date;
 }
 
 interface myBoardsData {

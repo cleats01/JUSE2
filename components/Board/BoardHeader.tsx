@@ -1,13 +1,16 @@
 import styled from 'styled-components';
+import moment from 'moment';
+import 'moment/locale/ko';
 
 interface IProps {
   type: string;
   place: string;
   title: string;
+  createdAt: Date;
 }
 
 export default function BoardHeader(props: IProps) {
-  const { type, place, title } = props;
+  const { type, place, title, createdAt } = props;
 
   return (
     <BoardHeaderContainer>
@@ -16,6 +19,7 @@ export default function BoardHeader(props: IProps) {
         <Badge>{place}</Badge>
       </BadgeWrapper>
       <Title>{title}</Title>
+      <CreatedAt>{moment(createdAt).format('LLL')}</CreatedAt>
     </BoardHeaderContainer>
   );
 }
@@ -46,6 +50,11 @@ const Badge = styled.div`
   &.프로젝트 {
     background-color: ${({ theme }) => theme.colors.purple1};
   }
+`;
+
+const CreatedAt = styled.div`
+  color: ${({ theme }) => theme.colors.grey4};
+  font-size: 14px;
 `;
 
 const Title = styled.h1`

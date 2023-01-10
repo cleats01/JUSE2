@@ -75,7 +75,12 @@ export default function BoardPage(props: IProps) {
     <BoardLayout>
       <NavbarBoard isClosed={isClosed} isAdmin={isAdmin} />
       <ContentsWrapper>
-        <BoardHeader type={type} place={place} title={title} />
+        <BoardHeader
+          type={type}
+          place={place}
+          title={title}
+          createdAt={createdAt}
+        />
         <BasicInfo place={place} period={period} techStack={techStack} />
         <BoardTab
           currentTab={currentTab}

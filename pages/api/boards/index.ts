@@ -96,6 +96,7 @@ export default async function handler(
             chat: true,
             bookmark: true,
             isClosed: true,
+            createdAt: true,
           },
         });
         return res.json(boards);
