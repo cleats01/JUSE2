@@ -22,7 +22,7 @@ interface IProps {
 }
 
 export default function BoardBottomController(props: IProps) {
-  const { id: boardId, isBookmarked, authorId, chat } = props.board;
+  const { id: boardId, isBookmarked, authorId, chat, isClosed } = props.board;
   const { isAdmin, setIsDrawerOpen } = props;
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -136,8 +136,9 @@ export default function BoardBottomController(props: IProps) {
           onClick={() => {
             toggleDrawer('apply', true);
           }}
+          disabled={isClosed}
           disableElevation>
-          지원하기
+          {isClosed ? '모집마감' : '지원하기'}
         </Button>
       )}
     </BottomController>
