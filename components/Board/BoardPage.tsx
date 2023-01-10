@@ -5,7 +5,7 @@ import { Board, User } from '@prisma/client';
 import { DehydratedState, useQuery } from 'react-query';
 import { getBoardById, getRelated } from 'utils/axios';
 
-import NavbarBoard from 'components/Common/NavbarBoard';
+import NavbarBoard from 'components/Board/NavbarBoard';
 import ContentViewer from 'components/Board/ContentViewer';
 import BoardHeader from 'components/Board/BoardHeader';
 import BoardTab from 'components/Board/BoardTab';

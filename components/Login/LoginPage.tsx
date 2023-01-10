@@ -35,7 +35,7 @@ const LoginPageLayout = styled.div`
   position: relative;
 `;
 
-export const Welcome = styled.h1`
+const Welcome = styled.h1`
   font-size: 20px;
   margin-top: 40vh;
   > span {
