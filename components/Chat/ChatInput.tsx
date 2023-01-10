@@ -57,8 +57,9 @@ export default function ChatInput(props: IProps) {
       setMessageInput('');
       // 날짜 변경 시
       if (
+        !messages.length ||
         moment(messages.at(-1)?.createdAt).format('L') !==
-        moment(Date.now()).format('L')
+          moment(Date.now()).format('L')
       ) {
         await (channel as Types.RealtimeChannelPromise).publish({
           name: 'date',
