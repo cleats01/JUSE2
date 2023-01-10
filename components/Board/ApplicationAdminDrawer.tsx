@@ -124,7 +124,7 @@ export default function ApplicationAdminDrawer(props: IProps) {
   );
 
   return (
-    <Drawer
+    <CustomDrawer
       anchor={'bottom'}
       open={isDrawerOpen.admin}
       onClose={() => {
@@ -248,9 +248,20 @@ export default function ApplicationAdminDrawer(props: IProps) {
           ))}
         </ApplicationContainer>
       </DrawerLayout>
-    </Drawer>
+    </CustomDrawer>
   );
 }
+
+const CustomDrawer = styled(Drawer)`
+  max-width: 480px;
+  margin: auto;
+  .MuiDrawer-paper {
+    position: absolute;
+    bottom: 0;
+    border-radius: 15px 15px 0 0;
+    max-width: 480px;
+  }
+`;
 
 const ApplicationContainer = styled.div`
   display: flex;

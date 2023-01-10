@@ -42,7 +42,7 @@ export default function NavbarBoard({ isClosed, isAdmin }: IProps) {
       ) : (
         ''
       )}
-      <Drawer
+      <CustomDrawer
         anchor={'bottom'}
         open={isDrawerOpen}
         onClose={() => {
@@ -68,10 +68,21 @@ export default function NavbarBoard({ isClosed, isAdmin }: IProps) {
             닫기
           </li>
         </DrawerLayout>
-      </Drawer>
+      </CustomDrawer>
     </NavLayout>
   );
 }
+
+const CustomDrawer = styled(Drawer)`
+  max-width: 480px;
+  margin: auto;
+  .MuiDrawer-paper {
+    position: absolute;
+    bottom: 0;
+    border-radius: 15px 15px 0 0;
+    max-width: 480px;
+  }
+`;
 
 const NavLayout = styled.nav`
   position: sticky;
@@ -101,5 +112,6 @@ const DrawerLayout = styled.ul`
     text-align: center;
     font-size: 18px;
     font-weight: 600;
+    cursor: pointer;
   }
 `;
