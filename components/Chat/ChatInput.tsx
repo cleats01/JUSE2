@@ -12,6 +12,8 @@ import { useChannel } from 'utils/hooks';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { Types } from 'ably/ably';
+import moment from 'moment';
+import 'moment/locale/ko';
 
 import { Button, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -19,11 +21,12 @@ import SendIcon from '@mui/icons-material/Send';
 interface IProps {
   messageInput: string;
   setMessageInput: Dispatch<SetStateAction<string>>;
+  messages: IMessage[];
   setMessages: Dispatch<SetStateAction<IMessage[]>>;
 }
 
 export default function ChatInput(props: IProps) {
-  const { messageInput, setMessageInput, setMessages } = props;
+  const { messageInput, setMessageInput, messages, setMessages } = props;
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -32,7 +35,10 @@ export default function ChatInput(props: IProps) {
     (message: any) => {
       setMessages((prev) => [
         ...prev,
-        { username: message.name, message: message.data },
+        {
+          userId: message.name,
+          message: message.data,
+        },
       ]);
     }
   );
@@ -49,12 +55,26 @@ export default function ChatInput(props: IProps) {
     if (messageInput) {
       const message = messageInput;
       setMessageInput('');
+      // 날짜 변경 시
+      if (
+        moment(messages.at(-1)?.createdAt).format('L') !==
+        moment(Date.now()).format('L')
+      ) {
+        await (channel as Types.RealtimeChannelPromise).publish({
+          name: 'date',
+          data: 'line',
+        });
+        postMessage(router.query.chatId as string, {
+          userId: 'date',
+          message: 'line',
+        });
+      }
       await (channel as Types.RealtimeChannelPromise).publish({
-        name: session?.user.nickname,
+        name: session?.user.id,
         data: message,
       });
-      await postMessage(router.query.chatId as string, {
-        username: session?.user.nickname,
+      postMessage(router.query.chatId as string, {
+        userId: session?.user.id,
         message,
       });
     }

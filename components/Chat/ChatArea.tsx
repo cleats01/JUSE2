@@ -13,20 +13,20 @@ export default function ChatArea(props: IProps) {
   return (
     <ChatAreaContainer>
       {messages.map((message, index) =>
-        session?.user.nickname === message.username ? (
-          <MyMessageWrapper>
+        message.userId === 'date' ? (
+          <DateLineWrapper key={index}>
+            {moment(message.createdAt).format('LL')}
+          </DateLineWrapper>
+        ) : session?.user.id === message.userId ? (
+          <MyMessageWrapper key={index}>
             <Time>{moment(message.createdAt).format('HH:mm')}</Time>
-            <ChatBubble
-              key={index}
-              isMe={session?.user.nickname === message.username}>
+            <ChatBubble key={index} isMe={session?.user.id === message.userId}>
               {message.message}
             </ChatBubble>
           </MyMessageWrapper>
         ) : (
-          <OtherMessageWrapper>
-            <ChatBubble
-              key={index}
-              isMe={session?.user.nickname === message.username}>
+          <OtherMessageWrapper key={index}>
+            <ChatBubble key={index} isMe={session?.user.id === message.userId}>
               {message.message}
             </ChatBubble>
             <Time>{moment(message.createdAt).format('HH:mm')}</Time>
@@ -45,6 +45,14 @@ const ChatAreaContainer = styled.div`
   height: 100%;
   width: 100%;
   padding: 10px;
+`;
+
+const DateLineWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.grey4};
+  font-size: 14px;
+  padding: 5px 0;
 `;
 
 const OtherMessageWrapper = styled.div`

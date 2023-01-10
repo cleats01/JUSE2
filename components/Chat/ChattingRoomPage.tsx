@@ -37,6 +37,7 @@ export default function ChattingRoomPage() {
   const chatInputProps = {
     messageInput,
     setMessageInput,
+    messages,
     setMessages,
   };
 
