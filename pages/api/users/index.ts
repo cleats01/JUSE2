@@ -1,13 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../prisma/prisma';
+import prisma from '../../../prisma/prisma';
 import {
   createUser,
-  deleteUser,
   getAllUsers,
   getUserById,
   getUserByEmail,
-  updateUser,
-} from '../../prisma/user';
+} from '../../../prisma/user';
 
 export default async function handler(
   req: NextApiRequest,
