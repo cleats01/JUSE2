@@ -2,9 +2,17 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { deleteBoard, patchBoardClose } from 'utils/axios';
+import { useMutation, useQueryClient } from 'react-query';
+import { Board, User } from '@prisma/client';
 
 import { Drawer } from '@mui/material';
 import { AngleLeftIcon, DotsVerticalIcon } from 'components/Common/Icons';
+
+interface boardType extends Board {
+  isBookmarked: boolean;
+  author: User;
+  related: boardData[];
+}
 
 interface IProps {
   isClosed: boolean;
@@ -13,8 +21,8 @@ interface IProps {
 
 export default function NavbarBoard({ isClosed, isAdmin }: IProps) {
   const router = useRouter();
-
   const { boardId } = router.query;
+  const queryClient = useQueryClient();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -26,9 +34,31 @@ export default function NavbarBoard({ isClosed, isAdmin }: IProps) {
     }
   };
 
-  const handleBoardClose = async () => {
-    await patchBoardClose(boardId as string, isClosed);
-  };
+  const patchBoardCloseMutation = useMutation(
+    () => patchBoardClose(boardId as string, isClosed),
+    {
+      onMutate: async (context) => {
+        await queryClient.cancelQueries('board');
+        const previousBoard = queryClient.getQueryData<boardType>('board');
+
+        if (previousBoard) {
+          queryClient.setQueryData<boardType>('board', {
+            ...previousBoard,
+            isClosed: !previousBoard.isClosed,
+          });
+        }
+        return { previousBoard };
+      },
+      onError: (err, variables, context) => {
+        if (context?.previousBoard) {
+          queryClient.setQueryData<boardType>('board', context.previousBoard);
+        }
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries('board');
+      },
+    }
+  );
 
   return (
     <NavLayout>
@@ -42,7 +72,7 @@ export default function NavbarBoard({ isClosed, isAdmin }: IProps) {
       ) : (
         ''
       )}
-      <Drawer
+      <CustomDrawer
         anchor={'bottom'}
         open={isDrawerOpen}
         onClose={() => {
@@ -50,9 +80,19 @@ export default function NavbarBoard({ isClosed, isAdmin }: IProps) {
         }}>
         <DrawerLayout>
           {isClosed ? (
-            <li onClick={handleBoardClose}>모집중</li>
+            <li
+              onClick={() => {
+                patchBoardCloseMutation.mutate();
+              }}>
+              모집중
+            </li>
           ) : (
-            <li onClick={handleBoardClose}>모집 마감</li>
+            <li
+              onClick={() => {
+                patchBoardCloseMutation.mutate();
+              }}>
+              모집 마감
+            </li>
           )}
           <li
             onClick={() => {
@@ -68,13 +108,24 @@ export default function NavbarBoard({ isClosed, isAdmin }: IProps) {
             닫기
           </li>
         </DrawerLayout>
-      </Drawer>
+      </CustomDrawer>
     </NavLayout>
   );
 }
 
+const CustomDrawer = styled(Drawer)`
+  max-width: 480px;
+  margin: auto;
+  .MuiDrawer-paper {
+    position: absolute;
+    bottom: 0;
+    border-radius: 15px 15px 0 0;
+    max-width: 480px;
+  }
+`;
+
 const NavLayout = styled.nav`
-  position: fixed;
+  position: sticky;
   max-width: 480px;
   height: 55px;
   left: 0;
@@ -101,5 +152,6 @@ const DrawerLayout = styled.ul`
     text-align: center;
     font-size: 18px;
     font-weight: 600;
+    cursor: pointer;
   }
 `;

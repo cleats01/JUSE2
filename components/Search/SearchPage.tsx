@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { User } from '@prisma/client';
 
 import NavbarTextOnly from 'components/Common/NavbarTextOnly';
 import ScrollToTop from 'components/Common/ScrollToTop';
@@ -10,9 +11,10 @@ import SearchResult from 'components/Search/SearchResult';
 
 interface IProps {
   trending: boardData[];
+  newbies: User[];
 }
 
-export default function SearchPage({ trending }: IProps) {
+export default function SearchPage({ trending, newbies }: IProps) {
   const [searchInput, setSearchInput] = useState<string>('');
   const [recentSearch, setRecentSearch] = useState<string[]>([]);
   const [recentSwitch, setRecentSwitch] = useState<string | null>(null);
@@ -42,6 +44,7 @@ export default function SearchPage({ trending }: IProps) {
     isSearched,
     searchResult,
     trending,
+    newbies,
   };
 
   return (
@@ -59,6 +62,6 @@ export default function SearchPage({ trending }: IProps) {
 const SearchLayout = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 55px 16px;
+  min-height: 100vh;
+  position: relative;
 `;

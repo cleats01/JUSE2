@@ -8,28 +8,26 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET': {
-        const boards = await prisma.board
-          .findMany({
-            take: 10,
-            orderBy: [
-              { bookmark: 'desc' },
-              { chat: 'desc' },
-              { updatedAt: 'desc' },
-            ],
-          })
-          .then((data) =>
-            data.map((board) => ({
-              id: board.id,
-              type: board.type,
-              place: board.place,
-              title: board.title,
-              techStack: board.techStack,
-              application: board.application,
-              chat: board.chat,
-              bookmark: board.bookmark,
-              isClosed: board.isClosed,
-            }))
-          );
+        const boards = await prisma.board.findMany({
+          take: 10,
+          orderBy: [
+            { bookmark: 'desc' },
+            { chat: 'desc' },
+            { updatedAt: 'desc' },
+          ],
+          select: {
+            id: true,
+            type: true,
+            place: true,
+            title: true,
+            techStack: true,
+            application: true,
+            chat: true,
+            bookmark: true,
+            isClosed: true,
+            createdAt: true,
+          },
+        });
         return res.json(boards);
       }
       default:

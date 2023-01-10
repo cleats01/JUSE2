@@ -18,7 +18,7 @@ const RelatedContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  padding: 20px 0;
+  padding-top: 20px;
 `;
 
 const RelatedHeader = styled.h1`

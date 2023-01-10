@@ -8,6 +8,7 @@ interface boardData {
   bookmark: number;
   chat: number;
   isClosed: boolean;
+  createdAt: Date;
 }
 
 interface myBoardsData {
@@ -30,7 +31,7 @@ interface boardFormData {
 
 interface IRoom {
   id: string;
-  chat: { username: string; message: string; createdAt: Date }[];
+  chat: IMessage[];
   membersId: string[];
   membersData: { id: string; image: string; nickname: string }[];
   boardId: string[];
@@ -44,5 +45,6 @@ interface IUserSimple {
 
 interface IMessage {
   message: string;
-  username: string;
+  userId: string;
+  createdAt?: Date;
 }

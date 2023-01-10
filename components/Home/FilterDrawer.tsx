@@ -131,7 +131,7 @@ export default function FilterDrawer(props: IProps) {
   };
 
   return (
-    <Drawer anchor='bottom' open={isFilterOpen} onClose={toggleFilter}>
+    <CustomDrawer anchor='bottom' open={isFilterOpen} onClose={toggleFilter}>
       <FilterContainer>
         <DrawerHeader>
           <span>상세필터</span>
@@ -177,7 +177,7 @@ export default function FilterDrawer(props: IProps) {
         </Wrapper>
         <Wrapper>
           <Label>진행기간</Label>
-          <Box sx={{ padding: '0 20px', minWidth: '250px', maxWidth: '350px' }}>
+          <Box sx={{ padding: '0 20px', minWidth: '250px' }}>
             <Slider
               value={period}
               onChange={handlePeriod}
@@ -205,9 +205,20 @@ export default function FilterDrawer(props: IProps) {
           </Button>
         </ButtonContainer>
       </FilterContainer>
-    </Drawer>
+    </CustomDrawer>
   );
 }
+
+const CustomDrawer = styled(Drawer)`
+  max-width: 480px;
+  margin: auto;
+  .MuiDrawer-paper {
+    position: absolute;
+    bottom: 0;
+    border-radius: 15px 15px 0 0;
+    max-width: 480px;
+  }
+`;
 
 const DrawerHeader = styled.div`
   display: flex;
@@ -224,6 +235,8 @@ const FilterContainer = styled.div`
   flex-direction: column;
   gap: 20px;
   padding: 20px;
+  max-width: 480px;
+  margin: auto;
 `;
 
 const Label = styled.label`

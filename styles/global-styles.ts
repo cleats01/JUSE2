@@ -11,6 +11,11 @@ const GlobalStyle = createGlobalStyle`
         color: ${({ theme }) => theme.colors.black1};
         fill: ${({ theme }) => theme.colors.black1};
         max-width: 480px;
+        margin: auto;
+        -ms-overflow-style: none;
+        ::-webkit-scrollbar {
+          display: none;
+        }
       }
       a {
         color: inherit;

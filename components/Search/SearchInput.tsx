@@ -79,5 +79,5 @@ const SearchInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding-top: 15px;
+  padding: 15px 16px;
 `;

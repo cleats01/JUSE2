@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
+import Image from 'next/image';
 
 import { CloseIcon } from 'components/Common/Icons';
 
@@ -88,7 +89,13 @@ const TechStack = ({ selected, setSelected }: IProps) => {
                   ? 'not-selected'
                   : ''
               }>
-              <Stack src={`/icons/stacks/${el}.png`} alt={el} />
+              <Stack
+                src={`/icons/stacks/${el}.png`}
+                alt={el}
+                width={25}
+                height={25}
+                sizes={'25px'}
+              />
               <span>{el}</span>
             </StackBubble>
           )
@@ -152,11 +159,8 @@ const StackBubble = styled.div`
   }
 `;
 
-const Stack = styled.img`
-  /* border: 1px solid ${({ theme }) => theme.colors.grey2}; */
+const Stack = styled(Image)`
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
 `;
 
 const SelectedContainer = styled.div`

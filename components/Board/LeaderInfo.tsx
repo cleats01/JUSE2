@@ -31,7 +31,15 @@ export default function LeaderInfo(props: IProps) {
           </LeaderNickname>
           <LeaderTechStack>
             {author.userTechStack?.map((stack) => (
-              <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
+              <StackBubble
+                src={`/icons/stacks/${stack}.png`}
+                key={stack}
+                alt={stack}
+                width={30}
+                height={30}
+                sizes={'30px'}
+                priority
+              />
             ))}
           </LeaderTechStack>
         </LeaderInfoContainer>

@@ -1,32 +1,33 @@
 import styled from 'styled-components';
-import Card from 'components/Common/Card';
+import { User } from '@prisma/client';
+import UserInfo from 'components/User/UserInfo';
 
 interface IProps {
-  trending: boardData[];
+  users: User[];
 }
 
-export default function Trending({ trending }: IProps) {
+export default function Newbie({ users }: IProps) {
   return (
-    <TrendingContainer>
-      <TrendingHeader>현재 🔥한 모임</TrendingHeader>
+    <NewbieContainer>
+      <NewbieHeader>새로 가입했어요!</NewbieHeader>
       <CardContainer>
-        {trending.map((board: boardData) => (
-          <CardOverflow key={board.id}>
-            <Card data={board} />
+        {users.map((user: User) => (
+          <CardOverflow key={user.id}>
+            <UserInfo user={user} />
           </CardOverflow>
         ))}
       </CardContainer>
-    </TrendingContainer>
+    </NewbieContainer>
   );
 }
 
-const TrendingContainer = styled.div`
+const NewbieContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
 `;
 
-const TrendingHeader = styled.h1`
+const NewbieHeader = styled.h1`
   font-weight: 700;
   font-size: 20px;
   padding-left: 10px;
@@ -49,4 +50,6 @@ const CardContainer = styled.div`
 const CardOverflow = styled.div`
   flex: 0 0 85%;
   scroll-snap-align: start;
+  border: 1px solid ${({ theme }) => theme.colors.grey2};
+  border-radius: 10px;
 `;

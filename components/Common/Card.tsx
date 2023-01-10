@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import theme from 'styles/theme';
+import moment from 'moment';
+import 'moment/locale/ko';
 
 import { BookmarkIcon, ChatIcon } from 'components/Common/Icons';
 import { StackBubble } from 'components/Common/TechStackSelector';
@@ -20,6 +22,7 @@ export default function Card(props: IProps) {
     bookmark,
     chat,
     isClosed,
+    createdAt,
   } = props.data;
 
   return (
@@ -29,11 +32,24 @@ export default function Card(props: IProps) {
         <CardHeader>
           <Badge className={type}>{type}</Badge>
           <Badge>{place}</Badge>
+          <CreatedAt>
+            {moment(createdAt).year() === moment(Date.now()).year()
+              ? moment(createdAt).format('M월 D일')
+              : moment(createdAt).format('LL')}
+          </CreatedAt>
         </CardHeader>
         <Title>{title}</Title>
         <TechStackWrapper>
           {techStack.map((stack, index) => (
-            <StackBubble src={`/icons/stacks/${stack}.png`} key={index} />
+            <StackBubble
+              src={`/icons/stacks/${stack}.png`}
+              key={index}
+              alt={stack}
+              width={30}
+              height={30}
+              sizes={'30px'}
+              priority
+            />
           ))}
         </TechStackWrapper>
       </Link>
@@ -92,6 +108,12 @@ const Badge = styled.div`
   }
 `;
 
+const CreatedAt = styled.div`
+  color: ${({ theme }) => theme.colors.grey4};
+  font-size: 14px;
+  margin-left: auto;
+`;
+
 const Title = styled.h1`
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -108,6 +130,7 @@ const TechStackWrapper = styled.div`
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+  min-height: 30px;
 `;
 
 const CardFooter = styled.footer`

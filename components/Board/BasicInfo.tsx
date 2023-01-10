@@ -26,7 +26,15 @@ export default function BasicInfo(props: IProps) {
         <InfoLabel>기술 스택</InfoLabel>
         <StackWrapper>
           {techStack.map((stack) => (
-            <StackBubble src={`/icons/stacks/${stack}.png`} key={stack} />
+            <StackBubble
+              src={`/icons/stacks/${stack}.png`}
+              key={stack}
+              alt={stack}
+              width={30}
+              height={30}
+              sizes={'30px'}
+              priority
+            />
           ))}
         </StackWrapper>
       </Info>

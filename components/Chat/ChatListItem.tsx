@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import moment from 'moment';
+import 'moment/locale/ko';
 
 import UserImgWrapper from 'components/Common/UserImgWrapper';
 
@@ -21,6 +23,9 @@ export default function ChatListItem({ data }: { data: IRoom }) {
             {chat.length ? chat.at(-1)?.message : '메세지가 없습니다.'}
           </LastMessage>
         </ChattingRoomInfo>
+        <TimeInfo>
+          {chat.length ? moment(chat.at(-1)?.createdAt).fromNow() : ''}
+        </TimeInfo>
       </ChatListItemLayout>
     </Link>
   );
@@ -45,6 +50,13 @@ const Username = styled.div`
 `;
 
 const LastMessage = styled.div`
+  color: ${({ theme }) => theme.colors.grey4};
+  font-size: 14px;
+`;
+
+const TimeInfo = styled.div`
+  padding: 10px;
+  margin-left: auto;
   color: ${({ theme }) => theme.colors.grey4};
   font-size: 14px;
 `;

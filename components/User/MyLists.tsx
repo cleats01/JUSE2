@@ -4,14 +4,9 @@ import Link from 'next/link';
 import { User } from '@prisma/client';
 
 import { Drawer, Tab, Tabs } from '@mui/material';
-import {
-  AngleLeftIcon,
-  AngleRightIcon,
-  HeartFilledIcon,
-} from 'components/Common/Icons';
+import { AngleLeftIcon, AngleRightIcon } from 'components/Common/Icons';
 import Card from 'components/Common/Card';
-import { StackBubble } from 'components/Common/TechStackSelector';
-import UserImgWrapper from 'components/Common/UserImgWrapper';
+import UserInfo from 'components/User/UserInfo';
 
 interface drawer {
   myList: boolean;
@@ -75,13 +70,21 @@ export default function MyLists(props: IProps) {
             <Tab value='참여중인 모임' label='참여중인 모임' />
           </Tabs>
           <BoardContainer>
-            {myListTab === '내가 만든 모임'
-              ? boardsData?.myList.map((board) => (
+            {myListTab === '내가 만든 모임' ? (
+              boardsData?.myList.length ? (
+                boardsData.myList.map((board) => (
                   <Card data={board} key={board.id} />
                 ))
-              : boardsData?.acceptedList.map((board) => (
-                  <Card data={board} key={board.id} />
-                ))}
+              ) : (
+                <NullMessage>해당하는 모임이 없습니다.</NullMessage>
+              )
+            ) : boardsData?.acceptedList.length ? (
+              boardsData.acceptedList.map((board) => (
+                <Card data={board} key={board.id} />
+              ))
+            ) : (
+              <NullMessage>해당하는 모임이 없습니다.</NullMessage>
+            )}
           </BoardContainer>
         </DrawerLayout>
       </Drawer>
@@ -108,9 +111,13 @@ export default function MyLists(props: IProps) {
             <span>지원한 모임</span>
           </DrawerHeader>
           <BoardContainer>
-            {boardsData?.applyList.map((board) => (
-              <Card data={board} key={board.id} />
-            ))}
+            {boardsData?.applyList.length ? (
+              boardsData.applyList.map((board) => (
+                <Card data={board} key={board.id} />
+              ))
+            ) : (
+              <NullMessage>해당하는 모임이 없습니다.</NullMessage>
+            )}
           </BoardContainer>
         </DrawerLayout>
       </Drawer>
@@ -137,9 +144,13 @@ export default function MyLists(props: IProps) {
             <span>북마크한 모임</span>
           </DrawerHeader>
           <BoardContainer>
-            {boardsData?.bookmarkList.map((board) => (
-              <Card data={board} key={board.id} />
-            ))}
+            {boardsData?.bookmarkList.length ? (
+              boardsData.bookmarkList.map((board) => (
+                <Card data={board} key={board.id} />
+              ))
+            ) : (
+              <NullMessage>해당하는 모임이 없습니다.</NullMessage>
+            )}
           </BoardContainer>
         </DrawerLayout>
       </Drawer>
@@ -166,84 +177,34 @@ export default function MyLists(props: IProps) {
             <span>좋아요한 사용자</span>
           </DrawerHeader>
           <BoardContainer>
-            {likeListData?.map((likedUser) => (
-              <Link href={`/user/${likedUser.id}`} key={likedUser.id}>
-                <InfoContainer className='border'>
-                  <ProfileWrapper>
-                    <UserImgWrapper size='50px'>
-                      <img src={likedUser.image} alt='likedUser-image' />
-                    </UserImgWrapper>
-                    <span>{likedUser.nickname}</span>
-                    <LikeWrapper>
-                      <HeartFilledIcon fill={'tomato'} />
-                      <span>{likedUser.like}</span>
-                    </LikeWrapper>
-                  </ProfileWrapper>
-                  <TechStackContainer>
-                    {likedUser.userTechStack.map((stack) => (
-                      <StackBubble
-                        key={stack}
-                        src={`/icons/stacks/${stack}.png`}
-                      />
-                    ))}
-                  </TechStackContainer>
-                </InfoContainer>
-              </Link>
-            ))}
+            {likeListData?.length ? (
+              likeListData.map((likedUser) => (
+                <Link href={`/user/${likedUser.id}`} key={likedUser.id}>
+                  <InfoContainer className='border'>
+                    <UserInfo user={likedUser} />
+                  </InfoContainer>
+                </Link>
+              ))
+            ) : (
+              <NullMessage>좋아요한 사용자가 없습니다.</NullMessage>
+            )}
           </BoardContainer>
         </DrawerLayout>
       </Drawer>
-      <ListItem>
-        <h4>알림</h4>
-      </ListItem>
     </ListsContainer>
   );
 }
 
 const InfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 0 16px;
   &.border {
-    padding: 16px;
-    border-radius: 10px;
+    border-radius: 15px;
     border: 1px solid ${({ theme }) => theme.colors.grey2};
-  }
-`;
-
-const TechStackContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  > img {
-    width: 35px;
-  }
-`;
-
-const ProfileWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  > span {
-    font-weight: 700;
-  }
-`;
-
-const LikeWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-left: auto;
-  margin-right: 10px;
-  > span {
-    font-size: 18px;
-    width: 22px;
   }
 `;
 
 const ListsContainer = styled.ul`
   margin-top: 10px;
+  flex-grow: 1;
 `;
 
 const ListItem = styled.li`
@@ -259,7 +220,7 @@ const ListItem = styled.li`
 `;
 
 const DrawerHeader = styled.header`
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -278,7 +239,6 @@ const DrawerHeader = styled.header`
 `;
 
 const DrawerLayout = styled.div`
-  padding: 55px 16px;
   width: 100vw;
   max-width: 480px;
 `;
@@ -287,5 +247,15 @@ const BoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 10px;
+  padding: 16px;
+`;
+
+const NullMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 25vh;
+  color: ${({ theme }) => theme.colors.grey4};
 `;

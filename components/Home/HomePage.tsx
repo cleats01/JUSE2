@@ -10,6 +10,7 @@ import Boards from 'components/Home/Boards';
 import FilterDrawer from 'components/Home/FilterDrawer';
 import TabBar from 'components/Common/TabBar';
 import NavbarMain from 'components/Common/NavbarMain';
+import LoadingSpinner from 'components/Common/LoadingSpinner';
 
 export default function HomePage() {
   // 필터 State
@@ -41,7 +42,7 @@ export default function HomePage() {
   useEffect(() => {
     if (inView) fetchNextPage();
   }, [inView]);
-  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, status } = useInfiniteQuery(
     [currentTab, place, offline, period, techStack, isClosed],
     ({ pageParam = '' }) =>
       getBoards(
@@ -64,7 +65,11 @@ export default function HomePage() {
         setCurrentTab={setCurrentTab}
         setIsFilterOpen={setIsFilterOpen}
       />
-      <Boards data={data} lastRef={ref} />
+      {status === 'loading' ? (
+        <LoadingSpinner />
+      ) : (
+        <Boards data={data} lastRef={ref} />
+      )}
       <FilterDrawer {...filterProps} />
       <ScrollToTop />
       <TabBar />
@@ -75,6 +80,6 @@ export default function HomePage() {
 const HomeLayout = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 55px 16px;
+  min-height: 100vh;
+  position: relative;
 `;

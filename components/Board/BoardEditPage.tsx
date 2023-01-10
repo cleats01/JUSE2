@@ -86,6 +86,8 @@ export default function BoardEditPage() {
 }
 
 const NewLayout = styled.div`
-  padding: 70px 16px;
-  animation: bottomShow 0.3s linear;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
 `;

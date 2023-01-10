@@ -28,14 +28,16 @@ export default function LoginPage() {
 const LoginPageLayout = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 50px;
-  height: 90vh;
+  min-height: 100vh;
+  position: relative;
 `;
 
-export const Welcome = styled.h1`
+const Welcome = styled.h1`
   font-size: 20px;
+  margin-top: 40vh;
   > span {
     font-weight: 900;
     color: ${({ theme }) => theme.colors.purple1};
@@ -46,6 +48,7 @@ const LoginButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 180px;
   padding: 10px 20px;
   gap: 10px;
   border: 1px solid ${({ theme }) => theme.colors.grey2};
