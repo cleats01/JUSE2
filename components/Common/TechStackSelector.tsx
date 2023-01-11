@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { Dispatch, SetStateAction, useState } from 'react';
-import Image from 'next/image';
 
 import { Drawer } from '@mui/material';
 import TechStack from 'components/Common/TechStack';
+import StackLogo from 'components/Common/StackLogo';
 
 interface IProps {
   techStack: string[];
@@ -19,13 +19,7 @@ export default function TechStackSelector(props: IProps) {
       <StackAddButton onClick={() => setIsModalOpen((prev) => !prev)}>
         {techStack.length
           ? techStack.map((stack) => (
-              <StackBubble
-                key={stack}
-                src={`/icons/stacks/${stack}.png`}
-                alt={stack}
-                width={30}
-                height={30}
-              />
+              <StackLogo key={stack} stack={stack.toLowerCase()} zoom={0.6} />
             ))
           : '기술 스택 추가'}
       </StackAddButton>
@@ -81,11 +75,6 @@ export const StackAddButton = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.grey3};
   border-radius: 5px;
   padding: 10px;
-`;
-
-export const StackBubble = styled(Image)`
-  border: 1px solid ${({ theme }) => theme.colors.grey2};
-  border-radius: 999px;
 `;
 
 export const BottomSheetHeader = styled.header`

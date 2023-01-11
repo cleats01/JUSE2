@@ -42,10 +42,9 @@ export const getNickname = (nickname: string) =>
   axios.get(`/api/users?nickname=${nickname}`).then((res) => res.data);
 
 export const getNewbies = () =>
-  axios.get(`${process.env.BASE_URL}/api/users/newbies`).then((res) => {
-    console.log(res.data);
-    return res.data;
-  });
+  axios
+    .get(`${process.env.BASE_URL}/api/users/newbies`)
+    .then((res) => res.data);
 
 export const postUser = (data: {
   email: string;

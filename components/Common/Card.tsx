@@ -5,7 +5,7 @@ import moment from 'moment';
 import 'moment/locale/ko';
 
 import { BookmarkIcon, ChatIcon } from 'components/Common/Icons';
-import { StackBubble } from 'components/Common/TechStackSelector';
+import StackLogo from 'components/Common/StackLogo';
 
 interface IProps {
   data: boardData;
@@ -41,15 +41,7 @@ export default function Card(props: IProps) {
         <Title>{title}</Title>
         <TechStackWrapper>
           {techStack.map((stack, index) => (
-            <StackBubble
-              src={`/icons/stacks/${stack}.png`}
-              key={index}
-              alt={stack}
-              width={30}
-              height={30}
-              sizes={'30px'}
-              priority
-            />
+            <StackLogo key={index} stack={stack.toLowerCase()} zoom={0.6} />
           ))}
         </TechStackWrapper>
       </Link>

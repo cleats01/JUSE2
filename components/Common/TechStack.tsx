@@ -3,6 +3,7 @@ import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
 import Image from 'next/image';
 
 import { CloseIcon } from 'components/Common/Icons';
+import StackLogo from 'components/Common/StackLogo';
 
 interface IProps {
   selected: string[];
@@ -89,13 +90,7 @@ const TechStack = ({ selected, setSelected }: IProps) => {
                   ? 'not-selected'
                   : ''
               }>
-              <Stack
-                src={`/icons/stacks/${el}.png`}
-                alt={el}
-                width={25}
-                height={25}
-                sizes={'25px'}
-              />
+              <StackLogo stack={el.toLowerCase()} zoom={0.5} />
               <span>{el}</span>
             </StackBubble>
           )

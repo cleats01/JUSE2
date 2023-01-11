@@ -3,8 +3,8 @@ import { User } from '@prisma/client';
 import Image from 'next/image';
 
 import UserImgWrapper from 'components/Common/UserImgWrapper';
-import { StackBubble } from 'components/Common/TechStackSelector';
 import { HeartFilledIcon } from 'components/Common/Icons';
+import StackLogo from 'components/Common/StackLogo';
 
 interface IProps {
   user: User;
@@ -34,15 +34,7 @@ export default function UserInfo(props: IProps) {
       </ProfileWrapper>
       <TechStackContainer>
         {userTechStack.map((stack) => (
-          <StackBubble
-            key={stack}
-            src={`/icons/stacks/${stack}.png`}
-            alt={stack}
-            width={35}
-            height={35}
-            sizes={'35px'}
-            priority
-          />
+          <StackLogo key={stack} stack={stack.toLowerCase()} zoom={0.7} />
         ))}
       </TechStackContainer>
     </UserInfoContainer>
