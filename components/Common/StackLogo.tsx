@@ -14,7 +14,7 @@ const Logo = styled.div<{ zoom: number }>`
   border-radius: 999px;
   width: 50px;
   height: 50px;
-  background: url('stack-logos.png') no-repeat;
+  background: url('/stack-logos.png') no-repeat;
   zoom: ${({ zoom }) => zoom};
   &.aws {
     background-position: -10px -10px;
