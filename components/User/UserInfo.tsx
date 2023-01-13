@@ -57,6 +57,7 @@ const TechStackContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  min-height: 35px;
   > img {
     width: 35px;
   }

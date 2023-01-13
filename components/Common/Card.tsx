@@ -78,6 +78,7 @@ const CardLayout = styled.div<{ isClosed: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.grey2};
   padding: 10px 15px;
   opacity: ${({ isClosed }) => (isClosed ? 0.7 : 1)};
+  width: 100%;
 `;
 
 const CardHeader = styled.header`

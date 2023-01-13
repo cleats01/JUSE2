@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { User } from '@prisma/client';
 import UserInfo from 'components/User/UserInfo';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import Link from 'next/link';
 
 interface IProps {
   users: User[];
@@ -10,13 +15,22 @@ export default function Newbie({ users }: IProps) {
   return (
     <NewbieContainer>
       <NewbieHeader>새로 가입했어요!</NewbieHeader>
-      <CardContainer>
+      <Swiper
+        slidesPerView={1.15}
+        spaceBetween={10}
+        grabCursor
+        modules={[Pagination]}
+        style={{ width: '100%' }}>
         {users.map((user: User) => (
-          <CardOverflow key={user.id}>
-            <UserInfo user={user} />
-          </CardOverflow>
+          <SwiperSlide key={user.id}>
+            <UserCard>
+              <Link href={`/user/${user.id}`}>
+                <UserInfo user={user} />
+              </Link>
+            </UserCard>
+          </SwiperSlide>
         ))}
-      </CardContainer>
+      </Swiper>
     </NewbieContainer>
   );
 }
@@ -33,23 +47,7 @@ const NewbieHeader = styled.h1`
   padding-left: 10px;
 `;
 
-const CardContainer = styled.div`
-  display: flex;
-  overflow-x: auto;
-  gap: 10px;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-  /* 스크롤 바 없애기 */
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const CardOverflow = styled.div`
-  flex: 0 0 85%;
-  scroll-snap-align: start;
+const UserCard = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.grey2};
   border-radius: 10px;
 `;
