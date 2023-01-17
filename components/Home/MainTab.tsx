@@ -34,6 +34,10 @@ export default function MainTab(props: IProps) {
 }
 
 const TabContainer = styled.div`
+  position: sticky;
+  top: 55px;
+  background-color: #fff;
+  z-index: 9;
   display: flex;
   align-items: center;
   justify-content: space-between;

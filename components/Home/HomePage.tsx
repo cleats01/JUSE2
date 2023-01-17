@@ -11,6 +11,7 @@ import FilterDrawer from 'components/Home/FilterDrawer';
 import TabBar from 'components/Common/TabBar';
 import NavbarMain from 'components/Common/NavbarMain';
 import LoadingSpinner from 'components/Common/LoadingSpinner';
+import Carousel from 'components/Home/Carousel';
 
 export default function HomePage() {
   // 필터 State
@@ -60,6 +61,7 @@ export default function HomePage() {
   return (
     <HomeLayout>
       <NavbarMain />
+      <Carousel />
       <MainTab
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
