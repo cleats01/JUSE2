@@ -2,33 +2,19 @@ import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import GlobalStyle from 'styles/global-styles';
 import styled, { ThemeProvider } from 'styled-components';
-import theme from 'styles/theme';
+import theme, { palette } from 'styles/theme';
 import { QueryClientProvider, QueryClient, Hydrate } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Router } from 'next/router';
+import Head from 'next/head';
 
-import {
-  createTheme,
-  ThemeProvider as MuiThemeProvider,
-} from '@mui/material/styles';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import LoadingSpinner from 'components/Common/LoadingSpinner';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
   const [loading, setLoading] = useState(false);
-
-  const palette = createTheme({
-    palette: {
-      primary: {
-        main: '#be99ff',
-      },
-      secondary: {
-        main: '#81d8cf',
-      },
-    },
-  });
 
   useEffect(() => {
     const start = () => {
@@ -56,6 +42,9 @@ export default function App({ Component, pageProps }: AppProps) {
           <ThemeProvider theme={theme}>
             <MuiThemeProvider theme={palette}>
               <GlobalStyle />
+              <Head>
+                <title>JUSE - Junior to Senior</title>
+              </Head>
               <AppContainer>
                 {loading ? (
                   <LoadingSpinner fullScreen />
