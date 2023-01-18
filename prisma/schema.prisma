@@ -79,3 +79,9 @@ model Board {
   chat        Int        @default(0)
   isClosed    Boolean    @default(false)
 }
+
+model Report {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+}

@@ -136,3 +136,7 @@ export const getTrendings = () =>
   axios
     .get(`${process.env.BASE_URL}/api/boards/trending`)
     .then((res) => res.data);
+
+// REPORT
+export const postReport = (data: { content: string }) =>
+  axios.post('/api/reports', data);
