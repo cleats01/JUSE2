@@ -5,9 +5,11 @@ export const palette = createTheme({
   palette: {
     primary: {
       main: '#be99ff',
+      contrastText: '#fff',
     },
     secondary: {
       main: '#81d8cf',
+      contrastText: '#fff',
     },
   },
 });
