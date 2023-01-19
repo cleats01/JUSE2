@@ -40,6 +40,7 @@ export default function Carousel() {
     flexDirection: 'column',
     gap: '10px',
     width: '90%',
+    maxWidth: '432px',
     position: 'absolute',
     top: '50%',
     left: '50%',
