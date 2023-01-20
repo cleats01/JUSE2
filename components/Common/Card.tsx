@@ -139,7 +139,8 @@ const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
-  color: ${({ theme }) => theme.colors.grey5};
+  color: ${({ theme }) => theme.colors.grey4};
+  fill: ${({ theme }) => theme.colors.grey4};
 `;
 
 const Closed = styled.div`
