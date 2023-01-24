@@ -46,5 +46,6 @@ interface IUserSimple {
 interface IMessage {
   message: string;
   userId: string;
+  isRead?: boolean;
   createdAt?: Date;
 }

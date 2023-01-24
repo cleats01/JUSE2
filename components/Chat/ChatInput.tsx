@@ -68,6 +68,7 @@ export default function ChatInput(props: IProps) {
         postMessage(router.query.chatId as string, {
           userId: 'date',
           message: 'line',
+          isRead: true,
         });
       }
       await (channel as Types.RealtimeChannelPromise).publish({

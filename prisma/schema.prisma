@@ -34,6 +34,7 @@ type userSession {
 type chatMessage {
   userId    String
   message   String
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 
