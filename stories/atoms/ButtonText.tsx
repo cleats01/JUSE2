@@ -1,5 +1,4 @@
 import { Button as MuiButton } from '@mui/material';
-import { ReactNode } from 'react';
 
 export interface IButtonProps {
   label: string;
