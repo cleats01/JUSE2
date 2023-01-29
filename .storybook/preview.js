@@ -1,4 +1,6 @@
-import { GlobalStyle } from '/stories/foundations/global.ts';
+import { ThemeProvider } from 'styled-components';
+import GlobalStyle from '../stories/foundations/global.ts';
+import theme from '../styles/theme';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -12,9 +14,9 @@ export const parameters = {
 
 export const decorators = [
   (Story) => (
-    <>
-      {/* <GlobalStyle /> */}
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <Story />
-    </>
+    </ThemeProvider>
   ),
 ];
