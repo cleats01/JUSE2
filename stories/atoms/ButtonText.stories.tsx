@@ -1,4 +1,4 @@
-import ButtonText, { IButtonProps } from './ButtonText';
+import ButtonText, { IButtonProps } from '@atoms/ButtonText';
 import { ComponentStory } from '@storybook/react';
 
 export default {
