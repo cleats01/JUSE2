@@ -1,4 +1,4 @@
-import ButtonIcon, { IButtonIconProps } from './ButtonIcon';
+import ButtonIcon, { IButtonIconProps } from '@atoms/ButtonIcon';
 import { ComponentStory } from '@storybook/react';
 import DeleteIcon from '@mui/icons-material/Delete';
 
