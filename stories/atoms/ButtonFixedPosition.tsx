@@ -13,12 +13,7 @@ export default function ButtonFixedPosition(props: IButtonFixedPositionProps) {
   return <PositionContainer {...props}>{props.children}</PositionContainer>;
 }
 
-const PositionContainer = styled.div<{
-  visible?: boolean;
-  size?: number;
-  bottom: number;
-  borderColor?: string;
-}>`
+const PositionContainer = styled.div<IButtonFixedPositionProps>`
   position: fixed;
   display: ${({ visible }) => (visible ? 'flex' : 'none')};
   justify-content: center;
