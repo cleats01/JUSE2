@@ -6,6 +6,7 @@ import 'moment/locale/ko';
 
 import { BookmarkIcon, ChatIcon } from 'components/Common/Icons';
 import StackLogo from 'components/Common/StackLogo';
+import Chip from '@stories/atoms/Chip';
 
 interface IProps {
   data: boardData;
@@ -30,8 +31,15 @@ export default function Card(props: IProps) {
       <Link href={`/board/${id}`}>
         {isClosed ? <Closed>모집 마감</Closed> : ''}
         <CardHeader>
-          <Badge className={type}>{type}</Badge>
-          <Badge>{place}</Badge>
+          <Chip
+            color={
+              type === '프로젝트'
+                ? theme.colors.purple1
+                : theme.colors.tiffanyblue
+            }>
+            {type}
+          </Chip>
+          <Chip outlined>{place}</Chip>
           <CreatedAt>
             {moment(createdAt).year() === moment(Date.now()).year()
               ? moment(createdAt).format('M월 D일')
