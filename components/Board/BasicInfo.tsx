@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import { StackBubble } from 'components/Common/TechStackSelector';
 import { InfoLabel, InfoWrapper } from 'components/Board/BoardPage';
+import StackLogo from 'components/Common/StackLogo';
 
 interface IProps {
   place: string;
@@ -26,15 +26,7 @@ export default function BasicInfo(props: IProps) {
         <InfoLabel>기술 스택</InfoLabel>
         <StackWrapper>
           {techStack.map((stack) => (
-            <StackBubble
-              src={`/icons/stacks/${stack}.png`}
-              key={stack}
-              alt={stack}
-              width={30}
-              height={30}
-              sizes={'30px'}
-              priority
-            />
+            <StackLogo key={stack} stack={stack.toLowerCase()} zoom={0.6} />
           ))}
         </StackWrapper>
       </Info>

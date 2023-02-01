@@ -81,6 +81,7 @@ export default function TabBar() {
 
 const TabBarLayout = styled.div`
   padding: 8px 20px;
+  padding-bottom: 16px;
   position: sticky;
   width: 100%;
   max-width: 480px;

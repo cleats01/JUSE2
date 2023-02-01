@@ -78,7 +78,7 @@ export default async function handler(
           related.push(...additionalRelated);
         }
 
-        if (related.length < 5) {
+        if (related.length < 4) {
           const additionalRelated = await prisma.board.findMany({
             where: {
               NOT: [

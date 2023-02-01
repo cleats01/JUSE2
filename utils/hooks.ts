@@ -1,5 +1,6 @@
 import { Types } from 'ably/ably';
 import Ably from 'ably/promises';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 const ably = new Ably.Realtime.Promise({
@@ -7,6 +8,7 @@ const ably = new Ably.Realtime.Promise({
 });
 
 export function useChannel(channelName: string, callbackOnMessage: any) {
+  const router = useRouter();
   const channel: Types.RealtimeChannelPromise = ably.channels.get(channelName);
 
   const onMount = () => {
@@ -26,7 +28,7 @@ export function useChannel(channelName: string, callbackOnMessage: any) {
     };
   };
 
-  useEffect(useEffectHook);
+  useEffect(useEffectHook, []);
 
   return [channel, ably];
 }

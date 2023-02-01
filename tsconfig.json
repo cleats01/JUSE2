@@ -15,7 +15,13 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"]
+      "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"],
+      "@components/*": ["components/*"],
+      "@pages/*": ["pages/*"],
+      "@stories/*": ["stories/*"],
+      "@atoms/*": ["stories/atoms/*"],
+      "@molecules/*": ["stories/molecules/*"],
+      "@organisms/*": ["stories/organisms/*"]
     },
     "typeRoots": ["./types"],
     "baseUrl": "."

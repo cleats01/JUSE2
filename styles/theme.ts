@@ -1,4 +1,18 @@
+import { createTheme } from '@mui/material';
 import { DefaultTheme } from 'styled-components';
+
+export const palette = createTheme({
+  palette: {
+    primary: {
+      main: '#be99ff',
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#81d8cf',
+      contrastText: '#fff',
+    },
+  },
+});
 
 const colors = {
   black1: '#333533', // 기본 텍스트

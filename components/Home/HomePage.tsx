@@ -11,6 +11,7 @@ import FilterDrawer from 'components/Home/FilterDrawer';
 import TabBar from 'components/Common/TabBar';
 import NavbarMain from 'components/Common/NavbarMain';
 import LoadingSpinner from 'components/Common/LoadingSpinner';
+import Carousel from 'components/Home/Carousel';
 
 export default function HomePage() {
   // 필터 State
@@ -21,6 +22,7 @@ export default function HomePage() {
   const [offline, setOffline] = useState('');
   const [period, setPeriod] = useState<number[]>([1, 6]);
   const [techStack, setTechStack] = useState<string[]>([]);
+  const [filterCount, setFilterCount] = useState<number>(0);
 
   const filterProps = {
     isFilterOpen,
@@ -57,13 +59,32 @@ export default function HomePage() {
     }
   );
 
+  useEffect(() => {
+    let count = 0;
+    if (isClosed) {
+      count++;
+    }
+    if (place || offline) {
+      count++;
+    }
+    if (period[0] !== 1 || period[1] !== 6) {
+      count++;
+    }
+    if (techStack.length) {
+      count++;
+    }
+    setFilterCount(count);
+  }, [filterProps]);
+
   return (
     <HomeLayout>
       <NavbarMain />
+      <Carousel />
       <MainTab
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         setIsFilterOpen={setIsFilterOpen}
+        filterCount={filterCount}
       />
       {status === 'loading' ? (
         <LoadingSpinner />

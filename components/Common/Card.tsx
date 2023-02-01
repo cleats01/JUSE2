@@ -5,7 +5,8 @@ import moment from 'moment';
 import 'moment/locale/ko';
 
 import { BookmarkIcon, ChatIcon } from 'components/Common/Icons';
-import { StackBubble } from 'components/Common/TechStackSelector';
+import StackLogo from 'components/Common/StackLogo';
+import Chip from '@stories/atoms/Chip';
 
 interface IProps {
   data: boardData;
@@ -30,8 +31,15 @@ export default function Card(props: IProps) {
       <Link href={`/board/${id}`}>
         {isClosed ? <Closed>모집 마감</Closed> : ''}
         <CardHeader>
-          <Badge className={type}>{type}</Badge>
-          <Badge>{place}</Badge>
+          <Chip
+            color={
+              type === '프로젝트'
+                ? theme.colors.purple1
+                : theme.colors.tiffanyblue
+            }>
+            {type}
+          </Chip>
+          <Chip outlined>{place}</Chip>
           <CreatedAt>
             {moment(createdAt).year() === moment(Date.now()).year()
               ? moment(createdAt).format('M월 D일')
@@ -41,15 +49,7 @@ export default function Card(props: IProps) {
         <Title>{title}</Title>
         <TechStackWrapper>
           {techStack.map((stack, index) => (
-            <StackBubble
-              src={`/icons/stacks/${stack}.png`}
-              key={index}
-              alt={stack}
-              width={30}
-              height={30}
-              sizes={'30px'}
-              priority
-            />
+            <StackLogo key={index} stack={stack.toLowerCase()} zoom={0.6} />
           ))}
         </TechStackWrapper>
       </Link>
@@ -86,6 +86,7 @@ const CardLayout = styled.div<{ isClosed: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.grey2};
   padding: 10px 15px;
   opacity: ${({ isClosed }) => (isClosed ? 0.7 : 1)};
+  width: 100%;
 `;
 
 const CardHeader = styled.header`
@@ -146,7 +147,8 @@ const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
-  color: ${({ theme }) => theme.colors.grey5};
+  color: ${({ theme }) => theme.colors.grey4};
+  fill: ${({ theme }) => theme.colors.grey4};
 `;
 
 const Closed = styled.div`

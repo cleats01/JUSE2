@@ -4,8 +4,8 @@ import { User } from '@prisma/client';
 
 import UserImgWrapper from 'components/Common/UserImgWrapper';
 import { HeartFilledIcon } from 'components/Common/Icons';
-import { StackBubble } from 'components/Common/TechStackSelector';
 import { InfoLabel, InfoWrapper } from 'components/Board/BoardPage';
+import StackLogo from 'components/Common/StackLogo';
 
 interface IProps {
   author: User;
@@ -31,15 +31,7 @@ export default function LeaderInfo(props: IProps) {
           </LeaderNickname>
           <LeaderTechStack>
             {author.userTechStack?.map((stack) => (
-              <StackBubble
-                src={`/icons/stacks/${stack}.png`}
-                key={stack}
-                alt={stack}
-                width={30}
-                height={30}
-                sizes={'30px'}
-                priority
-              />
+              <StackLogo key={stack} stack={stack.toLowerCase()} zoom={0.6} />
             ))}
           </LeaderTechStack>
         </LeaderInfoContainer>

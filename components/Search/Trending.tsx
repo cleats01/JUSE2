@@ -1,4 +1,9 @@
 import styled from 'styled-components';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper';
+
 import Card from 'components/Common/Card';
 
 interface IProps {
@@ -9,13 +14,18 @@ export default function Trending({ trending }: IProps) {
   return (
     <TrendingContainer>
       <TrendingHeader>현재 🔥한 모임</TrendingHeader>
-      <CardContainer>
+      <Swiper
+        slidesPerView={1.15}
+        spaceBetween={10}
+        grabCursor
+        modules={[Pagination]}
+        style={{ width: '100%' }}>
         {trending.map((board: boardData) => (
-          <CardOverflow key={board.id}>
+          <SwiperSlide key={board.id}>
             <Card data={board} />
-          </CardOverflow>
+          </SwiperSlide>
         ))}
-      </CardContainer>
+      </Swiper>
     </TrendingContainer>
   );
 }
@@ -30,23 +40,4 @@ const TrendingHeader = styled.h1`
   font-weight: 700;
   font-size: 20px;
   padding-left: 10px;
-`;
-
-const CardContainer = styled.div`
-  display: flex;
-  overflow-x: auto;
-  gap: 10px;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-  /* 스크롤 바 없애기 */
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const CardOverflow = styled.div`
-  flex: 0 0 85%;
-  scroll-snap-align: start;
 `;

@@ -19,7 +19,12 @@ export default function ChatArea(props: IProps) {
           </DateLineWrapper>
         ) : session?.user.id === message.userId ? (
           <MyMessageWrapper key={index}>
-            <Time>{moment(message.createdAt).format('HH:mm')}</Time>
+            <MessageStatusWrapper>
+              <MessageStatus>
+                {message.isRead ? '읽음' : '전송됨'}
+              </MessageStatus>
+              <Time>{moment(message.createdAt).format('HH:mm')}</Time>
+            </MessageStatusWrapper>
             <ChatBubble key={index} isMe={session?.user.id === message.userId}>
               {message.message}
             </ChatBubble>
@@ -81,6 +86,18 @@ const ChatBubble = styled.div<{ isMe: boolean }>`
   border: ${({ theme, isMe }) =>
     isMe ? '' : `1px solid ${theme.colors.grey2}`};
   padding: 10px 15px;
-  max-width: 330px;
+  max-width: min(330px, 70vw);
   overflow-wrap: break-word;
+`;
+
+const MessageStatusWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+`;
+
+const MessageStatus = styled.div`
+  color: ${({ theme }) => theme.colors.grey5};
+  font-size: 12px;
 `;

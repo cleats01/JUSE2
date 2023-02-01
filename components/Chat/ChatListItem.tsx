@@ -52,6 +52,13 @@ const Username = styled.div`
 const LastMessage = styled.div`
   color: ${({ theme }) => theme.colors.grey4};
   font-size: 14px;
+  max-width: min(240px, 50vw);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
 `;
 
 const TimeInfo = styled.div`
