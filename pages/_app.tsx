@@ -8,6 +8,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { useState, useEffect } from 'react';
 import { Router } from 'next/router';
 import Head from 'next/head';
+import { RecoilRoot } from 'recoil';
 
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import LoadingSpinner from 'components/Common/LoadingSpinner';
@@ -36,28 +37,30 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <SessionProvider session={pageProps.session}>
-      <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <ThemeProvider theme={theme}>
-            <MuiThemeProvider theme={palette}>
-              <GlobalStyle />
-              <Head>
-                <title>JUSE - Junior to Senior</title>
-              </Head>
-              <AppContainer>
-                {loading ? (
-                  <LoadingSpinner fullScreen />
-                ) : (
-                  <Component {...pageProps} />
-                )}
-                <ReactQueryDevtools />
-              </AppContainer>
-            </MuiThemeProvider>
-          </ThemeProvider>
-        </Hydrate>
-      </QueryClientProvider>
-    </SessionProvider>
+    <RecoilRoot>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <ThemeProvider theme={theme}>
+              <MuiThemeProvider theme={palette}>
+                <GlobalStyle />
+                <Head>
+                  <title>JUSE - Junior to Senior</title>
+                </Head>
+                <AppContainer>
+                  {loading ? (
+                    <LoadingSpinner fullScreen />
+                  ) : (
+                    <Component {...pageProps} />
+                  )}
+                  <ReactQueryDevtools />
+                </AppContainer>
+              </MuiThemeProvider>
+            </ThemeProvider>
+          </Hydrate>
+        </QueryClientProvider>
+      </SessionProvider>
+    </RecoilRoot>
   );
 }
 
