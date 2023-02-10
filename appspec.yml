@@ -2,11 +2,11 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/github_action
+    destination: /home/ubuntu/juse2_cicd
     overwrite: yes
 
 permissions:
-  - object: /
+  - object: /home/ubuntu/juse2_cicd
     pattern: '**'
     owner: ubuntu
     group: ubuntu
@@ -14,5 +14,5 @@ permissions:
 hooks:
   ApplicationStart:
     - location: gh_deploy.sh
-      timeout: 1000
+      timeout: 100
       runas: ubuntu

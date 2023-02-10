@@ -1,7 +1,8 @@
-REPOSITORY=/home/ubuntu/github_action
+#!/bin/bash
+REPOSITORY=/home/ubuntu/juse2_cicd
 
 cd $REPOSITORY
 
 sudo npm install
 
-sudo npx pm2 reload all
+sudo npm run start
