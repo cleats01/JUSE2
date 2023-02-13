@@ -3,6 +3,6 @@ REPOSITORY=/home/ubuntu/juse2_cicd
 
 cd $REPOSITORY
 
-sudo npm install
+sudo npm install next
 
-sudo npm run start
+sudo npx next start
