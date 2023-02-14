@@ -14,6 +14,7 @@ export interface IButtonIconProps {
     | 'warning';
   size?: 'small' | 'medium' | 'large' | undefined;
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 const ButtonIcon = (props: IButtonIconProps) => {

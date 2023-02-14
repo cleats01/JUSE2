@@ -31,8 +31,8 @@ export default function MainTab(props: IProps) {
         <Tab value='스터디' label='스터디' />
       </Tabs>
       <Badge badgeContent={filterCount} color='primary'>
-        <ButtonIcon>
-          <SlidersIcon width={18} onClick={toggleFilter} />
+        <ButtonIcon onClick={toggleFilter}>
+          <SlidersIcon width={18} />
         </ButtonIcon>
       </Badge>
     </TabContainer>
