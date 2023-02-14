@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, SyntheticEvent } from 'react';
 
 import { Badge, Tab, Tabs } from '@mui/material';
 import { SlidersIcon } from 'components/Common/Icons';
+import ButtonIcon from '@stories/atoms/ButtonIcon';
 
 interface IProps {
   currentTab: string;
@@ -30,7 +31,9 @@ export default function MainTab(props: IProps) {
         <Tab value='스터디' label='스터디' />
       </Tabs>
       <Badge badgeContent={filterCount} color='primary'>
-        <SlidersIcon width={18} onClick={toggleFilter} />
+        <ButtonIcon>
+          <SlidersIcon width={18} onClick={toggleFilter} />
+        </ButtonIcon>
       </Badge>
     </TabContainer>
   );
