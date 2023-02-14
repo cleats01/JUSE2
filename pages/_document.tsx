@@ -118,6 +118,10 @@ class MyDocument extends Document {
             as='style'
             href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/variable/pretendardvariable-dynamic-subset.css'
           />
+          <meta
+            name='description'
+            content='주니어에서 시니어로! 개발자 프로젝트/스터디 모집 플랫폼 주시입니다.'
+          />
         </Head>
         <body>
           <Main />
