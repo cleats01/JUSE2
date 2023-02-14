@@ -1,16 +1,10 @@
-# workflow의 이름을 설정해준다.
 name: AWS CI/CD
 
-# workflow가 작동되는 이벤트를 정의한다.
-# 해당 workflow같은 경우는 main branch에 push 될 경우 작동된다.
 on:
   push:
     branches:
       - main
 
-# 아래 S3와 CodeDeploy에서 사용 될 env값을 정의한다.
-# 이 값은 2편과 3편에서 설정해준 S3의 버킷명과
-# CodeDeploy의 applicationName, groupName과 일치해야한다.
 env:
   S3_BUCKET_NAME: jusedeploybucket
   CODE_DEPLOY_APPLICATION_NAME: juse-code-deploy
@@ -27,22 +21,44 @@ jobs:
         with:
           node-version: 16
 
-      # pacakge.json에 명시된 의존성을 설치한다.
+      - name: Generate Environment Variables File for Production
+        run: |
+          echo "ABLY_API_KEY=$ABLY_API_KEY" >> .env
+          echo "BASE_URL=$BASE_URL" >> .env
+          echo "DATABASE_URL=$DATABASE_URL" >> .env
+          echo "GOOGLE_ID=$GOOGLE_ID" >> .env
+          echo "GOOGLE_SECRET=$GOOGLE_SECRET" >> .env
+          echo "MONGODB_URI=$MONGODB_URI" >> .env
+          echo "MY_AWS_ACCESS_KEY=$MY_AWS_ACCESS_KEY" >> .env
+          echo "MY_AWS_S3_BUCKET=$MY_AWS_S3_BUCKET" >> .env
+          echo "MY_AWS_S3_BUCKET_REGION=$MY_AWS_S3_BUCKET_REGION" >> .env
+          echo "MY_AWS_SECRET_KEY=$MY_AWS_SECRET_KEY" >> .env
+          echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> .env
+          echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> .env
+        env:
+          ABLY_API_KEY: ${{ secrets.ABLY_API_KEY }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+          GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MY_AWS_ACCESS_KEY: ${{ secrets.MY_AWS_ACCESS_KEY }}
+          MY_AWS_S3_BUCKET: ${{ secrets.MY_AWS_S3_BUCKET }}
+          MY_AWS_S3_BUCKET_REGION: ${{ secrets.MY_AWS_S3_BUCKET_REGION }}
+          MY_AWS_SECRET_KEY: ${{ secrets.MY_AWS_SECRET_KEY }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+
       - name: Install dependencies
         run: npm install
 
-      # 프로젝트를 빌드한다.
       - name: Build next app
         run: npm run build
 
-      # S3에 올리기 전 빌드파일을 압축해준다.
-      # 여기서 $GITHUB_SHA라는 값을 사용하는데 이 값은 Github에서 기본적으로 제공하는 환경변수다.
-      # $GITHUB_SHA는 해당 워크플로우를 트리거 한 커밋의 고유값이 할당되어있다.
       - name: Make zip file
         run: zip -qq -r ./$GITHUB_SHA.zip . -x "node_modules/*"
         shell: bash
 
-      # 2편에서 만든 IAM사용자를 이용해 AWS 서비스에 접근하는데 필요한 권한을 얻어오는 단계이다.
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -50,11 +66,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      # Make zip file 단계에서 압축된 빌드 파일을 S3 버킷에 업로드하는 단계이다.
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
 
-      # S3에 업로드 된 빌드 파일을 이용해 CodeDeploy가 정의된 동작을 하도록 트리거해주는 단계이다.
       - name: Code Deploy
         run: |
           aws deploy create-deployment \
