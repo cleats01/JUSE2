@@ -30,11 +30,11 @@ export default function MainTab(props: IProps) {
         <Tab value='프로젝트' label='프로젝트' />
         <Tab value='스터디' label='스터디' />
       </Tabs>
-      <Badge badgeContent={filterCount} color='primary'>
-        <ButtonIcon onClick={toggleFilter}>
+      <ButtonIcon onClick={toggleFilter}>
+        <Badge badgeContent={filterCount} color='primary'>
           <SlidersIcon width={18} />
-        </ButtonIcon>
-      </Badge>
+        </Badge>
+      </ButtonIcon>
     </TabContainer>
   );
 }
