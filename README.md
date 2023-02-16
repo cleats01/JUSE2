@@ -8,15 +8,14 @@
 
 <br>
 
-# 서비스 소개
+# ✨ 서비스 소개
 ### 🐥 공동 성장에 목말라있지만 나에게 맞는 팀원 혹은 팀을 찾느라 지쳐있는 주니어 개발자들을 위해!
 ### 🔍 주시를 통해 편리하게 마음에 맞는 동료를 찾고, 함께 성장해요!
 
 <br>
 
-# 핵심 기능
+# 💡 핵심 기능
 
-<div align="center">
 
 |게시물 필터링|게시물 검색 및 최근검색어|게시물 작성 템플릿|
 |:-:|:-:|:-:|
@@ -26,6 +25,10 @@
 |<b>모임 지원</b>|<b>지원 관리</b>|<b>유저 조회 및 채팅</b>|
 |<img width="200" alt="filter" src="https://user-images.githubusercontent.com/91973744/219236215-72a8fddd-6211-4e7a-84df-7eb7eeb3e63b.gif">|<img width="200" alt="filter" src="https://user-images.githubusercontent.com/91973744/219236243-00b474c3-f350-4db6-bf8e-3631c04aa978.gif">|<img width="200" alt="filter" src="https://user-images.githubusercontent.com/91973744/219236267-985b6bbe-bfae-47d0-96a8-84018efd0bb6.gif">|
 
-</div>
+<br>
 
-# 기술 스택
+# ⚙️  기술 스택
+<img width="800" alt="스크린샷 2023-02-16 오후 2 14 20" src="https://user-images.githubusercontent.com/91973744/219274690-288649d0-a271-4e49-983e-5d206b4472a9.png">
+
+# 🔗  링크
+[<img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white" />](https://cleats01.notion.site/JUSE-mobile-3a075a53c02a4526ac0eb549780e4aa4)
