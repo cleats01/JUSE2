@@ -30,5 +30,7 @@
 # ⚙️  기술 스택
 <img width="800" alt="스크린샷 2023-02-16 오후 2 14 20" src="https://user-images.githubusercontent.com/91973744/219274690-288649d0-a271-4e49-983e-5d206b4472a9.png">
 
+<br>
+
 # 🔗  링크
 [<img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white" />](https://cleats01.notion.site/JUSE-mobile-3a075a53c02a4526ac0eb549780e4aa4)
