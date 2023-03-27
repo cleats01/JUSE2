@@ -61,7 +61,7 @@ export default function ChatInput(props: IProps) {
         moment(messages.at(-1)?.createdAt).format('L') !==
           moment(Date.now()).format('L')
       ) {
-        await (channel as Types.RealtimeChannelPromise).publish({
+        (channel as Types.RealtimeChannelPromise).publish({
           name: 'date',
           data: 'line',
         });
@@ -71,7 +71,7 @@ export default function ChatInput(props: IProps) {
           isRead: true,
         });
       }
-      await (channel as Types.RealtimeChannelPromise).publish({
+      (channel as Types.RealtimeChannelPromise).publish({
         name: session?.user.id,
         data: message,
       });
