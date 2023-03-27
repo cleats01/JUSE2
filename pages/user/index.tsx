@@ -1,5 +1,10 @@
+import Authorization from '@components/Common/Authorization';
 import UserPage from 'components/User/UserPage';
 
 export default function User() {
-  return <UserPage />;
+  return (
+    <Authorization>
+      <UserPage />
+    </Authorization>
+  );
 }
