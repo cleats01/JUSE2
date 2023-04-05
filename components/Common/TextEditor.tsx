@@ -32,10 +32,6 @@ export default function TextEditor(props: IProps) {
     setContent(content);
   }, 500);
 
-  useEffect(() => {
-    console.log(content);
-  }, [content]);
-
   return (
     <>
       <TextStyleCustom>
