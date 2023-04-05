@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { useMemo, Dispatch, SetStateAction } from 'react';
+import { useMemo, Dispatch, SetStateAction, useEffect } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
+import { debounce } from 'lodash';
 
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -27,12 +28,20 @@ export default function TextEditor(props: IProps) {
     []
   );
 
+  const handleOnChange = debounce((content) => {
+    setContent(content);
+  }, 500);
+
+  useEffect(() => {
+    console.log(content);
+  }, [content]);
+
   return (
     <>
       <TextStyleCustom>
         <ReactQuill
           value={content}
-          onChange={setContent}
+          onChange={handleOnChange}
           modules={modules}
           theme={'snow'}
           placeholder={`내용을 입력해주세요.`}
