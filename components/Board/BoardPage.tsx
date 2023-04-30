@@ -28,7 +28,7 @@ interface IProps {
 }
 
 export default function BoardPage(props: IProps) {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [currentTab, setCurrentTab] = useState<string>('모집내용');
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const tabRef = useRef<HTMLElement[] | null[]>([]);
@@ -48,9 +48,6 @@ export default function BoardPage(props: IProps) {
     title,
     content,
     createdAt,
-    chat,
-    bookmark,
-    isBookmarked,
     authorId,
     author,
     isClosed,

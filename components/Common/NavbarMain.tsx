@@ -3,9 +3,7 @@ import styled from 'styled-components';
 export default function NavbarMain() {
   return (
     <NavLayout>
-      {/* <HamburgerIcon /> */}
       <LogoSpan>JUSE</LogoSpan>
-      {/* <NotificationIcon /> */}
     </NavLayout>
   );
 }

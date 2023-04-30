@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useMemo, Dispatch, SetStateAction, useEffect } from 'react';
+import { useMemo, Dispatch, SetStateAction } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
 import { debounce } from 'lodash';

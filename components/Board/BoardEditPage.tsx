@@ -10,7 +10,7 @@ import ContentsInput from 'components/New/ContentsInput';
 import NavbarNew from 'components/Common/NavbarNew';
 
 export default function BoardEditPage() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const [type, setType] = useState<string>('프로젝트');
   const [place, setPlace] = useState<string>('온라인');

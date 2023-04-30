@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
-import Image from 'next/image';
 
 import { CloseIcon } from 'components/Common/Icons';
 import StackLogo from 'components/Common/StackLogo';
@@ -152,10 +151,6 @@ const StackBubble = styled.div`
   &.not-selected {
     opacity: 0.6;
   }
-`;
-
-const Stack = styled(Image)`
-  border-radius: 50%;
 `;
 
 const SelectedContainer = styled.div`
